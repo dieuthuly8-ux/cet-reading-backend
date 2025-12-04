@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于我们 - 四六级学习站</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23007AFF' /><text x='50' y='50' font-size='50' fill='%23FFF' text-anchor='middle' dominant-baseline='central' font-family='system-ui' font-weight='bold'>CET</text></svg>" type="image/svg+xml">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- 页面滚动进度条 -->
+    <div class="scroll-progress" id="scroll-progress"></div>
+    
+    <!-- WeHUSTER 导航栏 -->
+    <nav class="apple-nav wehuster-nav">
+        <div class="nav-container">
+            <!-- Logo -->
+            <a class="nav-logo wehuster-logo" href="index.html">
+                <i class="fas fa-graduation-cap"></i>
+                <span class="logo-text">四六级学习站</span>
+            </a>
+            
+            <!-- 主导航菜单 -->
+            <ul class="nav-menu wehuster-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">首页</a>
+                </li>
+                <li class="nav-item">
+                    <a href="cet4.html" class="nav-link">四级真题</a>
+                </li>
+                <li class="nav-item">
+                    <a href="cet6.html" class="nav-link">六级真题</a>
+                </li>
+                <li class="nav-item">
+                    <a href="translator.html" class="nav-link">阅读神器</a>
+                </li>
+                <li class="nav-item">
+                    <a href="listening-micro.html" class="nav-link">听力练习</a>
+                </li>
+                <li class="nav-item">
+                    <a href="news.html" class="nav-link">资讯</a>
+                </li>
+                <li class="nav-item">
+                    <a href="about.html" class="nav-link active">About Us</a>
+                </li>
+            </ul>
+            
+            <!-- 工具栏 -->
+            <div class="nav-tools">
+                <button class="search-btn" id="search-toggle" aria-label="搜索">
+                    <i class="fas fa-search"></i>
+                </button>
+                <button class="mobile-toggle" id="mobile-toggle" aria-label="菜单">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- About Us 内容区域 -->
+    <section style="min-height: 100vh; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 8rem 0 4rem; margin-top: 70px; border-radius: 0 0 200px 0; position: relative;">
+        <!-- 右上角装饰圆圈 -->
+        <div style="position: absolute; top: 30px; right: 30px; width: 50px; height: 50px; background: rgba(255, 255, 255, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px);">
+            <div style="width: 30px; height: 30px; border: 3px solid white; border-radius: 50%;"></div>
+        </div>
+
+        <div style="max-width: 1200px; margin: 0 auto; padding: 0 2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem;">
+            <!-- 左侧英文内容 -->
+            <div style="color: white;">
+                <h1 style="font-size: 3rem; font-weight: 800; margin-bottom: 2rem; color: white;">About Us</h1>
+                
+                <div style="line-height: 1.8;">
+                    <h3 style="font-size: 1.3rem; font-weight: 700; margin: 2rem 0 1rem; color: white;">1. Who we are?</h3>
+                    <p style="color: rgba(255,255,255,0.9); font-size: 1.05rem;">We are people aiming at distributing resources for free.</p>
+                    
+                    <h3 style="font-size: 1.3rem; font-weight: 700; margin: 2rem 0 1rem; color: white;">2. How to contact us?</h3>
+                    <p style="color: rgba(255,255,255,0.9); font-size: 1.05rem;">To contact us, Please send an email to 2978651061@qq.com</p>
+                    
+                    <h3 style="font-size: 1.3rem; font-weight: 700; margin: 2rem 0 1rem; color: white;">3. What if I have some resources to share?</h3>
+                    <p style="color: rgba(255,255,255,0.9); font-size: 1.05rem;">Please send the resources via email to us directly, with a brief description.</p>
+                    
+                    <h3 style="font-size: 1.3rem; font-weight: 700; margin: 2rem 0 1rem; color: white;">4. What if I find a bug on the website?</h3>
+                    <p style="color: rgba(255,255,255,0.9); font-size: 1.05rem;">For reporting bugs, feel free to contact us. We will fix it as soon as possible.</p>
+                    
+                    <h3 style="font-size: 1.3rem; font-weight: 700; margin: 2rem 0 1rem; color: white;">5. I want to make a donation.</h3>
+                    <p style="color: rgba(255,255,255,0.9); font-size: 1.05rem;">Sorry, donations are currently not accepted.</p>
+                    
+                    <h3 style="font-size: 1.3rem; font-weight: 700; margin: 2rem 0 1rem; color: white;">6. Other question.</h3>
+                    <p style="color: rgba(255,255,255,0.9); font-size: 1.05rem;">For any other issues not listed above, Please contact us directly for help. Our response will be made within one day.</p>
+                </div>
+            </div>
+
+            <!-- 右侧中文内容 -->
+            <div style="color: white;">
+                <h1 style="font-size: 3rem; font-weight: 800; margin-bottom: 2rem; color: white;">关于我们</h1>
+                
+                <div style="line-height: 1.8;">
+                    <h3 style="font-size: 1.3rem; font-weight: 700; margin: 2rem 0 1rem; color: white;">1. 我们是谁？</h3>
+                    <p style="color: rgba(255,255,255,0.9); font-size: 1.05rem;">我们是一群致力于免费分发资源的网站平台。</p>
+                    
+                    <h3 style="font-size: 1.3rem; font-weight: 700; margin: 2rem 0 1rem; color: white;">2. 如何联系我们？</h3>
+                    <p style="color: rgba(255,255,255,0.9); font-size: 1.05rem;">请直接发送邮件至我们的官方邮箱：2978651061@qq.com</p>
+                    
+                    <h3 style="font-size: 1.3rem; font-weight: 700; margin: 2rem 0 1rem; color: white;">3. 我想投稿？</h3>
+                    <p style="color: rgba(255,255,255,0.9); font-size: 1.05rem;">请直接给我们发官方邮箱进行投稿，并附详细说明已告知侵权威胁的邮箱详细</p>
+                    
+                    <h3 style="font-size: 1.3rem; font-weight: 700; margin: 2rem 0 1rem; color: white;">4. 我发现网站的问题或问题？</h3>
+                    <p style="color: rgba(255,255,255,0.9); font-size: 1.05rem;">报告bug请直接联系我们，我们会工作人员将尽快修复您的问题。</p>
+                    
+                    <h3 style="font-size: 1.3rem; font-weight: 700; margin: 2rem 0 1rem; color: white;">5. 如何捐款？</h3>
+                    <p style="color: rgba(255,255,255,0.9); font-size: 1.05rem;">抱歉，暂不接受捐款。</p>
+                    
+                    <h3 style="font-size: 1.3rem; font-weight: 700; margin: 2rem 0 1rem; color: white;">6. 其他问题</h3>
+                    <p style="color: rgba(255,255,255,0.9); font-size: 1.05rem;">对于其他问题，请立即联系我们，我们的工作人员会在1个工作日内回复您的诉求。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 优化页脚 -->
+    <footer class="site-footer" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; position: relative; overflow: hidden; box-shadow: 0 -4px 20px rgba(102, 126, 234, 0.15);">
+        <div style="position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, rgba(251, 191, 36, 0.5), transparent);"></div>
+        
+        <div style="text-align: center; padding: 2rem 2rem 1.5rem;">
+            <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem; margin-bottom: 1.5rem;">
+                <a href="news.html" style="color: rgba(255,255,255,0.85); text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.85)'">考试资讯</a>
+                <a href="about.html" style="color: white; text-decoration: none; font-weight: 600;">关于本站</a>
+                <a href="index.html#contact" style="color: rgba(255,255,255,0.85); text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.85)'">联系我们</a>
+                <a href="help.html" style="color: rgba(255,255,255,0.85); text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.85)'">使用帮助</a>
+            </div>
+            
+            <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 1.5rem;">
+                <a href="#" style="width: 45px; height: 45px; background: rgba(255,255,255,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; border: 1px solid rgba(255,255,255,0.2);">
+                    <i class="fab fa-weixin" style="font-size: 1.3rem;"></i>
+                </a>
+                <a href="#" style="width: 45px; height: 45px; background: rgba(255,255,255,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; border: 1px solid rgba(255,255,255,0.2);">
+                    <i class="fab fa-qq" style="font-size: 1.3rem;"></i>
+                </a>
+                <a href="#" style="width: 45px; height: 45px; background: rgba(255,255,255,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; border: 1px solid rgba(255,255,255,0.2);">
+                    <i class="fab fa-weibo" style="font-size: 1.3rem;"></i>
+                </a>
+                <a href="#" style="width: 45px; height: 45px; background: rgba(255,255,255,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; border: 1px solid rgba(255,255,255,0.2);">
+                    <i class="fab fa-github" style="font-size: 1.3rem;"></i>
+                </a>
+            </div>
+        </div>
+
+        <div style="background: rgba(0,0,0,0.2); padding: 1.5rem 2rem; text-align: center; border-top: 1px solid rgba(255,255,255,0.1);">
+            <p style="margin: 0 0 0.5rem; color: rgba(255,255,255,0.7);">&copy; 2025 四六级学习站 All Rights Reserved</p>
+            <p style="margin: 0; color: rgba(255,255,255,0.6); font-size: 0.9rem;">本站仅用于学习交流 · 真题版权归原版权所有者所有</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>

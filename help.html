@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>使用帮助 - 四六级学习站</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23007AFF' /><text x='50' y='50' font-size='50' fill='%23FFF' text-anchor='middle' dominant-baseline='central' font-family='system-ui' font-weight='bold'>CET</text></svg>" type="image/svg+xml">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #f8f9fa;
+        }
+        
+        .help-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+        
+        @media (max-width: 900px) and (min-width: 769px) {
+            .help-header {
+                padding: 2.5rem 2rem;
+            }
+            
+            .help-header h1 {
+                font-size: 3.8rem;
+                color: white;
+            }
+            
+            .help-header p {
+                font-size: 1.1rem;
+            }
+            
+            .quick-link {
+                padding: 2rem 1.5rem;
+            }
+            
+            .quick-link-icon {
+                font-size: 3rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .help-container {
+                padding: 2rem 1rem;
+            }
+            
+            .help-header {
+                padding: 2.5rem 1.5rem;
+                border-radius: 20px;
+            }
+            
+            .help-header h1 {
+                font-size: 3rem;
+                margin-bottom: 1rem;
+                color: white;
+            }
+            
+            .help-header p {
+                font-size: 1rem;
+            }
+            
+            .help-section {
+                padding: 2rem 1.5rem;
+            }
+            
+            .feature-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .quick-link {
+                min-height: 150px;
+                aspect-ratio: auto;
+                padding: 2rem 1.5rem;
+            }
+            
+            .quick-link-icon {
+                font-size: 3rem;
+            }
+            
+            .help-section > div[style*="grid-template-columns"] {
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+                max-width: 100% !important;
+            }
+        }
+        
+        .help-header {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 24px;
+            margin-bottom: 3rem;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.25);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .help-header::before {
+            content: '';
+            position: absolute;
+            top: -60%;
+            right: -15%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 20s ease-in-out infinite;
+        }
+        
+        .help-header::after {
+            content: '';
+            position: absolute;
+            bottom: -40%;
+            left: -10%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.12) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 15s ease-in-out infinite reverse;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+            }
+            50% {
+                transform: translate(30px, 30px) scale(1.1);
+            }
+        }
+        
+        .help-header h1 {
+            font-size: 4.5rem;
+            margin: 0 0 1.2rem 0;
+            font-weight: 900;
+            position: relative;
+            z-index: 1;
+            letter-spacing: 0.05em;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            color: white;
+        }
+        
+        .help-header p {
+            font-size: 1.15rem;
+            opacity: 0.92;
+            margin: 0;
+            position: relative;
+            z-index: 1;
+            max-width: 500px;
+            margin: 0 auto;
+            line-height: 1.5;
+            font-weight: 400;
+        }
+        
+        .help-section {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+            border: 1px solid rgba(0,0,0,0.03);
+            transition: all 0.3s ease;
+        }
+        
+        .help-section:hover {
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            transform: translateY(-2px);
+        }
+        
+        .help-section h2 {
+            color: #2d3436;
+            font-size: 2rem;
+            margin-top: 0;
+            margin-bottom: 2rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            letter-spacing: -0.03em;
+        }
+        
+        .help-section h3 {
+            color: #2d3436;
+            font-size: 1.4rem;
+            margin: 2.5rem 0 1.2rem 0;
+            font-weight: 700;
+            padding-left: 1rem;
+            border-left: 4px solid #667eea;
+        }
+        
+        .help-section p {
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+            font-size: 1.02rem;
+        }
+        
+        .help-section a {
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        
+        .help-section a:hover {
+            opacity: 0.8;
+        }
+        
+        .help-section ul, .help-section ol {
+            color: #555;
+            line-height: 1.9;
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+        }
+        
+        .help-section li {
+            margin-bottom: 0.8rem;
+            padding-left: 0.5rem;
+        }
+        
+        .help-section ul li {
+            position: relative;
+        }
+        
+        .help-section ul li::marker {
+            color: #667eea;
+            font-size: 1.2em;
+        }
+        
+        .help-section ol li {
+            padding-left: 0.8rem;
+        }
+        
+        .help-section ol li::marker {
+            color: #667eea;
+            font-weight: 700;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2.5rem;
+            padding: 1.5rem;
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-item:hover {
+            background: rgba(102, 126, 234, 0.03);
+            transform: translateX(8px);
+        }
+        
+        .feature-icon {
+            flex-shrink: 0;
+            width: 80px;
+            height: 80px;
+            font-size: 2.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+        }
+        
+        .feature-content h4 {
+            color: #667eea;
+            margin: 0 0 0.6rem 0;
+            font-size: 1.35rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        
+        .feature-content p {
+            margin: 0;
+            color: #666;
+            line-height: 1.7;
+            font-size: 1.05rem;
+        }
+        
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 1.05rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-top: 1rem;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-back:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-back i {
+            font-size: 1.1rem;
+        }
+        
+        .icon-box {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.12) 0%, rgba(118, 75, 162, 0.12) 100%);
+            border-radius: 14px;
+            color: #667eea;
+            font-size: 1.3rem;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+        }
+        
+        .quick-link {
+            background: white;
+            padding: 2.5rem 2rem;
+            border-radius: 18px;
+            text-decoration: none;
+            color: #2d3436;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            gap: 1.2rem;
+            margin-bottom: 0;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            min-height: 200px;
+            aspect-ratio: 1.2 / 1;
+        }
+        
+        .quick-link:hover {
+            border-color: #667eea;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.25);
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.02) 0%, rgba(118, 75, 162, 0.02) 100%);
+        }
+        
+        .quick-link-icon {
+            font-size: 3.5rem;
+            flex-shrink: 0;
+            transition: transform 0.3s ease;
+        }
+        
+        .quick-link:hover .quick-link-icon {
+            transform: scale(1.15);
+        }
+        
+        .quick-link-text {
+            width: 100%;
+        }
+        
+        .quick-link-text strong {
+            color: #2d3436;
+            font-size: 1.15rem;
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            transition: color 0.3s;
+        }
+        
+        .quick-link:hover .quick-link-text strong {
+            color: #667eea;
+        }
+        
+        .quick-link-text small {
+            color: #999;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar" style="background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 1000;">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; max-width: 1400px; margin: 0 auto;">
+            <div class="logo" style="font-size: 1.8rem; font-weight: 800; background: linear-gradient(135deg, #667eea, #764ba2); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                <i class="fas fa-graduation-cap" style="margin-right: 0.5rem; -webkit-text-fill-color: #667eea;"></i>四六级学习站
+            </div>
+            <ul class="nav-links" style="list-style: none; display: flex; gap: 2rem; margin: 0; padding: 0;">
+                <li><a href="index.html" style="text-decoration: none; color: #2d3436; font-weight: 600; transition: color 0.3s;">首页</a></li>
+                <li><a href="news.html" style="text-decoration: none; color: #2d3436; font-weight: 600; transition: color 0.3s;">考试资讯</a></li>
+                <li><a href="about.html" style="text-decoration: none; color: #2d3436; font-weight: 600; transition: color 0.3s;">关于</a></li>
+                <li><a href="help.html" style="text-decoration: none; color: #667eea; font-weight: 600;">帮助</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="help-container">
+        <div class="help-header">
+            <h1>使用帮助</h1>
+            <p>快速了解四六级学习站的功能和使用方法</p>
+        </div>
+
+        <!-- 快速导航 -->
+        <div class="help-section">
+            <h2><span class="icon-box"><i class="fas fa-compass"></i></span> 快速导航</h2>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; max-width: 800px; margin: 0 auto;">
+                <a href="#resources" class="quick-link">
+                    <div class="quick-link-icon">📚</div>
+                    <div class="quick-link-text">
+                        <strong>真题资源</strong>
+                        <small>如何下载真题</small>
+                    </div>
+                </a>
+                <a href="#listening" class="quick-link">
+                    <div class="quick-link-icon">🎧</div>
+                    <div class="quick-link-text">
+                        <strong>听力练习</strong>
+                        <small>在线听力训练</small>
+                    </div>
+                </a>
+                <a href="#translator" class="quick-link">
+                    <div class="quick-link-icon">📖</div>
+                    <div class="quick-link-text">
+                        <strong>翻译工具</strong>
+                        <small>阅读辅助功能</small>
+                    </div>
+                </a>
+                <a href="#contact" class="quick-link">
+                    <div class="quick-link-icon">📧</div>
+                    <div class="quick-link-text">
+                        <strong>联系我们</strong>
+                        <small>投稿与反馈</small>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- 真题资源 -->
+        <div id="resources" class="help-section">
+            <h2><span class="icon-box"><i class="fas fa-book"></i></span> 真题资源使用</h2>
+            
+            <h3>如何查找真题？</h3>
+            <ol>
+                <li>在首页点击 <strong>"英语四级"</strong> 或 <strong>"英语六级"</strong> 卡片</li>
+                <li>浏览年份列表，找到需要的考试年份</li>
+                <li>点击年份卡片查看该年所有考试</li>
+            </ol>
+
+            <h3>如何下载真题？</h3>
+            <div class="feature-item">
+                <div class="feature-icon">📄</div>
+                <div class="feature-content">
+                    <h4>真题PDF下载</h4>
+                    <p>点击真题详情页的 <strong>"下载PDF"</strong> 按钮即可下载完整试卷</p>
+                </div>
+            </div>
+
+            <h3>真题包含内容</h3>
+            <ul>
+                <li>✅ 完整试题（听力、阅读、翻译、写作）</li>
+                <li>✅ 详细答案解析</li>
+                <li>✅ 听力音频文件</li>
+                <li>✅ 参考译文</li>
+            </ul>
+        </div>
+
+        <!-- 听力练习 -->
+        <div id="listening" class="help-section">
+            <h2><span class="icon-box"><i class="fas fa-headphones"></i></span> 听力练习功能</h2>
+            
+            <h3>两种听力模式</h3>
+            <div class="feature-item">
+                <div class="feature-icon">🎯</div>
+                <div class="feature-content">
+                    <h4>逐句精听模式</h4>
+                    <p>适合精细学习，每句话单独播放，可以反复听某一句，配合原文和翻译学习</p>
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">📝</div>
+                <div class="feature-content">
+                    <h4>整篇练习模式</h4>
+                    <p>模拟真实考试环境，整篇连续播放，适合考前冲刺和实战训练</p>
+                </div>
+            </div>
+
+            <h3>听力功能特点</h3>
+            <ul>
+                <li>🎧 <strong>在线播放</strong>：无需下载，直接在线听</li>
+                <li>📖 <strong>同步显示</strong>：音频配合原文和中文翻译</li>
+                <li>⏯️ <strong>播放控制</strong>：暂停、重听、跳转自由</li>
+                <li>💾 <strong>音频下载</strong>：支持下载MP3文件</li>
+            </ul>
+
+            <h3>使用步骤</h3>
+            <ol>
+                <li>进入 <a href="listening-micro.html" style="color: #667eea; font-weight: 600;">听力练习</a> 页面</li>
+                <li>选择年份和套数</li>
+                <li>选择听力部分（Section A/B/C）</li>
+                <li>点击播放按钮开始练习</li>
+                <li>可切换"逐句精听"和"整篇练习"模式</li>
+            </ol>
+        </div>
+
+        <!-- 翻译工具 -->
+        <div id="translator" class="help-section">
+            <h2><span class="icon-box"><i class="fas fa-language"></i></span> 翻译工具</h2>
+            
+            <p>我们提供强大的翻译工具，帮助你快速理解英文材料：</p>
+
+            <div class="feature-item">
+                <div class="feature-icon">📝</div>
+                <div class="feature-content">
+                    <h4>整句翻译</h4>
+                    <p>输入英文句子或段落，即时获得中文翻译</p>
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">📚</div>
+                <div class="feature-content">
+                    <h4>单词查询</h4>
+                    <p>输入单词，查看详细释义、音标和例句</p>
+                </div>
+            </div>
+
+            <h3>如何使用？</h3>
+            <ol>
+                <li>访问 <a href="translator.html" style="color: #667eea; font-weight: 600;">翻译工具</a> 页面</li>
+                <li>选择"整句翻译"或"单词查询"</li>
+                <li>输入内容，点击翻译或查询</li>
+                <li>查看结果</li>
+            </ol>
+
+            <p><strong>提示</strong>：翻译工具需要后端服务支持，如遇到问题请联系我们。</p>
+        </div>
+
+        <!-- 联系与反馈 -->
+        <div id="contact" class="help-section">
+            <h2><span class="icon-box"><i class="fas fa-envelope"></i></span> 联系我们</h2>
+            
+            <h3>如何投稿资源？</h3>
+            <ol>
+                <li>访问 <a href="index.html#contact" style="color: #667eea; font-weight: 600;">首页联系表单</a></li>
+                <li>填写姓名、邮箱和留言内容</li>
+                <li>描述你要分享的资源</li>
+                <li>点击"发送消息"</li>
+                <li>我们会尽快联系你</li>
+            </ol>
+
+            <h3>反馈与建议</h3>
+            <p>如果你发现了网站的问题或有改进建议，欢迎通过以下方式联系我们：</p>
+            <ul>
+                <li>📧 <strong>邮箱</strong>：2978651061@qq.com</li>
+                <li>💬 <strong>表单</strong>：填写首页的联系表单</li>
+            </ul>
+
+            <div class="feature-item">
+                <div class="feature-icon">💡</div>
+                <div class="feature-content">
+                    <h4>我们欢迎</h4>
+                    <p>真题资源分享、网站改进建议、功能需求反馈、bug报告</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 常见问题 -->
+        <div class="help-section">
+            <h2><span class="icon-box"><i class="fas fa-question"></i></span> 常见问题</h2>
+            
+            <h3>Q: 资源是免费的吗？</h3>
+            <p><strong>A:</strong> 是的！所有资源完全免费，无需注册登录，直接下载使用。</p>
+
+            <h3>Q: 资源会持续更新吗？</h3>
+            <p><strong>A:</strong> 会的！我们会持续收集和更新最新的四六级真题资源。</p>
+
+            <h3>Q: 听力音频播放不了怎么办？</h3>
+            <p><strong>A:</strong> 请检查：</p>
+            <ul>
+                <li>网络连接是否正常</li>
+                <li>浏览器是否支持音频播放</li>
+                <li>尝试刷新页面</li>
+                <li>如问题仍存在，请联系我们</li>
+            </ul>
+
+            <h3>Q: 下载的PDF打不开？</h3>
+            <p><strong>A:</strong> 建议使用最新版本的PDF阅读器（如Adobe Acrobat Reader、Foxit Reader等）。</p>
+
+            <h3>Q: 可以分享资源给其他同学吗？</h3>
+            <p><strong>A:</strong> 当然可以！我们鼓励分享，帮助更多同学。</p>
+        </div>
+
+        <!-- 返回首页 -->
+        <div style="text-align: center; padding: 2rem 0;">
+            <a href="index.html" class="btn-back">
+                <i class="fas fa-home" style="margin-right: 0.5rem;"></i>返回首页
+            </a>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2rem; text-align: center; margin-top: 3rem;">
+        <div style="display: flex; justify-content: center; gap: 2rem; margin-bottom: 1rem; flex-wrap: wrap;">
+            <a href="news.html" style="color: rgba(255,255,255,0.85); text-decoration: none;">考试资讯</a>
+            <a href="about.html" style="color: rgba(255,255,255,0.85); text-decoration: none;">关于本站</a>
+            <a href="index.html#contact" style="color: rgba(255,255,255,0.85); text-decoration: none;">联系我们</a>
+            <a href="help.html" style="color: white; text-decoration: none; font-weight: 600;">使用帮助</a>
+        </div>
+        <p style="margin: 1rem 0 0.5rem; opacity: 0.9;">© 2025 四六级学习站 All Rights Reserved</p>
+        <p style="margin: 0; opacity: 0.7; font-size: 0.9rem;">本站仅用于学习交流，禁商收权侵网版权的对有举有报 </p>
+    </footer>
+</body>
+</html>

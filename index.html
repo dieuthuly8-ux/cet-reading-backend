@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"="width=device-width, initial-scale=1.0">
+    <title>四六级学习站 - 免费真题资源平台</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23007AFF' /><text x='50' y='50' font-size='50' fill='%23FFF' text-anchor='middle' dominant-baseline='central' font-family='system-ui' font-weight='bold'>CET</text></svg>" type="image/svg+xml">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <style>
+        /* 表单输入框placeholder样式 */
+        .contribute-section input::placeholder, 
+        .contribute-section textarea::placeholder {
+            color: #94a3b8;
+        }
+        
+        /* 投稿区域响应式布局 */
+        @media (max-width: 768px) {
+            .contribute-section > div {
+                flex-direction: column !important;
+                gap: 2rem !important;
+            }
+            .contribute-section > div > div {
+                max-width: 100% !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 页面滚动进度条 -->
+    <div class="scroll-progress" id="scroll-progress"></div>
+    <!-- WeHUSTER 导航栏 -->
+    <nav class="apple-nav wehuster-nav">
+        <div class="nav-container">
+            <!-- Logo -->
+            <a class="nav-logo wehuster-logo" href="index.html">
+                <i class="fas fa-graduation-cap"></i>
+                <span class="logo-text">四六级学习站</span>
+            </a>
+            
+            <!-- 主导航菜单 -->
+            <ul class="nav-menu wehuster-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">首页</a>
+                </li>
+                <li class="nav-item">
+                    <a href="cet4.html" class="nav-link">四级真题</a>
+                </li>
+                <li class="nav-item">
+                    <a href="cet6.html" class="nav-link">六级真题</a>
+                </li>
+                <li class="nav-item">
+                    <a href="translator.html" class="nav-link">阅读神器</a>
+                </li>
+                <li class="nav-item">
+                    <a href="listening-micro.html" class="nav-link">听力练习</a>
+                </li>
+                <li class="nav-item">
+                    <a href="news.html" class="nav-link">资讯</a>
+                </li>
+                <li class="nav-item">
+                    <a href="about.html" class="nav-link">About Us</a>
+                </li>
+            </ul>
+            
+            <!-- 工具栏 -->
+            <div class="nav-tools">
+                <button class="search-btn" id="search-toggle" aria-label="搜索">
+                    <i class="fas fa-search"></i>
+                </button>
+                <button class="mobile-toggle" id="mobile-toggle" aria-label="菜单">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 搜索覆盖层 -->
+    <div class="search-overlay" id="search-overlay">
+        <div class="search-container">
+            <button class="search-close" id="search-close">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="search-input-wrapper">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search-input" placeholder="搜索真题、资讯..." autocomplete="off">
+            </div>
+            <div class="search-suggestions" id="search-suggestions"></div>
+        </div>
+    </div>
+
+    <!-- 功能展示轮播 -->
+    <section class="feature-carousel-section">
+        <!-- 背景大圆形装饰 -->
+        <div class="background-circles">
+            <div class="bg-circle bg-circle-1"></div>
+            <div class="bg-circle bg-circle-2"></div>
+            <div class="bg-circle bg-circle-3"></div>
+            <div class="bg-circle bg-circle-4"></div>
+            <div class="bg-circle bg-circle-5"></div>
+            <div class="bg-circle bg-circle-6"></div>
+        </div>
+        
+        <!-- 装饰性几何图形 -->
+        <div class="decoration-shapes">
+            <div class="shape shape-circle-1"></div>
+            <div class="shape shape-circle-2"></div>
+            <div class="shape shape-circle-3"></div>
+            <div class="shape shape-square-1"></div>
+            <div class="shape shape-square-2"></div>
+            <div class="shape shape-triangle-1"></div>
+            <div class="shape shape-triangle-2"></div>
+            <div class="shape shape-blob-1"></div>
+            <div class="shape shape-blob-2"></div>
+        </div>
+        
+        <div class="carousel-container">
+            <div class="carousel-wrapper">
+                <!-- Slide 1 -->
+                <div class="carousel-slide active">
+                    <div class="slide-image wehuster-hero-left">
+                        <div class="hero-text-large">
+                            <div class="hero-line hero-line-1">FREE</div>
+                            <div class="hero-line hero-line-2">OPEN</div>
+                            <div class="hero-line hero-line-3">FOREVER</div>
+                        </div>
+                    </div>
+                    <div class="slide-content wehuster-hero-right">
+                        <h2>免费开放的资源站</h2>
+                        <p>所有资源无需注册即可免费获取，<br>无需关注公众账号账号，<br>让每个人信息平等和能够自由获取。</p>
+                        <a href="cet4.html" class="btn btn-primary wehuster-btn">开始探索</a>
+                    </div>
+                </div>
+                
+                <!-- Slide 2 -->
+                <div class="carousel-slide">
+                    <div class="slide-image">
+                        <i class="fas fa-headphones-alt" style="font-size: 220px; color: #fbbf24;"></i>
+                        <i class="fas fa-chart-line" style="font-size: 120px; color: #10b981; position: absolute; bottom: 20px; right: 20px;"></i>
+                    </div>
+                    <div class="slide-content">
+                        <h2>智能听力练习</h2>
+                        <p>支持AB循环、倍速播放、精准定位，专项听力微练习助你高效提升。</p>
+                        <a href="listening-micro.html" class="btn btn-primary">立即练习</a>
+                    </div>
+                </div>
+                
+                <!-- Slide 3 -->
+                <div class="carousel-slide">
+                    <div class="slide-image">
+                        <i class="fas fa-language" style="font-size: 220px; color: #ec4899;"></i>
+                        <i class="fas fa-magic" style="font-size: 120px; color: #06b6d4; position: absolute; bottom: 20px; right: 20px;"></i>
+                    </div>
+                    <div class="slide-content">
+                        <h2>智能翻译辅助</h2>
+                        <p>划词即译，快速理解生词和长难句，提升阅读理解效率。</p>
+                        <a href="translator.html" class="btn btn-primary">体验翻译</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 导航点 -->
+            <div class="carousel-dots">
+                <span class="dot active" data-slide="0"></span>
+                <span class="dot" data-slide="1"></span>
+                <span class="dot" data-slide="2"></span>
+            </div>
+        </div>
+        
+        <!-- 右侧帮助图标 -->
+        <div class="help-icon">
+            <i class="fas fa-question-circle"></i>
+        </div>
+        
+        <!-- 向下滚动提示 -->
+        <div class="scroll-indicator">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
+
+    <!-- 功能特色 -->
+    <section class="features-section" style="background: linear-gradient(to bottom, #f8f9ff 0%, #ffffff 100%); position: relative;">
+        <div class="page-content">
+            <div style="text-align: center; position: relative;">
+                <div style="display: inline-block; position: relative;">
+                    <h2 class="section-title" data-aos="fade-up" style="font-size: 2.8rem; font-weight: 800; color: #667eea; margin-bottom: 1rem; position: relative; display: inline-block;">
+                        <span style="position: absolute; left: -30px; top: 50%; transform: translateY(-50%); font-size: 2rem; color: #fbbf24;">★</span>
+                        核心功能
+                        <span style="position: absolute; right: -30px; top: 50%; transform: translateY(-50%); font-size: 2rem; color: #fbbf24;">★</span>
+                    </h2>
+                    <div style="height: 4px; background: linear-gradient(90deg, transparent, #667eea, transparent); margin-bottom: 0.5rem;"></div>
+                </div>
+            </div>
+            <p class="section-subtitle" data-aos="fade-up" data-aos-delay="50" style="font-size: 1.15rem; color: #64748b;">提供四六级真题、智能听力练习、翻译工具及各科学习资源</p>
+            <div class="features-grid">
+                <a href="cet4.html" class="feature-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="feature-icon-text">CET4</div>
+                    <h3>四级真题</h3>
+                    <p>近年来所有大学英语四级考试真题、听力音频和答案解析。</p>
+                </a>
+                <a href="cet6.html" class="feature-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="feature-icon-text">CET6</div>
+                    <h3>六级真题</h3>
+                    <p>近年来所有大学英语六级考试真题、听力音频和答案解析。</p>
+                </a>
+                <a href="listening-micro.html" class="feature-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="feature-icon-text">🎧</div>
+                    <h3>听力训练</h3>
+                    <p>智能AB循环、倍速播放、精准定位，专项听力微练习助你高效提升</p>
+                </a>
+                <a href="news.html" class="feature-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="feature-icon-text">📖</div>
+                    <h3>阅读神器</h3>
+                    <p>双语新闻阅读、实时翻译、词汇积累，提升英语阅读能力</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 平台数据 -->
+    <section class="stats-section" style="padding: 0.5rem 2rem 4rem 2rem; background: #fafbff;">
+        <div class="page-content">
+            <div style="text-align: center; position: relative; margin-bottom: 3rem;">
+                <div style="display: inline-block; position: relative;">
+                    <h2 class="section-title" data-aos="fade-up" style="font-size: 2.8rem; font-weight: 800; color: #667eea; position: relative; display: inline-block;">
+                        <span style="position: absolute; left: -30px; top: 50%; transform: translateY(-50%); font-size: 2rem; color: #fbbf24;">★</span>
+                        平台数据
+                        <span style="position: absolute; right: -30px; top: 50%; transform: translateY(-50%); font-size: 2rem; color: #fbbf24;">★</span>
+                    </h2>
+                    <div style="height: 4px; background: linear-gradient(90deg, transparent, #667eea, transparent);"></div>
+                </div>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; max-width: 1200px; margin: 0 auto;">
+                <div data-aos="fade-up" data-aos-delay="100" style="background: white; padding: 2.5rem; border-radius: 20px; text-align: center; border: 2px solid #f0f0f0; box-shadow: 0 4px 15px rgba(0,0,0,0.08); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.12)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.08)';">
+                    <div style="font-size: 3.5rem; font-weight: 900; color: #fbbf24; margin-bottom: 1rem;">50+</div>
+                    <div style="font-size: 1.1rem; color: #64748b; font-weight: 500;">套真题资源</div>
+                </div>
+                <div data-aos="fade-up" data-aos-delay="200" style="background: white; padding: 2.5rem; border-radius: 20px; text-align: center; border: 2px solid #f0f0f0; box-shadow: 0 4px 15px rgba(0,0,0,0.08); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.12)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.08)';">
+                    <div style="font-size: 3.5rem; font-weight: 900; color: #34d399; margin-bottom: 1rem;">10K+</div>
+                    <div style="font-size: 1.1rem; color: #64748b; font-weight: 500;">活跃用户</div>
+                </div>
+                <div data-aos="fade-up" data-aos-delay="300" style="background: white; padding: 2.5rem; border-radius: 20px; text-align: center; border: 2px solid #f0f0f0; box-shadow: 0 4px 15px rgba(0,0,0,0.08); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.12)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.08)';">
+                    <div style="font-size: 3.5rem; font-weight: 900; color: #60a5fa; margin-bottom: 1rem;">100%</div>
+                    <div style="font-size: 1.1rem; color: #64748b; font-weight: 500;">免费开放</div>
+                </div>
+                <div data-aos="fade-up" data-aos-delay="400" style="background: white; padding: 2.5rem; border-radius: 20px; text-align: center; border: 2px solid #f0f0f0; box-shadow: 0 4px 15px rgba(0,0,0,0.08); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.12)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.08)';">
+                    <div style="font-size: 3.5rem; font-weight: 900; color: #f472b6; margin-bottom: 1rem;">24/7</div>
+                    <div style="font-size: 1.1rem; color: #64748b; font-weight: 500;">在线访问</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 投稿区域 -->
+    <section id="contact" class="contribute-section" data-aos="fade-up" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 4rem 0; margin: 4rem 0; border-radius: 30px 30px 200px 30px; position: relative; overflow: visible;">
+        <!-- 右上角装饰圆圈 -->
+        <div style="position: absolute; top: 20px; right: 20px; width: 35px; height: 35px; background: rgba(255, 255, 255, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px);">
+            <div style="width: 20px; height: 20px; border: 2px solid white; border-radius: 50%;"></div>
+        </div>
+        
+        <div style="max-width: 1200px; margin: 0 auto; padding: 0 2rem; display: flex; gap: 3rem; align-items: center;">
+            <!-- 左侧：投稿信息 -->
+            <div style="flex: 1;">
+                <h2 style="color: white; font-size: 2.5rem; font-weight: 700; margin-bottom: 1.5rem; text-align: left;">向我们投稿</h2>
+                <p style="color: rgba(255, 255, 255, 0.95); margin-bottom: 2.5rem; line-height: 1.8; font-size: 1.05rem; text-align: left;">
+                    免费资源的整理和分享离不开每位同学的帮助。正是由于千千万万像你一样致力于共享的人的助跑，我们才能实现落地。感谢浏览这个网站，如果你有任何已经不再使用却想分享的资源，欢迎点击下方的按钮联系我，我们代表千千万万受益者感谢您的支持。
+                </p>
+                <a href="#contact-form-section" style="display: inline-block; background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); color: white; padding: 1rem 2.5rem; border-radius: 10px; font-weight: 900; font-size: 1.4rem; font-family: 'SimHei', 'Microsoft YaHei', sans-serif; text-decoration: none; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)';" onmouseout="this.style.transform='translateY(0)';">我要投稿</a>
+            </div>
+            
+            <!-- 右侧：联系表单 -->
+            <div id="contact-form-section" style="flex: 1; max-width: 500px;">
+                <div style="background: white; padding: 2.5rem; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); position: relative; overflow: hidden;">
+                    <!-- 顶部装饰条 -->
+                    <div style="position: absolute; top: 0; left: 0; right: 0; height: 5px; background: linear-gradient(90deg, #667eea 0%, #fbbf24 50%, #764ba2 100%);"></div>
+                    
+                    <div style="display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1.8rem;">
+                        <div style="width: 45px; height: 45px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);">
+                            <i class="fas fa-envelope" style="color: white; font-size: 1.2rem;"></i>
+                        </div>
+                        <h3 style="color: #2d3436; font-size: 1.8rem; font-weight: 800; margin: 0;">发送消息</h3>
+                    </div>
+                    
+                    <form id="contact-form" action="https://formsubmit.co/2978651061@qq.com" method="POST" style="display: flex; flex-direction: column; gap: 1.3rem;">
+                        <!-- FormSubmit 配置 -->
+                        <input type="hidden" name="_subject" value="新的联系表单提交 - 四六级学习站">
+                        <input type="hidden" name="_captcha" value="false">
+                        <input type="hidden" name="_template" value="table">
+                        <div>
+                            <label style="display: block; color: #64748b; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem;">姓名</label>
+                            <input type="text" id="user-name" name="name" placeholder="请输入您的姓名" required style="width: 100%; padding: 0.9rem 1.2rem; border: 2px solid #e2e8f0; background: #f8fafc; border-radius: 10px; color: #2d3436; font-size: 0.95rem; outline: none; transition: all 0.3s ease;" onfocus="this.style.border='2px solid #667eea'; this.style.background='white'; this.style.boxShadow='0 0 0 3px rgba(102, 126, 234, 0.1)';" onblur="this.style.border='2px solid #e2e8f0'; this.style.background='#f8fafc'; this.style.boxShadow='none';">
+                        </div>
+                        <div>
+                            <label style="display: block; color: #64748b; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem;">邮箱</label>
+                            <input type="email" id="user-email" name="email" placeholder="请输入您的邮箱" required style="width: 100%; padding: 0.9rem 1.2rem; border: 2px solid #e2e8f0; background: #f8fafc; border-radius: 10px; color: #2d3436; font-size: 0.95rem; outline: none; transition: all 0.3s ease;" onfocus="this.style.border='2px solid #667eea'; this.style.background='white'; this.style.boxShadow='0 0 0 3px rgba(102, 126, 234, 0.1)';" onblur="this.style.border='2px solid #e2e8f0'; this.style.background='#f8fafc'; this.style.boxShadow='none';">
+                        </div>
+                        <div>
+                            <label style="display: block; color: #64748b; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem;">留言内容</label>
+                            <textarea id="user-message" name="message" placeholder="请输入您的留言..." rows="4" required style="width: 100%; padding: 0.9rem 1.2rem; border: 2px solid #e2e8f0; background: #f8fafc; border-radius: 10px; color: #2d3436; font-size: 0.95rem; outline: none; resize: vertical; transition: all 0.3s ease; font-family: inherit;" onfocus="this.style.border='2px solid #667eea'; this.style.background='white'; this.style.boxShadow='0 0 0 3px rgba(102, 126, 234, 0.1)';" onblur="this.style.border='2px solid #e2e8f0'; this.style.background='#f8fafc'; this.style.boxShadow='none';"></textarea>
+                        </div>
+                        <div>
+                            <button type="submit" id="submit-btn" style="width: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1rem 2rem; border: none; border-radius: 10px; font-size: 1.35rem; font-weight: 900; font-family: 'SimHei', 'Microsoft YaHei', sans-serif; cursor: pointer; transition: all 0.3s ease; letter-spacing: 0.03em; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(102, 126, 234, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(102, 126, 234, 0.3)';">
+                                <i class="fas fa-paper-plane" style="margin-right: 0.5rem;"></i><span id="btn-text">发送消息</span>
+                            </button>
+                        </div>
+                        <!-- 提示消息 -->
+                        <div id="form-message" style="display: none; padding: 1rem; border-radius: 10px; text-align: center; font-weight: 600; transition: all 0.3s ease;"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+
+    <!-- 优化页脚 -->
+    <footer class="site-footer" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; position: relative; overflow: hidden; box-shadow: 0 -4px 20px rgba(102, 126, 234, 0.15);">
+        <div style="position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, rgba(251, 191, 36, 0.5), transparent);"></div>
+        
+        <div style="text-align: center; padding: 2rem 2rem 1.5rem;">
+            <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem; margin-bottom: 1.5rem;">
+                <a href="news.html" style="color: rgba(255,255,255,0.85); text-decoration: none; transition: color 0.3s; font-weight: 700; font-family: 'Microsoft YaHei', 'SimHei', sans-serif;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.85)'">考试资讯</a>
+                <a href="about.html" style="color: rgba(255,255,255,0.85); text-decoration: none; transition: color 0.3s; font-weight: 700; font-family: 'Microsoft YaHei', 'SimHei', sans-serif;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.85)'">关于本站</a>
+                <a href="index.html#contact" style="color: rgba(255,255,255,0.85); text-decoration: none; transition: color 0.3s; font-weight: 700; font-family: 'Microsoft YaHei', 'SimHei', sans-serif;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.85)'">联系我们</a>
+                <a href="help.html" style="color: rgba(255,255,255,0.85); text-decoration: none; transition: color 0.3s; font-weight: 700; font-family: 'Microsoft YaHei', 'SimHei', sans-serif;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.85)'">使用帮助</a>
+            </div>
+            
+            <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 1.5rem;">
+                <a href="#" style="width: 45px; height: 45px; background: rgba(255,255,255,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; border: 1px solid rgba(255,255,255,0.2);">
+                    <i class="fab fa-weixin" style="font-size: 1.3rem;"></i>
+                </a>
+                <a href="#" style="width: 45px; height: 45px; background: rgba(255,255,255,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; border: 1px solid rgba(255,255,255,0.2);">
+                    <i class="fab fa-qq" style="font-size: 1.3rem;"></i>
+                </a>
+                <a href="#" style="width: 45px; height: 45px; background: rgba(255,255,255,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; border: 1px solid rgba(255,255,255,0.2);">
+                    <i class="fab fa-weibo" style="font-size: 1.3rem;"></i>
+                </a>
+                <a href="#" style="width: 45px; height: 45px; background: rgba(255,255,255,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; border: 1px solid rgba(255,255,255,0.2);">
+                    <i class="fab fa-github" style="font-size: 1.3rem;"></i>
+                </a>
+            </div>
+        </div>
+
+        <div style="background: rgba(0,0,0,0.2); padding: 1.5rem 2rem; text-align: center; border-top: 1px solid rgba(255,255,255,0.1); margin: 0 -2rem 0 -2rem;">
+            <p style="margin: 0 0 0.5rem; color: rgba(255,255,255,0.7);">&copy; 2025 四六级学习站 All Rights Reserved</p>
+            <p style="margin: 0; color: rgba(255,255,255,0.6); font-size: 0.9rem;">本站仅用于学习交流 · 真题版权归原版权所有者所有</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+    
+    <script>
+        // 初始化 AOS
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+
+        // 导航栏交互
+        (function() {
+            const nav = document.querySelector('.apple-nav');
+            const searchToggle = document.getElementById('search-toggle');
+            const searchOverlay = document.getElementById('search-overlay');
+            const searchClose = document.getElementById('search-close');
+            const searchInput = document.getElementById('search-input');
+            const mobileToggle = document.getElementById('mobile-toggle');
+            
+            // 滚动效果
+            let lastScroll = 0;
+            window.addEventListener('scroll', () => {
+                const currentScroll = window.pageYOffset;
+                
+                if (currentScroll > 50) {
+                    nav.classList.add('scrolled');
+                } else {
+                    nav.classList.remove('scrolled');
+                }
+                
+                lastScroll = currentScroll;
+            });
+
+            // 搜索功能
+            if (searchToggle && searchOverlay) {
+                searchToggle.addEventListener('click', () => {
+                    searchOverlay.classList.add('active');
+                    setTimeout(() => searchInput.focus(), 300);
+                });
+
+                searchClose.addEventListener('click', () => {
+                    searchOverlay.classList.remove('active');
+                    searchInput.value = '';
+                });
+
+                searchOverlay.addEventListener('click', (e) => {
+                    if (e.target === searchOverlay) {
+                        searchOverlay.classList.remove('active');
+                        searchInput.value = '';
+                    }
+                });
+
+                // 搜索执行功能
+                const performSearch = () => {
+                    const query = searchInput.value.trim();
+                    if (query) {
+                        // 搜索关键词映射
+                        const searchMap = {
+                            '四级': 'cet4.html',
+                            'cet4': 'cet4.html',
+                            'cet-4': 'cet4.html',
+                            '4级': 'cet4.html',
+                            '六级': 'cet6.html',
+                            'cet6': 'cet6.html',
+                            'cet-6': 'cet6.html',
+                            '6级': 'cet6.html',
+                            '听力': 'listening-micro.html',
+                            '翻译': 'translator.html',
+                            '阅读': 'translator.html',
+                            '资讯': 'news.html',
+                            '新闻': 'news.html'
+                        };
+
+                        // 查找匹配的页面
+                        const lowerQuery = query.toLowerCase();
+                        let targetPage = null;
+
+                        for (const [keyword, page] of Object.entries(searchMap)) {
+                            if (lowerQuery.includes(keyword.toLowerCase())) {
+                                targetPage = page;
+                                break;
+                            }
+                        }
+
+                        if (targetPage) {
+                            window.location.href = targetPage;
+                        } else {
+                            // 显示联网搜索选项
+                            const suggestions = document.getElementById('search-suggestions');
+                            const encodedQuery = encodeURIComponent('四六级 ' + query);
+                            suggestions.innerHTML = `
+                                <div style="padding: 1.5rem; color: #fff; text-align: center;">
+                                    <div style="font-size: 1.1rem; margin-bottom: 1rem;">未找到"${query}"相关内容</div>
+                                    <div style="margin-bottom: 1.5rem; opacity: 0.8;">试试搜索：四级、六级、听力、阅读、资讯</div>
+                                    <div style="font-weight: 600; margin-bottom: 1rem; font-size: 1.05rem;">或使用联网搜索：</div>
+                                    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                                        <a href="https://www.baidu.com/s?wd=${encodedQuery}" target="_blank" 
+                                           style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; 
+                                                  background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3);
+                                                  border-radius: 8px; color: #fff; text-decoration: none; font-weight: 600;
+                                                  transition: all 0.3s ease;">
+                                            <i class="fab fa-chrome" style="font-size: 1.2rem;"></i>
+                                            百度搜索
+                                        </a>
+                                        <a href="https://www.bing.com/search?q=${encodedQuery}" target="_blank"
+                                           style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; 
+                                                  background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3);
+                                                  border-radius: 8px; color: #fff; text-decoration: none; font-weight: 600;
+                                                  transition: all 0.3s ease;">
+                                            <i class="fab fa-microsoft" style="font-size: 1.2rem;"></i>
+                                            必应搜索
+                                        </a>
+                                        <a href="https://www.google.com/search?q=${encodedQuery}" target="_blank"
+                                           style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; 
+                                                  background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3);
+                                                  border-radius: 8px; color: #fff; text-decoration: none; font-weight: 600;
+                                                  transition: all 0.3s ease;">
+                                            <i class="fab fa-google" style="font-size: 1.2rem;"></i>
+                                            谷歌搜索
+                                        </a>
+                                    </div>
+                                </div>
+                            `;
+                            
+                            // 添加悬停效果
+                            setTimeout(() => {
+                                const links = suggestions.querySelectorAll('a');
+                                links.forEach(link => {
+                                    link.addEventListener('mouseenter', function() {
+                                        this.style.background = 'rgba(255, 255, 255, 0.3)';
+                                        this.style.transform = 'translateY(-2px)';
+                                        this.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)';
+                                    });
+                                    link.addEventListener('mouseleave', function() {
+                                        this.style.background = 'rgba(255, 255, 255, 0.2)';
+                                        this.style.transform = 'translateY(0)';
+                                        this.style.boxShadow = 'none';
+                                    });
+                                });
+                            }, 100);
+                        }
+                    }
+                };
+
+                // 回车搜索
+                searchInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        performSearch();
+                    }
+                });
+
+                // 实时搜索建议
+                searchInput.addEventListener('input', () => {
+                    const query = searchInput.value.trim().toLowerCase();
+                    const suggestions = document.getElementById('search-suggestions');
+                    
+                    if (query) {
+                        const results = [];
+                        if (query.includes('四') || query.includes('4') || query.includes('cet4')) {
+                            results.push({ title: '四级真题', desc: '历年CET-4真题及解析', url: 'cet4.html' });
+                        }
+                        if (query.includes('六') || query.includes('6') || query.includes('cet6')) {
+                            results.push({ title: '六级真题', desc: '历年CET-6真题及解析', url: 'cet6.html' });
+                        }
+                        if (query.includes('听') || query.includes('听力')) {
+                            results.push({ title: '听力练习', desc: '在线听力训练系统', url: 'listening-micro.html' });
+                        }
+                        if (query.includes('阅读') || query.includes('翻译')) {
+                            results.push({ title: '阅读神器', desc: '智能翻译辅助工具', url: 'translator.html' });
+                        }
+                        if (query.includes('资讯') || query.includes('新闻')) {
+                            results.push({ title: '资讯', desc: '四六级最新资讯', url: 'news.html' });
+                        }
+
+                        if (results.length > 0) {
+                            suggestions.innerHTML = results.map(r => `
+                                <a href="${r.url}" style="display: block; padding: 1rem; color: #fff; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.1); transition: all 0.3s;">
+                                    <div style="font-weight: 600; margin-bottom: 0.25rem;">${r.title}</div>
+                                    <div style="font-size: 0.85rem; opacity: 0.7;">${r.desc}</div>
+                                </a>
+                            `).join('');
+                        } else {
+                            suggestions.innerHTML = '';
+                        }
+                    } else {
+                        suggestions.innerHTML = '';
+                    }
+                });
+            }
+
+            // 移动端菜单
+            if (mobileToggle) {
+                mobileToggle.addEventListener('click', () => {
+                    nav.classList.toggle('mobile-active');
+                });
+            }
+
+            // 进度条
+            const scrollProgress = document.getElementById('scroll-progress');
+            window.addEventListener('scroll', () => {
+                const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                const scrolled = (winScroll / height) * 100;
+                scrollProgress.style.width = scrolled + '%';
+            });
+        })();
+
+        // 轮播功能
+        (function() {
+            const slides = document.querySelectorAll('.carousel-slide');
+            const dots = document.querySelectorAll('.dot');
+            let currentSlide = 0;
+            let autoPlayInterval;
+
+            function showSlide(index) {
+                // 移除所有active类
+                slides.forEach(slide => slide.classList.remove('active'));
+                dots.forEach(dot => dot.classList.remove('active'));
+                
+                // 添加active类到当前幻灯片
+                slides[index].classList.add('active');
+                dots[index].classList.add('active');
+                currentSlide = index;
+            }
+
+            function nextSlide() {
+                let next = (currentSlide + 1) % slides.length;
+                showSlide(next);
+            }
+
+            function startAutoPlay() {
+                autoPlayInterval = setInterval(nextSlide, 5000); // 每5秒切换
+            }
+
+            function stopAutoPlay() {
+                clearInterval(autoPlayInterval);
+            }
+
+            // 点击导航点切换
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => {
+                    showSlide(index);
+                    stopAutoPlay();
+                    startAutoPlay(); // 重新开始自动播放
+                });
+            });
+
+            // 初始化
+            if (slides.length > 0) {
+                showSlide(0);
+                startAutoPlay();
+            }
+
+            // 鼠标悬停时暂停自动播放
+            const carouselContainer = document.querySelector('.carousel-container');
+            if (carouselContainer) {
+                carouselContainer.addEventListener('mouseenter', stopAutoPlay);
+                carouselContainer.addEventListener('mouseleave', startAutoPlay);
+            }
+        })();
+
+        // 滚动指示器
+        (function() {
+            const scrollIndicator = document.querySelector('.scroll-indicator');
+            if (!scrollIndicator) return;
+
+            // 点击滚动到下一个区域
+            scrollIndicator.addEventListener('click', () => {
+                const nextSection = document.querySelector('.features-section');
+                if (nextSection) {
+                    nextSection.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+
+            // 滚动时隐藏指示器
+            let hasScrolled = false;
+            window.addEventListener('scroll', () => {
+                if (!hasScrolled && window.scrollY > 100) {
+                    hasScrolled = true;
+                    scrollIndicator.style.opacity = '0';
+                    scrollIndicator.style.pointerEvents = 'none';
+                }
+                if (hasScrolled && window.scrollY < 100) {
+                    hasScrolled = false;
+                    scrollIndicator.style.opacity = '0.8';
+                    scrollIndicator.style.pointerEvents = 'auto';
+                }
+            });
+        })();
+
+        // FormSubmit 表单提交提示
+        (function() {
+            const contactForm = document.getElementById('contact-form');
+            const submitBtn = document.getElementById('submit-btn');
+            const btnText = document.getElementById('btn-text');
+
+            if (!contactForm) return;
+
+            contactForm.addEventListener('submit', function(e) {
+                // 显示发送中状态
+                submitBtn.disabled = true;
+                btnText.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right: 0.5rem;"></i>正在发送...';
+                submitBtn.style.opacity = '0.7';
+                
+                // FormSubmit 会自动处理表单提交
+                // 表单会正常提交，不需要preventDefault()
+            });
+        })();
+    </script>
+</body>
+</html>

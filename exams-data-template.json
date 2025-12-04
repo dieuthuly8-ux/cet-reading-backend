@@ -1,0 +1,64 @@
+[
+  {
+    "id": "cet4-2023-12-set1",
+    "title": "2023年12月 四级真题 (第一套)",
+    "date": "2023年12月16日",
+    "type": "四级真题",
+    "writing": {
+      "directions": "For this part, you are allowed 30 minutes to write an essay titled \"The Importance of Developing a Healthy Lifestyle\". You should write at least 120 words but no more than 180 words.",
+      "topic": "健康生活方式的重要性"
+    },
+    "listening": [
+      {
+        "question": "What is the news report mainly about?",
+        "options": {
+          "A": "A new health study",
+          "B": "Climate change effects",
+          "C": "Economic development",
+          "D": "Education reform"
+        },
+        "answer": "A"
+      },
+      {
+        "question": "According to the report, what should people do?",
+        "options": {
+          "A": "Exercise more",
+          "B": "Eat less",
+          "C": "Sleep better",
+          "D": "Drink water"
+        },
+        "answer": "C"
+      }
+    ],
+    "reading": {
+      "passage": "In recent years, developing a healthy lifestyle has become increasingly important. With the fast pace of modern life, many people find it challenging to maintain good health habits. However, research shows that regular exercise, balanced diet, and adequate sleep are essential for both physical and mental well-being.",
+      "questions": [
+        {
+          "question": "What is the main topic of the passage?",
+          "options": {
+            "A": "Exercise benefits",
+            "B": "Healthy lifestyle",
+            "C": "Modern diseases",
+            "D": "Work productivity"
+          },
+          "answer": "B"
+        },
+        {
+          "question": "According to the passage, what can healthy habits prevent?",
+          "options": {
+            "A": "Accidents",
+            "B": "Stress",
+            "C": "Chronic diseases",
+            "D": "Bad mood"
+          },
+          "answer": "C"
+        }
+      ]
+    },
+    "translation": {
+      "chinese": "近年来，随着生活节奏的加快，越来越多的人开始关注健康问题。健康的生活方式不仅包括合理的饮食和适量的运动，还包括良好的作息习惯和积极的心态。保持健康的生活方式对提高生活质量具有重要意义。",
+      "english": "In recent years, with the acceleration of life pace, more and more people have begun to pay attention to health issues. A healthy lifestyle includes not only a reasonable diet and moderate exercise, but also good rest habits and a positive attitude. Maintaining a healthy lifestyle is of great significance to improving the quality of life."
+    }
+  }
+]
+

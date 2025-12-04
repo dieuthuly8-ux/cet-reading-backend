@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 1. 页面标题 -->
+    <title>最新考试资讯 - 四六级学习站</title>
+   <!-- 👇👇 终极版 Favicon (内联SVG, 无需外部请求, 100% 绕过缓存) 👇👇 -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23007AFF' /><text x='50' y='50' font-size='50' fill='%23FFF' text-anchor='middle' dominant-baseline='central' font-family='system-ui' font-weight='bold'>CET</text></svg>" type="image/svg+xml">
+    <!-- 2. 引入 CSS -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome 图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 3. (确保有) AOS CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+</head>
+<body>
+    <!-- 页面滚动进度条 -->
+    <div class="scroll-progress" id="scroll-progress"></div>
+
+    <!-- 简洁导航栏 -->
+    <nav class="apple-nav wehuster-nav">
+        <div class="nav-container">
+            <a class="nav-logo wehuster-logo" href="index.html">
+                <i class="fas fa-graduation-cap"></i>
+                <span class="logo-text">四六级学习站</span>
+            </a>
+            
+            <ul class="nav-menu wehuster-menu">
+                <li class="nav-item"><a href="index.html" class="nav-link">首页</a></li>
+                <li class="nav-item"><a href="cet4.html" class="nav-link">四级真题</a></li>
+                <li class="nav-item"><a href="cet6.html" class="nav-link">六级真题</a></li>
+                <li class="nav-item"><a href="translator.html" class="nav-link">阅读神器</a></li>
+                <li class="nav-item"><a href="listening-micro.html" class="nav-link">听力练习</a></li>
+                <li class="nav-item"><a href="news.html" class="nav-link">资讯</a></li>
+                <li class="nav-item"><a href="about.html" class="nav-link">About Us</a></li>
+            </ul>
+            
+            <div class="nav-tools">
+                <button class="search-btn" id="search-toggle" aria-label="搜索">
+                    <i class="fas fa-search"></i>
+                </button>
+                <button class="mobile-toggle" id="mobile-toggle" aria-label="菜单">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 5. 创建主内容区域 -->
+    <main class="page-content">
+        <h1>最新考试资讯</h1>
+        
+        <!-- 👇👇 填充更详细的模拟新闻 👇👇 -->
+        <div class="article-list-container">
+            
+            <!-- 模拟文章一 -->
+            <article class="article-preview" data-aos="fade-up">
+                <h2>2025年12月四六级考试报名时间通知</h2>
+                <div class="article-meta">发布日期：2025年10月20日</div>
+                <p>各位考生请注意，2025年下半年全国大学英语四、六级考试（CET）报名工作即将开始。报名时间为10月25日至11月5日。请各位考生务必在规定时间内登录全国大学英语四、六级考试报名网（cet-bm.neea.edu.cn）完成报名及缴费。</p>
+                <p>本次考试将继续采用"多题多卷"模式，请考生们注意备考。考试时间为12月14日，上午进行四级考试，下午进行六级考试。请考生提前打印准考证，并仔细阅读考场须知。</p>
+                
+                <!-- 考试时间表格 -->
+                <div style="background: white; padding: 1.5rem; border-radius: 12px; margin-top: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+                    <h3 style="color: #667eea; margin-top: 0; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-calendar-alt"></i> 2025年12月考试时间安排
+                    </h3>
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; font-size: 0.95rem;">
+                            <thead>
+                                <tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                    <th style="padding: 1rem; text-align: left; color: white; font-weight: 600; border-radius: 8px 0 0 0;">考试类型</th>
+                                    <th style="padding: 1rem; text-align: center; color: white; font-weight: 600;">考试日期</th>
+                                    <th style="padding: 1rem; text-align: center; color: white; font-weight: 600;">考试时间</th>
+                                    <th style="padding: 1rem; text-align: center; color: white; font-weight: 600; border-radius: 0 8px 0 0;">备注</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="background: #f8f9fa; border-bottom: 1px solid #e9ecef;">
+                                    <td style="padding: 1rem; font-weight: 600; color: #667eea;">
+                                        <i class="fas fa-microphone"></i> 四级口试 (CET-SET4)
+                                    </td>
+                                    <td style="padding: 1rem; text-align: center;">2025年11月23日</td>
+                                    <td style="padding: 1rem; text-align: center;">上午、下午批次</td>
+                                    <td style="padding: 1rem; text-align: center; color: #888; font-size: 0.85rem;">自愿报考</td>
+                                </tr>
+                                <tr style="background: white; border-bottom: 1px solid #e9ecef;">
+                                    <td style="padding: 1rem; font-weight: 600; color: #667eea;">
+                                        <i class="fas fa-microphone"></i> 六级口试 (CET-SET6)
+                                    </td>
+                                    <td style="padding: 1rem; text-align: center;">2025年11月24日</td>
+                                    <td style="padding: 1rem; text-align: center;">上午、下午批次</td>
+                                    <td style="padding: 1rem; text-align: center; color: #888; font-size: 0.85rem;">自愿报考</td>
+                                </tr>
+                                <tr style="background: #f8f9fa; border-bottom: 1px solid #e9ecef;">
+                                    <td style="padding: 1rem; font-weight: 600; color: #4facfe;">
+                                        <i class="fas fa-pen"></i> 四级笔试 (CET-4)
+                                    </td>
+                                    <td style="padding: 1rem; text-align: center;">2025年12月14日</td>
+                                    <td style="padding: 1rem; text-align: center;">9:00 - 11:20</td>
+                                    <td style="padding: 1rem; text-align: center; color: #ff5e4d; font-weight: 600;">必考</td>
+                                </tr>
+                                <tr style="background: white;">
+                                    <td style="padding: 1rem; font-weight: 600; color: #4facfe; border-radius: 0 0 0 8px;">
+                                        <i class="fas fa-pen"></i> 六级笔试 (CET-6)
+                                    </td>
+                                    <td style="padding: 1rem; text-align: center;">2025年12月14日</td>
+                                    <td style="padding: 1rem; text-align: center;">15:00 - 17:25</td>
+                                    <td style="padding: 1rem; text-align: center; color: #ff5e4d; font-weight: 600; border-radius: 0 0 8px 0;">必考</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="margin-top: 1rem; padding: 0.75rem 1rem; background: #e3f2fd; border-radius: 8px; border-left: 4px solid #4facfe;">
+                        <p style="margin: 0; font-size: 0.9rem; color: #1565c0;">
+                            <i class="fas fa-info-circle"></i> <strong>温馨提示：</strong>口试报名时间通常在笔试报名之后，具体时间请以官方通知为准。笔试和口试可分开报名。
+                        </p>
+                    </div>
+                </div>
+            </article>
+
+            <!-- 模拟文章三 -->
+            <article class="article-preview" data-aos="fade-up" data-aos-delay="200">
+                <h2>备考冲刺：四六级听力高分技巧分享</h2>
+                <div class="article-meta">发布日期：2025年07月30日</div>
+                <p>距离下半年考试还有几个月时间，但备考已经进入关键阶段。听力部分作为四六级的难点之一，一直是广大考生关注的焦点。本文将为你分享几个实用的听力高分技巧：</p>
+                <ul style="padding-left: 20px; margin-top: 10px;">
+                    <li><strong>视听一致原则：</strong> 听力短对话中，答案往往是录音中提到的原词或近义词。</li>
+                    <li><strong>预读选项：</strong> 在听力开始前，迅速浏览选项，预测对话或文章可能涉及的主题。</li>
+                    <li><strong>抓取关键信息：</strong> 注意听录音中的时间、地点、数字以及转折词（but, however）。</li>
+                </ul>
+            </article>
+
+            <!-- 新增文章四 - 阅读技巧 -->
+            <article class="article-preview" data-aos="fade-up" data-aos-delay="300" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%); border-left: 4px solid #667eea;">
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); width: 60px; height: 60px; border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                        <i class="fas fa-book-open" style="font-size: 1.8rem; color: white;"></i>
+                    </div>
+                    <div>
+                        <h2 style="margin: 0;">阅读理解提分秘籍：5大实用技巧</h2>
+                        <div class="article-meta" style="margin-top: 0.5rem;">发布日期：2025年11月10日</div>
+                    </div>
+                </div>
+                <p>阅读理解是四六级考试的重头戏，占分比例高达35%。掌握正确的阅读方法，能让你事半功倍。以下是5个经过验证的高效技巧：</p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: 1.5rem 0;">
+                    <div style="background: white; padding: 1rem; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+                        <h4 style="color: #667eea; margin-top: 0;"><i class="fas fa-check-circle"></i> 先题后文法</h4>
+                        <p style="font-size: 0.9rem; color: #666;">先看题目，带着问题去文中找答案，目标更明确</p>
+                    </div>
+                    <div style="background: white; padding: 1rem; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+                        <h4 style="color: #667eea; margin-top: 0;"><i class="fas fa-check-circle"></i> 定位关键词</h4>
+                        <p style="font-size: 0.9rem; color: #666;">找到题目中的关键词，在文中快速定位相关段落</p>
+                    </div>
+                </div>
+            </article>
+
+            <!-- 新增文章五 - 写作技巧 -->
+            <article class="article-preview" data-aos="fade-up" data-aos-delay="400" style="background: linear-gradient(135deg, rgba(79, 172, 254, 0.05) 0%, rgba(0, 242, 254, 0.05) 100%); border-left: 4px solid #4facfe;">
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                    <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); width: 60px; height: 60px; border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(79, 172, 254, 0.3);">
+                        <i class="fas fa-pen-fancy" style="font-size: 1.8rem; color: white;"></i>
+                    </div>
+                    <div>
+                        <h2 style="margin: 0;">四六级作文万能模板 + 高分句型</h2>
+                        <div class="article-meta" style="margin-top: 0.5rem;">发布日期：2025年11月05日</div>
+                    </div>
+                </div>
+                <p>作文是四六级考试中最容易提分的部分。只要掌握好模板和高级句型，就能轻松拿到高分。本文为大家整理了最全面的作文模板：</p>
+                <div style="background: white; padding: 1.5rem; border-radius: 12px; margin: 1rem 0; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+                    <h4 style="color: #4facfe; margin-top: 0;"><i class="fas fa-star"></i> 议论文三段式结构</h4>
+                    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                        <div style="flex: 1; background: #f8f9fa; padding: 1rem; border-radius: 8px;">
+                            <div style="font-weight: 600; color: #333; margin-bottom: 0.5rem;">开头段</div>
+                            <div style="font-size: 0.85rem; color: #666;">引出话题 + 表明观点</div>
+                        </div>
+                        <div style="flex: 1; background: #f8f9fa; padding: 1rem; border-radius: 8px;">
+                            <div style="font-weight: 600; color: #333; margin-bottom: 0.5rem;">主体段</div>
+                            <div style="font-size: 0.85rem; color: #666;">论据支撑 + 举例说明</div>
+                        </div>
+                        <div style="flex: 1; background: #f8f9fa; padding: 1rem; border-radius: 8px;">
+                            <div style="font-weight: 600; color: #333; margin-bottom: 0.5rem;">结尾段</div>
+                            <div style="font-size: 0.85rem; color: #666;">总结观点 + 升华主题</div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- 新增文章六 - 翻译技巧 -->
+            <article class="article-preview" data-aos="fade-up" data-aos-delay="500" style="background: linear-gradient(135deg, rgba(250, 112, 154, 0.05) 0%, rgba(254, 225, 64, 0.05) 100%); border-left: 4px solid #fa709a;">
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                    <div style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); width: 60px; height: 60px; border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(250, 112, 154, 0.3);">
+                        <i class="fas fa-language" style="font-size: 1.8rem; color: white;"></i>
+                    </div>
+                    <div>
+                        <h2 style="margin: 0;">翻译满分攻略：避开常见陷阱</h2>
+                        <div class="article-meta" style="margin-top: 0.5rem;">发布日期：2025年10月28日</div>
+                    </div>
+                </div>
+                <p>翻译题占15%的分数，是拉开差距的关键。很多同学在翻译时容易掉进"中式英语"的陷阱。掌握以下技巧，让你的翻译更地道：</p>
+                <div style="display: grid; gap: 1rem; margin: 1.5rem 0;">
+                    <div style="background: white; padding: 1.25rem; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border-left: 3px solid #fa709a;">
+                        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+                            <span style="background: #fa709a; color: white; width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.9rem;">1</span>
+                            <h4 style="margin: 0; color: #333;">意译优于直译</h4>
+                        </div>
+                        <p style="font-size: 0.9rem; color: #666; margin: 0;">不要逐字翻译，要理解句子的整体意思后再表达</p>
+                    </div>
+                    <div style="background: white; padding: 1.25rem; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border-left: 3px solid #fa709a;">
+                        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+                            <span style="background: #fa709a; color: white; width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.9rem;">2</span>
+                            <h4 style="margin: 0; color: #333;">掌握常用句型转换</h4>
+                        </div>
+                        <p style="font-size: 0.9rem; color: #666; margin: 0;">主动语态↔被动语态、简单句↔从句，灵活变换</p>
+                    </div>
+                </div>
+            </article>
+
+            <!-- 新增文章七 - 考前必看 -->
+            <article class="article-preview" data-aos="fade-up" data-aos-delay="600" style="background: linear-gradient(135deg, rgba(255, 94, 77, 0.05) 0%, rgba(255, 154, 68, 0.05) 100%); border-left: 4px solid #ff5e4d;">
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                    <div style="background: linear-gradient(135deg, #ff5e4d 0%, #ff9a44 100%); width: 60px; height: 60px; border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(255, 94, 77, 0.3);">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 1.8rem; color: white;"></i>
+                    </div>
+                    <div>
+                        <h2 style="margin: 0;">考前一周冲刺计划 + 注意事项</h2>
+                        <div class="article-meta" style="margin-top: 0.5rem;">发布日期：2025年11月15日 · 🔥 热门</div>
+                    </div>
+                </div>
+                <p>距离考试还有最后一周，如何高效利用这段时间？以下是科学的冲刺计划和考场必知事项：</p>
+                <div style="background: white; padding: 1.5rem; border-radius: 12px; margin: 1rem 0; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+                    <h4 style="color: #ff5e4d; margin-top: 0;"><i class="fas fa-calendar-check"></i> 一周冲刺时间表</h4>
+                    <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem;">
+                        <div style="display: flex; gap: 1rem; align-items: center; padding: 0.75rem; background: #f8f9fa; border-radius: 8px;">
+                            <div style="background: #ff5e4d; color: white; padding: 0.5rem 1rem; border-radius: 6px; font-weight: 600; min-width: 100px; text-align: center;">Day 1-2</div>
+                            <div style="flex: 1;">重点攻克听力和阅读，做3套完整真题</div>
+                        </div>
+                        <div style="display: flex; gap: 1rem; align-items: center; padding: 0.75rem; background: #f8f9fa; border-radius: 8px;">
+                            <div style="background: #ff7961; color: white; padding: 0.5rem 1rem; border-radius: 6px; font-weight: 600; min-width: 100px; text-align: center;">Day 3-4</div>
+                            <div style="flex: 1;">背诵作文模板，练习翻译常见句型</div>
+                        </div>
+                        <div style="display: flex; gap: 1rem; align-items: center; padding: 0.75rem; background: #f8f9fa; border-radius: 8px;">
+                            <div style="background: #ff9a44; color: white; padding: 0.5rem 1rem; border-radius: 6px; font-weight: 600; min-width: 100px; text-align: center;">Day 5-6</div>
+                            <div style="flex: 1;">模拟考试，严格按时间完成，找出弱项</div>
+                        </div>
+                        <div style="display: flex; gap: 1rem; align-items: center; padding: 0.75rem; background: #ffe8e8; border-radius: 8px; border: 2px dashed #ff5e4d;">
+                            <div style="background: #ff5e4d; color: white; padding: 0.5rem 1rem; border-radius: 6px; font-weight: 600; min-width: 100px; text-align: center;">Day 7</div>
+                            <div style="flex: 1; font-weight: 600; color: #ff5e4d;">放松心态，检查证件和文具，提前踩点考场</div>
+                        </div>
+                    </div>
+                </div>
+                <div style="background: #fff3cd; padding: 1rem; border-radius: 8px; border-left: 4px solid #ffb84d; margin-top: 1rem;">
+                    <div style="font-weight: 600; color: #856404; margin-bottom: 0.5rem;"><i class="fas fa-lightbulb"></i> 温馨提示</div>
+                    <p style="font-size: 0.9rem; color: #856404; margin: 0;">考试当天携带：准考证、身份证、2B铅笔、黑色签字笔、橡皮、耳机（听力用）</p>
+                </div>
+            </article>
+            
+        </div>
+        <!-- 👆👆 模拟新闻结束 👆👆 -->
+    </main>
+
+    <!-- 简洁页脚 -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h4>四六级学习站</h4>
+                <p>免费开放的四六级真题听力资源共享站</p>
+            </div>
+            <div class="footer-section footer-section-links">
+                <h4>快速链接</h4>
+                <ul class="footer-links">
+                    <li><a href="index.html">首页</a></li>
+                    <li><a href="cet4.html">四级真题</a></li>
+                    <li><a href="cet6.html">六级真题</a></li>
+                    <li><a href="translator.html">阅读神器</a></li>
+                    <li><a href="listening-micro.html">听力微练习</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>关于</h4>
+                <ul class="footer-links">
+                    <li><a href="news.html">考试资讯</a></li>
+                    <li><a href="about.html">关于本站</a></li>
+                    <li><a href="index.html#contact">联系我们</a></li>
+                    <li><a href="help.html">使用帮助</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 All Rights Reserved</p>
+            <p style="margin-top: 0.5rem;">本站仅用于学习交流，真题版权归原版权所有者所有。</p>
+        </div>
+    </footer>
+
+    <!-- 7. 引入 JS (放在 body 结束前) -->
+    <script>
+      if (typeof AOS !== 'undefined') {
+        AOS.init({ duration: 800, once: true });
+      } else {
+        console.error("AOS库未能加载！");
+      }
+    </script>
+    <script src="app.js"></script>
+
+</body>
+</html>

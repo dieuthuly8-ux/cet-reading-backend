@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>六级历年真题 - 四六级学习站</title>
+    <!-- 👇👇 终极版 Favicon (内联SVG, 无需外部请求, 100% 绕过缓存) 👇👇 -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23007AFF' /><text x='50' y='50' font-size='50' fill='%23FFF' text-anchor='middle' dominant-baseline='central' font-family='system-ui' font-weight='bold'>CET</text></svg>" type="image/svg+xml">
+    <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome 图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- 页面滚动进度条 -->
+    <div class="scroll-progress" id="scroll-progress"></div>
+    <!-- 简洁导航栏 -->
+    <nav class="apple-nav wehuster-nav">
+        <div class="nav-container">
+            <a class="nav-logo wehuster-logo" href="index.html">
+                <i class="fas fa-graduation-cap"></i>
+                <span class="logo-text">四六级学习站</span>
+            </a>
+            
+            <ul class="nav-menu wehuster-menu">
+                <li class="nav-item"><a href="index.html" class="nav-link">首页</a></li>
+                <li class="nav-item"><a href="cet4.html" class="nav-link">四级真题</a></li>
+                <li class="nav-item"><a href="cet6.html" class="nav-link">六级真题</a></li>
+                <li class="nav-item"><a href="translator.html" class="nav-link">阅读神器</a></li>
+                <li class="nav-item"><a href="listening-micro.html" class="nav-link">听力练习</a></li>
+                <li class="nav-item"><a href="news.html" class="nav-link">资讯</a></li>
+                <li class="nav-item"><a href="about.html" class="nav-link">About Us</a></li>
+            </ul>
+            
+            <div class="nav-tools">
+                <button class="search-btn" id="search-toggle" aria-label="搜索">
+                    <i class="fas fa-search"></i>
+                </button>
+                <button class="mobile-toggle" id="mobile-toggle" aria-label="菜单">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+    <main class="page-content">
+        <h1>六级历年真题</h1>
+        
+        <!-- 现代化搜索和筛选区域 -->
+        <div class="modern-filter-container">
+            <!-- 搜索框 -->
+            <div class="modern-search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search-input" placeholder="搜索真题标题或描述...">
+            </div>
+            
+            <!-- 筛选选项并排 -->
+            <div class="modern-filters">
+                <div class="filter-item">
+                    <i class="fas fa-calendar-alt filter-icon"></i>
+                    <span class="filter-label">年份：</span>
+                    <select id="year-filter" class="modern-select">
+                        <option value="">全部年份</option>
+                        <option value="2025">2025年</option>
+                        <option value="2024">2024年</option>
+                        <option value="2023">2023年</option>
+                        <option value="2022">2022年</option>
+                        <option value="2021">2021年</option>
+                        <option value="2020">2020年</option>
+                        <option value="2019">2019年</option>
+                        <option value="2018">2018年</option>
+                    </select>
+                </div>
+                
+                <div class="filter-item">
+                    <i class="fas fa-clock filter-icon"></i>
+                    <span class="filter-label">考期：</span>
+                    <select id="month-filter" class="modern-select">
+                        <option value="">全部考期</option>
+                        <option value="06">6月</option>
+                        <option value="07">7月</option>
+                        <option value="09">9月</option>
+                        <option value="12">12月</option>
+                    </select>
+                </div>
+                
+                <div class="filter-item checkbox-item">
+                    <i class="fas fa-headphones filter-icon"></i>
+                    <span class="filter-label">只看含听力：</span>
+                    <input type="checkbox" id="filter-listening-only" class="modern-checkbox" />
+                </div>
+                
+                <button class="modern-reset-btn" id="reset-filters">
+                    <i class="fas fa-redo-alt"></i> 重置筛选
+                </button>
+            </div>
+            
+            <!-- 结果统计 -->
+            <div class="modern-results-info" id="results-info">
+                <i class="fas fa-info-circle"></i>
+                <span>共找到 <strong id="results-count">0</strong> 套真题</span>
+            </div>
+        </div>
+        
+        <!-- 真题列表 -->
+        <div class="papers-list-container" id="papers-list">
+           
+        </div>
+        
+        <!-- 无结果提示 -->
+        <div class="no-results" id="no-results" style="display: none;">
+            <i class="fas fa-search-minus"></i>
+            <h3>没有找到匹配的真题</h3>
+            <p>试试调整筛选条件或搜索关键词</p>
+        </div>
+    </main>
+    <!-- 简洁页脚 -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h4>四六级学习站</h4>
+                <p>免费开放的四六级真题听力资源共享站</p>
+            </div>
+            <div class="footer-section footer-section-links">
+                <h4>快速链接</h4>
+                <ul class="footer-links">
+                    <li><a href="index.html">首页</a></li>
+                    <li><a href="cet4.html">四级真题</a></li>
+                    <li><a href="cet6.html">六级真题</a></li>
+                    <li><a href="translator.html">阅读神器</a></li>
+                    <li><a href="listening-micro.html">听力微练习</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>关于</h4>
+                <ul class="footer-links">
+                    <li><a href="news.html">考试资讯</a></li>
+                    <li><a href="#">关于本站</a></li>
+                    <li><a href="#">联系我们</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 All Rights Reserved</p>
+            <p style="margin-top: 0.5rem;">本站仅用于学习交流，真题版权归原版权所有者所有。</p>
+        </div>
+    </footer>
+    <script src="app.js"></script>
+</body>
+</html>

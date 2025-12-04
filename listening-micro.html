@@ -1,0 +1,2577 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>跨试卷微练习 - 四六级学习站</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!-- AI语音识别 - 使用硅基流动(SiliconFlow)云端API (国内可访问) -->
+  <style>
+    /* 苹果风格配色 */
+    :root {
+      --color-bg: #f5f5f7;           /* 浅灰背景 */
+      --color-bg-light: #ffffff;     /* 白色 */
+      --color-primary: #0071e3;       /* 苹果蓝 */
+      --color-primary-hover: #0077ED; /* 苹果蓝悬停 */
+      --color-secondary: #06c;        /* 次要蓝 */
+      --color-card: #ffffff;          /* 白色卡片 */
+      --color-text-dark: #1d1d1f;     /* 苹果黑 */
+      --color-text-light: #6e6e73;    /* 苹果灰 */
+    }
+    
+    body {
+      background: var(--color-bg) !important;
+    }
+    
+    .page-content {
+      background: var(--color-bg);
+    }
+    
+    .question {
+      background: var(--color-card);
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      transition: all 0.3s cubic-bezier(0.28, 0.11, 0.32, 1);
+      border: 1px solid rgba(0,0,0,0.08);
+    }
+    .question:hover {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      transform: translateY(-2px);
+      border-color: rgba(0,0,0,0.12);
+    }
+    .listening-list {
+      padding: 20px 0;
+    }
+    .action-btn, .btn {
+      transition: all 0.3s ease;
+      border-radius: 980px;
+      border: none;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+    .action-btn:hover, .btn:hover {
+      transform: scale(1.02);
+      box-shadow: none;
+    }
+    .action-btn:active, .btn:active {
+      transform: scale(0.98);
+    }
+    audio {
+      border-radius: 12px;
+      background: #f5f5f7;
+    }
+    audio::-webkit-media-controls-panel {
+      background: #ffffff;
+      border-radius: 12px;
+    }
+    select {
+      border: 1px solid rgba(0,0,0,0.12);
+      border-radius: 8px;
+      padding: 8px 12px;
+      transition: all 0.2s;
+      background: #ffffff;
+      color: var(--color-text-dark);
+    }
+    select:focus {
+      border-color: var(--color-primary);
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.1);
+    }
+    label {
+      color: var(--color-text-dark);
+      font-weight: 500;
+    }
+    .hint {
+      color: var(--color-text-dark) !important;
+    }
+    
+    /* 动画效果 */
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+    }
+    
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+        max-height: 0;
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+        max-height: 200px;
+      }
+    }
+    
+    @keyframes pulseGlow {
+      0%, 100% {
+        box-shadow: 0 4px 16px rgba(102, 126, 234, 0.5);
+      }
+      50% {
+        box-shadow: 0 6px 24px rgba(102, 126, 234, 0.8), 0 0 20px rgba(102, 126, 234, 0.4);
+      }
+    }
+    
+    @keyframes pulseGlowGreen {
+      0%, 100% {
+        box-shadow: 0 4px 16px rgba(52, 199, 89, 0.5);
+      }
+      50% {
+        box-shadow: 0 6px 24px rgba(52, 199, 89, 0.8), 0 0 20px rgba(52, 199, 89, 0.4);
+      }
+    }
+    
+    @keyframes blink {
+      0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.3;
+        transform: scale(0.8);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 页面滚动进度条 -->
+  <div class="scroll-progress" id="scroll-progress"></div>
+  
+  <!-- 简洁导航栏 -->
+  <nav class="apple-nav wehuster-nav">
+    <div class="nav-container">
+      <a class="nav-logo wehuster-logo" href="index.html">
+        <i class="fas fa-graduation-cap"></i>
+        <span class="logo-text">四六级学习站</span>
+      </a>
+      
+      <ul class="nav-menu wehuster-menu">
+        <li class="nav-item"><a href="index.html" class="nav-link">首页</a></li>
+        <li class="nav-item"><a href="cet4.html" class="nav-link">四级真题</a></li>
+        <li class="nav-item"><a href="cet6.html" class="nav-link">六级真题</a></li>
+        <li class="nav-item"><a href="translator.html" class="nav-link">阅读神器</a></li>
+        <li class="nav-item"><a href="listening-micro.html" class="nav-link">听力练习</a></li>
+        <li class="nav-item"><a href="news.html" class="nav-link">资讯</a></li>
+        <li class="nav-item"><a href="about.html" class="nav-link">About Us</a></li>
+      </ul>
+      
+      <div class="nav-tools">
+        <button class="search-btn" id="search-toggle" aria-label="搜索">
+          <i class="fas fa-search"></i>
+        </button>
+        <button class="mobile-toggle" id="mobile-toggle" aria-label="菜单">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+  
+  <div class="page-content">
+    <!-- 页面标题 -->
+    <div style="text-align: center; margin-bottom: 3rem; animation: fadeInDown 0.6s ease-out;">
+      <div style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 1.25rem 2.5rem; border-radius: 24px; box-shadow: 0 8px 32px rgba(102, 126, 234, 0.4), 0 2px 8px rgba(0, 0, 0, 0.1); margin-bottom: 1.25rem; position: relative; overflow: hidden; transition: all 0.4s ease;">
+        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, transparent 100%); pointer-events: none;"></div>
+        <h1 style="color: white; margin: 0; font-weight: 800; font-size: 2.2rem; letter-spacing: -0.02em; position: relative; z-index: 1; text-shadow: 0 2px 8px rgba(0,0,0,0.15); text-align: center;">跨试卷听力微练习</h1>
+      </div>
+      <p style="color: #6c757d; font-size: 1.1rem; margin: 0; font-weight: 500; letter-spacing: 0.5px;"><span style="color: #667eea; font-weight: 600;">智能抽题</span> · <span style="color: #764ba2; font-weight: 600;">精准练习</span> · <span style="color: #667eea; font-weight: 600;">快速提升</span></p>
+    </div>
+
+    <!-- 控制面板 - 卡片式布局 -->
+    <div style="background: linear-gradient(to bottom, #ffffff 0%, #f8f9ff 100%); border-radius: 24px; padding: 2.5rem; margin-bottom: 2.5rem; box-shadow: 0 10px 40px rgba(102, 126, 234, 0.15), 0 4px 12px rgba(0, 0, 0, 0.08); border: 1px solid rgba(102, 126, 234, 0.1); position: relative; overflow: hidden; animation: fadeInUp 0.6s ease-out 0.1s both;">
+      <div style="position: absolute; top: -50%; right: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(102, 126, 234, 0.03) 0%, transparent 70%); pointer-events: none;"></div>
+      <div style="position: relative; z-index: 1;">
+        
+        <!-- 试卷锁定提示（仅在有exam参数时显示） -->
+        <div id="exam-filter-notice" style="display: none; background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); border-radius: 16px; padding: 20px 24px; margin-bottom: 24px; box-shadow: 0 4px 16px rgba(6, 182, 212, 0.25); position: relative; overflow: hidden; animation: slideDown 0.5s ease-out;">
+          <div style="position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%); border-radius: 50%;"></div>
+          <div style="position: relative; z-index: 1; display: flex; align-items: center; gap: 16px;">
+            <div style="width: 48px; height: 48px; background: rgba(255,255,255,0.25); backdrop-filter: blur(10px); border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              <i class="fas fa-lock" style="color: white; font-size: 1.3rem;"></i>
+            </div>
+            <div style="flex: 1;">
+              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                <h3 style="margin: 0; color: white; font-size: 1.2rem; font-weight: 700;">🎯 真题专项练习</h3>
+              </div>
+              <p id="exam-filter-text" style="margin: 0; color: rgba(255,255,255,0.95); font-size: 0.95rem; font-weight: 500;"></p>
+            </div>
+            <button id="clear-exam-filter" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 8px 16px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; backdrop-filter: blur(10px);" onmouseover="this.style.background='rgba(255,255,255,0.3)';" onmouseout="this.style.background='rgba(255,255,255,0.2)';">
+              <i class="fas fa-times" style="margin-right: 4px;"></i>解除锁定
+            </button>
+          </div>
+        </div>
+      
+      <!-- 快速配置区 -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.75rem; margin-bottom: 2.5rem;">
+        
+        <!-- 抽题数量卡片 -->
+        <div style="background: white; border-radius: 20px; padding: 1.75rem; border: 2px solid rgba(79, 172, 254, 0.15); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 16px rgba(79, 172, 254, 0.1); position: relative; overflow: hidden;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 12px 32px rgba(79, 172, 254, 0.2)'; this.style.borderColor='rgba(79, 172, 254, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 16px rgba(79, 172, 254, 0.1)'; this.style.borderColor='rgba(79, 172, 254, 0.15)';">
+          <div style="position: absolute; top: -10px; right: -10px; width: 80px; height: 80px; background: radial-gradient(circle, rgba(79, 172, 254, 0.08) 0%, transparent 70%); pointer-events: none;"></div>
+          <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 1.25rem; position: relative; z-index: 1;">
+            <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(79, 172, 254, 0.35); position: relative;">
+              <div style="position: absolute; inset: 0; border-radius: 14px; background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 100%);"></div>
+              <i class="fas fa-hashtag" style="color: white; font-size: 1.5rem; position: relative; z-index: 1; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));"></i>
+            </div>
+            <div>
+              <h3 style="margin: 0; font-size: 1.15rem; color: #2d3436; font-weight: 700; letter-spacing: -0.01em;">抽题数量</h3>
+              <p style="margin: 0; font-size: 0.9rem; color: #74798d; font-weight: 500;">选择练习题目数</p>
+            </div>
+          </div>
+          <select id="count-select" style="width: 100%; padding: 14px 18px; font-size: 1.05rem; border: 2px solid #e3e8f0; border-radius: 14px; background: #f8f9ff; color: #2d3436; font-weight: 600; cursor: pointer; transition: all 0.3s ease; position: relative; z-index: 1;" onmouseover="this.style.borderColor='#4facfe'; this.style.background='white';" onmouseout="this.style.borderColor='#e3e8f0'; this.style.background='#f8f9ff';">
+            <option value="3">3 道题（快速练习）</option>
+            <option value="5" selected>5 道题（推荐）⭐</option>
+            <option value="8">8 道题（深度练习）</option>
+            <option value="10">10 道题（强化训练）</option>
+          </select>
+        </div>
+
+        <!-- 优先技能卡片 -->
+        <div style="background: white; border-radius: 20px; padding: 1.75rem; border: 2px solid rgba(250, 112, 154, 0.15); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 16px rgba(250, 112, 154, 0.1); position: relative; overflow: hidden;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 12px 32px rgba(250, 112, 154, 0.2)'; this.style.borderColor='rgba(250, 112, 154, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 16px rgba(250, 112, 154, 0.1)'; this.style.borderColor='rgba(250, 112, 154, 0.15)';">
+          <div style="position: absolute; top: -10px; right: -10px; width: 80px; height: 80px; background: radial-gradient(circle, rgba(250, 112, 154, 0.08) 0%, transparent 70%); pointer-events: none;"></div>
+          <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 1.25rem; position: relative; z-index: 1;">
+            <div style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(250, 112, 154, 0.35); position: relative;">
+              <div style="position: absolute; inset: 0; border-radius: 14px; background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 100%);"></div>
+              <i class="fas fa-bullseye" style="color: white; font-size: 1.5rem; position: relative; z-index: 1; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));"></i>
+            </div>
+            <div>
+              <h3 style="margin: 0; font-size: 1.15rem; color: #2d3436; font-weight: 700; letter-spacing: -0.01em;">优先技能</h3>
+              <p style="margin: 0; font-size: 0.9rem; color: #74798d; font-weight: 500;">根据你的弱项智能推荐</p>
+            </div>
+          </div>
+          <select id="skill-select" multiple size="4" style="width: 100%; padding: 10px 14px; font-size: 0.95rem; border: 2px solid #e3e8f0; border-radius: 14px; background: #f8f9ff; color: #2d3436; position: relative; z-index: 1; transition: all 0.3s ease;" onmouseover="this.style.borderColor='#fa709a'; this.style.background='white';" onmouseout="this.style.borderColor='#e3e8f0'; this.style.background='#f8f9ff';"></select>
+        </div>
+
+        <!-- 高级选项卡片 -->
+        <div style="background: white; border-radius: 20px; padding: 1.75rem; border: 2px solid rgba(102, 126, 234, 0.15); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 16px rgba(102, 126, 234, 0.1); position: relative; overflow: hidden;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 12px 32px rgba(102, 126, 234, 0.2)'; this.style.borderColor='rgba(102, 126, 234, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 16px rgba(102, 126, 234, 0.1)'; this.style.borderColor='rgba(102, 126, 234, 0.15)';">
+          <div style="position: absolute; top: -10px; right: -10px; width: 80px; height: 80px; background: radial-gradient(circle, rgba(102, 126, 234, 0.08) 0%, transparent 70%); pointer-events: none;"></div>
+          <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 1.25rem; position: relative; z-index: 1;">
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(102, 126, 234, 0.35); position: relative;">
+              <div style="position: absolute; inset: 0; border-radius: 14px; background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 100%);"></div>
+              <i class="fas fa-sliders-h" style="color: white; font-size: 1.5rem; position: relative; z-index: 1; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));"></i>
+            </div>
+            <div>
+              <h3 style="margin: 0; font-size: 1.15rem; color: #2d3436; font-weight: 700; letter-spacing: -0.01em;">高级选项</h3>
+              <p style="margin: 0; font-size: 0.9rem; color: #74798d; font-weight: 500;">精细化控制</p>
+            </div>
+          </div>
+          <label style="display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: #f8f9ff; border-radius: 12px; cursor: pointer; border: 2px solid #e3e8f0; transition: all 0.3s ease; position: relative; z-index: 1; margin-bottom: 1rem;" onmouseover="this.style.borderColor='#667eea'; this.style.background='white';" onmouseout="this.style.borderColor='#e3e8f0'; this.style.background='#f8f9ff';">
+            <input type="checkbox" id="only-tagged" checked style="width: 22px; height: 22px; cursor: pointer; accent-color: #667eea;" />
+            <span style="font-weight: 600; color: #2d3436; font-size: 1.05rem;">仅抽取带标签题目</span>
+          </label>
+          <label style="display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: #fff8e1; border-radius: 12px; cursor: pointer; border: 2px solid #ffd54f; transition: all 0.3s ease; position: relative; z-index: 1;" onmouseover="this.style.borderColor='#ffc107'; this.style.background='white';" onmouseout="this.style.borderColor='#ffd54f'; this.style.background='#fff8e1';">
+            <input type="checkbox" id="reading-mode" checked style="width: 22px; height: 22px; cursor: pointer; accent-color: #ffc107;" />
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <i class="fas fa-book-reader" style="color: #f57c00; font-size: 1.2rem;"></i>
+              <span style="font-weight: 600; color: #2d3436; font-size: 1.05rem;">听力阅读训练模式</span>
+              <span style="background: linear-gradient(135deg, #ffd54f 0%, #ffb300 100%); color: white; padding: 2px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 700;">推荐</span>
+            </div>
+          </label>
+          <div id="reading-mode-hint" style="margin-top: 1rem; padding: 1rem; background: linear-gradient(135deg, rgba(255, 193, 7, 0.08) 0%, rgba(255, 152, 0, 0.08) 100%); border-left: 4px solid #ffc107; border-radius: 8px; position: relative; z-index: 1; transition: all 0.3s ease; overflow: hidden; max-height: 200px; opacity: 1;">
+            <div style="display: flex; align-items: flex-start; gap: 8px;">
+              <i class="fas fa-book-reader" style="color: #f57c00; font-size: 1.1rem; margin-top: 2px;"></i>
+              <div>
+                <strong style="color: #f57c00; font-size: 1rem; display: block; margin-bottom: 4px;">💡 听力阅读训练模式（已启用）</strong>
+                <p style="margin: 0; font-size: 0.9rem; color: #666; line-height: 1.6;">
+                  边听边读，同步显示听力原文，可随时隐藏/显示，提高听读结合能力。每道题都会显示对应的听力原文内容。
+                </p>
+              </div>
+            </div>
+          </div>
+          <p style="margin-top: 0.75rem; font-size: 0.9rem; color: #74798d; line-height: 1.6; position: relative; z-index: 1; font-weight: 500;">
+            <i class="fas fa-info-circle" style="color: #667eea; margin-right: 4px;"></i> 
+            建议保持勾选"仅抽取带标签题目"，以获得更精准的练习效果
+          </p>
+        </div>
+      </div>
+
+      <!-- 操作按钮区 -->
+      <div style="display: flex; gap: 1.25rem; justify-content: center; padding-top: 1.5rem; border-top: 2px solid rgba(102, 126, 234, 0.1);">
+        <button class="action-btn" id="start-btn" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-weight: 700; padding: 1.15rem 3rem; font-size: 1.15rem; border-radius: 14px; box-shadow: 0 6px 24px rgba(102, 126, 234, 0.4), 0 2px 8px rgba(0, 0, 0, 0.1); border: none; cursor: pointer; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden;" onmouseover="this.style.transform='translateY(-2px) scale(1.02)'; this.style.boxShadow='0 12px 32px rgba(102, 126, 234, 0.5), 0 4px 12px rgba(0, 0, 0, 0.15)';" onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 6px 24px rgba(102, 126, 234, 0.4), 0 2px 8px rgba(0, 0, 0, 0.1)';">
+          <div style="position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 100%); pointer-events: none;"></div>
+          <i class="fas fa-bolt" style="margin-right: 6px; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));"></i> 开始生成练习
+        </button>
+        <button class="action-btn" id="reset-btn" style="background: white; color: #667eea; border: 2px solid #667eea; font-weight: 700; padding: 1.15rem 2.5rem; font-size: 1.15rem; border-radius: 14px; cursor: pointer; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);" onmouseover="this.style.background='#667eea'; this.style.color='white'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(102, 126, 234, 0.3)';" onmouseout="this.style.background='white'; this.style.color='#667eea'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(102, 126, 234, 0.1)';">
+          <i class="fas fa-rotate" style="margin-right: 6px;"></i> 重置配置
+        </button>
+      </div>
+      </div>
+    </div>
+
+    <!-- 使用说明区 -->
+    <div style="background: linear-gradient(to bottom, #ffffff 0%, #f8f9ff 100%); border-radius: 20px; padding: 2.5rem; margin-bottom: 2.5rem; box-shadow: 0 6px 24px rgba(102, 126, 234, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06); border: 1px solid rgba(102, 126, 234, 0.08); animation: fadeInUp 0.6s ease-out 0.2s both;">
+      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 1.5rem;">
+        <i class="fas fa-lightbulb" style="color: #ffd700; font-size: 1.8rem;"></i>
+        <h3 style="margin: 0; font-size: 1.25rem; color: var(--color-text-dark); font-weight: 700;">使用说明</h3>
+      </div>
+      
+      <div style="display: grid; gap: 1.25rem;">
+        <div style="display: flex; align-items: start; gap: 14px; padding: 1.5rem; background: white; border-radius: 16px; border: 2px solid #e3e8f0; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);" onmouseover="this.style.borderColor='#667eea'; this.style.boxShadow='0 6px 16px rgba(102, 126, 234, 0.12)'; this.style.transform='translateX(4px)';" onmouseout="this.style.borderColor='#e3e8f0'; this.style.boxShadow='0 2px 8px rgba(0, 0, 0, 0.04)'; this.style.transform='translateX(0)';">
+          <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+            <span style="color: white; font-weight: 800; font-size: 1.1rem;">1</span>
+          </div>
+          <div>
+            <h4 style="margin: 0 0 0.6rem; font-size: 1.05rem; color: #2d3436; font-weight: 700; letter-spacing: -0.01em;">智能抽题</h4>
+            <p style="margin: 0; color: #74798d; line-height: 1.7; font-size: 0.95rem; font-weight: 500;">默认从你的<strong style="color: #667eea;">弱项技能</strong>中抽题，帮你针对性提升</p>
+          </div>
+        </div>
+        
+        <div style="display: flex; align-items: start; gap: 14px; padding: 1.5rem; background: white; border-radius: 16px; border: 2px solid #e3e8f0; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);" onmouseover="this.style.borderColor='#fa709a'; this.style.boxShadow='0 6px 16px rgba(250, 112, 154, 0.12)'; this.style.transform='translateX(4px)';" onmouseout="this.style.borderColor='#e3e8f0'; this.style.boxShadow='0 2px 8px rgba(0, 0, 0, 0.04)'; this.style.transform='translateX(0)';">
+          <div style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 4px 12px rgba(250, 112, 154, 0.3);">
+            <span style="color: white; font-weight: 800; font-size: 1.1rem;">2</span>
+          </div>
+          <div>
+            <h4 style="margin: 0 0 0.6rem; font-size: 1.05rem; color: #2d3436; font-weight: 700; letter-spacing: -0.01em;">手动选择技能</h4>
+            <p style="margin: 0; color: #74798d; line-height: 1.7; font-size: 0.95rem; font-weight: 500;">可在<strong style="color: #fa709a;">优先技能</strong>中多选，自定义练习重点</p>
+          </div>
+        </div>
+        
+        <div style="display: flex; align-items: start; gap: 14px; padding: 1.5rem; background: white; border-radius: 16px; border: 2px solid #e3e8f0; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);" onmouseover="this.style.borderColor='#4facfe'; this.style.boxShadow='0 6px 16px rgba(79, 172, 254, 0.12)'; this.style.transform='translateX(4px)';" onmouseout="this.style.borderColor='#e3e8f0'; this.style.boxShadow='0 2px 8px rgba(0, 0, 0, 0.04)'; this.style.transform='translateX(0)';">
+          <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 4px 12px rgba(79, 172, 254, 0.3);">
+            <span style="color: white; font-weight: 800; font-size: 1.1rem;">3</span>
+          </div>
+          <div>
+            <h4 style="margin: 0 0 0.6rem; font-size: 1.05rem; color: #2d3436; font-weight: 700; letter-spacing: -0.01em;">标签筛选</h4>
+            <p style="margin: 0; color: #74798d; line-height: 1.7; font-size: 0.95rem; font-weight: 500;">建议保持<strong style="color: #4facfe;">仅抽取带标签题目</strong>，练习效果更精准</p>
+          </div>
+        </div>
+      </div>
+      
+      <div style="margin-top: 1.5rem; display: flex; gap: 1rem; align-items: center; justify-content: space-between; padding-top: 1.5rem; border-top: 2px solid #f0f0f0;">
+        <span id="preset-badge" class="badge" style="display:none; background: #667eea; color: white; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600;">✓ 已从参数加载配置</span>
+        <button id="share-btn" class="btn btn-secondary" type="button" style="background: white; color: #667eea; border: 2px solid #667eea; padding: 0.75rem 1.5rem; border-radius: 10px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+          <i class="fas fa-share-alt"></i> 复制分享链接
+        </button>
+      </div>
+    </div>
+
+    <div id="quiz-wrap" class="listening-result" style="display:none;"></div>
+    <div id="result-wrap" class="listening-result" style="display:none;"></div>
+  </div>
+
+  <script>
+    const $ = s => document.querySelector(s);
+    const quizWrap = $('#quiz-wrap');
+    const resWrap = $('#result-wrap');
+    // 简易 Toast
+    (function ensureToast(){ if (!document.querySelector('.toast-container')){ const c=document.createElement('div'); c.className='toast-container'; document.body.appendChild(c);} })();
+    function toast(msg, type='ok'){ const c=document.querySelector('.toast-container'); const t=document.createElement('div'); t.className=`toast ${type}`; t.textContent=msg; c.appendChild(t); setTimeout(()=>{ t.remove(); }, 2200); }
+
+    // 读取画像并填充技能列表（按错误率降序）
+    function loadProfileSkills(){
+      let prof={}; try{ prof=JSON.parse(localStorage.getItem('listening:profile')||'{}') }catch(_){ }
+      const entries = Object.entries(prof.skill||{}).map(([k,v])=>{
+        const tot=(v.right||0)+(v.wrong||0); const err=tot? v.wrong/tot : 0; return {name:k,tot,err}
+      }).sort((a,b)=> (b.err-a.err) || (b.tot-a.tot));
+      const sel = $('#skill-select'); sel.innerHTML='';
+      // 预选取前2个弱项
+      entries.forEach((e,idx)=>{ const o=document.createElement('option'); o.value=e.name; o.textContent=`${e.name}（错率${Math.round(e.err*100)}%）`; if(idx<2) o.selected=true; sel.appendChild(o); });
+      if(entries.length===0){ ['synonym','number','keyword','logic'].forEach((k,i)=>{ const o=document.createElement('option'); o.value=k; o.textContent=k; if(i<2) o.selected=true; sel.appendChild(o); }); }
+    }
+
+    async function fetchAllQuestions(){
+      const resp = await fetch('./listening.json', { cache:'no-store' });
+      if(!resp.ok) throw new Error('listening.json 加载失败');
+      const data = await resp.json();
+      const pool=[];
+      Object.entries(data).forEach(([examId,payload])=>{
+        (payload.sections||[]).forEach(sec=>{
+          const secAudio = sec.audio || '';
+          const secStart = sec.audioStart;
+          const secEnd = sec.audioEnd;
+          const secTranscript = sec.transcript || '';
+          (sec.questions||[]).forEach(q=>{
+            pool.push({ 
+              examId, 
+              section: sec.name||'', 
+              sectionAudio: secAudio,
+              sectionStart: secStart,
+              sectionEnd: secEnd,
+              sectionTranscript: secTranscript,
+              q 
+            });
+          });
+        });
+      });
+      return pool;
+    }
+
+    function hasAnyTag(q){
+      const t=q?.tags||{}; const a=x=>Array.isArray(x)&&x.length>0;
+      return a(t.topic)||a(t.type)||a(t.skill)||a(t.distractor)||!!t.difficulty;
+    }
+    function pickBySkills(pool, skills, n, onlyTagged, examFilter){
+      // 如果指定了试卷筛选，直接返回该试卷的所有题目（不打乱，按原顺序）
+      if (examFilter) {
+        const examQuestions = pool.filter(item => item.examId === examFilter);
+        // 按题目ID排序，保持原始顺序
+        examQuestions.sort((a, b) => (a.q?.id || 0) - (b.q?.id || 0));
+        return examQuestions;
+      }
+      
+      // 常规抽题逻辑
+      const cand = pool.filter(item=>{
+        const ks = Array.isArray(item.q?.tags?.skill) ? item.q.tags.skill : [];
+        const skillMatch = skills.length===0 ? true : skills.some(s=>ks.includes(s));
+        const tagMatch = onlyTagged ? hasAnyTag(item.q) : true;
+        return skillMatch && tagMatch;
+      });
+      // 打乱
+      for(let i=cand.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [cand[i],cand[j]]=[cand[j],cand[i]] }
+      return cand.slice(0, n);
+    }
+
+    function formatTime(sec){ const m=Math.floor(sec/60); const s=Math.floor(sec%60); return `${m}:${s.toString().padStart(2,'0')}`; }
+    
+    // AI生成题目的渲染和答题功能
+    function renderAIGeneratedQuiz(questions, examId, examData) {
+      quizWrap.innerHTML = '';
+      quizWrap.style.display = 'block';
+      resWrap.style.display = 'none';
+      
+      // 顶部横幅
+      const banner = document.createElement('div');
+      banner.style.cssText = `
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 16px;
+        padding: 20px 28px;
+        margin-bottom: 24px;
+        box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+        color: white;
+      `;
+      banner.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <div style="width: 56px; height: 56px; background: rgba(255,255,255,0.25); border-radius: 14px; display: flex; align-items: center; justify-content: center;">
+            <i class="fas fa-robot" style="font-size: 1.5rem;"></i>
+          </div>
+          <div>
+            <h3 style="margin: 0 0 6px 0; font-size: 1.3rem; font-weight: 700;">🤖 AI智能生成题目</h3>
+            <p style="margin: 0; font-size: 0.95rem; opacity: 0.95;">
+              试卷：<strong>${examId}</strong> · 
+              共 <strong style="color: #fbbf24;">${questions.length}</strong> 道题 · 
+              <span style="font-size: 0.85rem;">题目由AI根据音频内容自动生成</span>
+            </p>
+          </div>
+        </div>
+      `;
+      quizWrap.appendChild(banner);
+      
+      // 音频播放器（带Section标记）
+      if (examData?.sections?.[0]?.audio) {
+        const audioCard = document.createElement('div');
+        audioCard.style.cssText = `
+          background: white;
+          border-radius: 12px;
+          padding: 16px 20px;
+          margin-bottom: 20px;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        `;
+        
+        const audioEl = document.createElement('audio');
+        audioEl.controls = true;
+        audioEl.style.cssText = 'width: 100%;';
+        audioEl.src = examData.sections[0].audio;
+        
+        audioCard.innerHTML = `
+          <div style="font-weight: 600; margin-bottom: 10px; color: #333;">
+            <i class="fas fa-headphones" style="color: #667eea;"></i> 听力音频
+          </div>
+        `;
+        audioCard.appendChild(audioEl);
+        
+        // Section时间标记区域
+        const markerArea = document.createElement('div');
+        markerArea.style.cssText = `
+          margin-top: 12px;
+          padding: 10px 0;
+          position: relative;
+        `;
+        
+        // 进度条背景
+        const progressBg = document.createElement('div');
+        progressBg.style.cssText = `
+          height: 8px;
+          background: #e5e7eb;
+          border-radius: 4px;
+          position: relative;
+          margin-bottom: 8px;
+        `;
+        
+        // Section标记点（四级听力标准时间分布）
+        // Section A: 0:00-5:00, Section B: 5:00-13:00, Section C: 13:00-25:00
+        const markers = [
+          { time: 0, label: 'A', color: '#10b981', desc: 'Section A 新闻' },
+          { time: 0.2, label: 'B', color: '#3b82f6', desc: 'Section B 对话' },
+          { time: 0.52, label: 'C', color: '#8b5cf6', desc: 'Section C 短文' }
+        ];
+        
+        markers.forEach(m => {
+          const marker = document.createElement('div');
+          marker.style.cssText = `
+            position: absolute;
+            left: ${m.time * 100}%;
+            top: -4px;
+            width: 16px;
+            height: 16px;
+            background: ${m.color};
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: white;
+            font-weight: bold;
+            z-index: 2;
+          `;
+          marker.textContent = m.label;
+          marker.title = m.desc;
+          
+          // 点击跳转到对应时间
+          marker.addEventListener('click', () => {
+            if (audioEl.duration) {
+              audioEl.currentTime = m.time * audioEl.duration;
+              audioEl.play();
+            }
+          });
+          
+          progressBg.appendChild(marker);
+        });
+        
+        markerArea.appendChild(progressBg);
+        
+        // 标记说明
+        const markerLegend = document.createElement('div');
+        markerLegend.style.cssText = `
+          display: flex;
+          justify-content: space-between;
+          font-size: 0.75rem;
+          color: #666;
+        `;
+        markerLegend.innerHTML = `
+          <span style="color: #10b981;">● Section A 新闻</span>
+          <span style="color: #3b82f6;">● Section B 对话</span>
+          <span style="color: #8b5cf6; font-weight: 600;">● Section C 短文 ← 从这里开始</span>
+        `;
+        markerArea.appendChild(markerLegend);
+        
+        audioCard.appendChild(markerArea);
+        quizWrap.appendChild(audioCard);
+      }
+      
+      // 题目列表
+      const list = document.createElement('div');
+      list.style.cssText = 'display: grid; gap: 16px;';
+      
+      const userAnswers = new Map();
+      
+      questions.forEach((q, idx) => {
+        const card = document.createElement('div');
+        card.className = 'ai-question-card';
+        card.style.cssText = `
+          background: white;
+          border-radius: 12px;
+          padding: 20px;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+          transition: all 0.3s ease;
+        `;
+        
+        const sectionLabel = q.section === 'A' ? 'Section A - 新闻报道' : 
+                            q.section === 'B' ? 'Section B - 长对话' : 'Section C - 短文';
+        
+        card.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+            <span style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">
+              第${q.id || idx+1}题
+            </span>
+            <span style="color: #888; font-size: 0.8rem;">${sectionLabel}</span>
+          </div>
+          <div style="font-size: 1rem; color: #333; margin-bottom: 16px; line-height: 1.6;">
+            ${q.stem}
+          </div>
+          <div class="options-wrap" style="display: grid; gap: 10px;"></div>
+          <div class="feedback-area" style="margin-top: 12px; display: none;"></div>
+        `;
+        
+        const optionsWrap = card.querySelector('.options-wrap');
+        const options = q.options || [];
+        const optionLabels = ['A', 'B', 'C', 'D'];
+        
+        options.forEach((opt, optIdx) => {
+          const optBtn = document.createElement('button');
+          optBtn.className = 'option-btn';
+          optBtn.dataset.value = optionLabels[optIdx];
+          optBtn.style.cssText = `
+            width: 100%;
+            padding: 12px 16px;
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            text-align: left;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #333;
+          `;
+          optBtn.innerHTML = `<strong>${optionLabels[optIdx]}.</strong> ${opt}`;
+          
+          optBtn.addEventListener('click', () => {
+            // 清除同题其他选项的选中状态
+            optionsWrap.querySelectorAll('.option-btn').forEach(btn => {
+              btn.style.background = '#f8f9fa';
+              btn.style.borderColor = '#e9ecef';
+              btn.style.color = '#333';
+            });
+            // 选中当前
+            optBtn.style.background = '#667eea';
+            optBtn.style.borderColor = '#667eea';
+            optBtn.style.color = 'white';
+            userAnswers.set(idx, optionLabels[optIdx]);
+          });
+          
+          optionsWrap.appendChild(optBtn);
+        });
+        
+        list.appendChild(card);
+      });
+      
+      quizWrap.appendChild(list);
+      
+      // 提交按钮
+      const submitArea = document.createElement('div');
+      submitArea.style.cssText = `
+        margin-top: 24px;
+        padding: 20px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        text-align: center;
+      `;
+      
+      const submitBtn = document.createElement('button');
+      submitBtn.style.cssText = `
+        padding: 14px 48px;
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+        transition: all 0.3s ease;
+      `;
+      submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> 提交答案';
+      
+      submitBtn.addEventListener('click', () => {
+        // 判分
+        let correct = 0;
+        const cards = list.querySelectorAll('.ai-question-card');
+        
+        questions.forEach((q, idx) => {
+          const card = cards[idx];
+          const feedbackArea = card.querySelector('.feedback-area');
+          const userAns = userAnswers.get(idx);
+          const correctAns = q.answer;
+          const isCorrect = userAns === correctAns;
+          
+          if (isCorrect) correct++;
+          
+          // 显示反馈
+          feedbackArea.style.display = 'block';
+          feedbackArea.style.padding = '12px';
+          feedbackArea.style.borderRadius = '8px';
+          feedbackArea.style.background = isCorrect ? '#d4edda' : '#f8d7da';
+          feedbackArea.style.color = isCorrect ? '#155724' : '#721c24';
+          
+          const statusIcon = isCorrect ? '✅' : '❌';
+          const userAnsText = userAns || '未作答';
+          
+          feedbackArea.innerHTML = `
+            <div style="font-weight: 600; margin-bottom: 6px;">
+              ${statusIcon} ${isCorrect ? '回答正确' : '回答错误'} 
+              <span style="margin-left: 10px; font-weight: normal;">
+                你的答案: <strong>${userAnsText}</strong> | 正确答案: <strong style="color: #155724;">${correctAns}</strong>
+              </span>
+            </div>
+            <div style="font-size: 0.9rem; color: #555;">
+              <i class="fas fa-lightbulb" style="color: #f39c12;"></i> ${q.explain || '暂无解析'}
+            </div>
+          `;
+          
+          // 高亮正确选项
+          const optBtns = card.querySelectorAll('.option-btn');
+          optBtns.forEach(btn => {
+            btn.disabled = true;
+            btn.style.cursor = 'default';
+            if (btn.dataset.value === correctAns) {
+              btn.style.background = '#28a745';
+              btn.style.borderColor = '#28a745';
+              btn.style.color = 'white';
+            } else if (btn.dataset.value === userAns && !isCorrect) {
+              btn.style.background = '#dc3545';
+              btn.style.borderColor = '#dc3545';
+              btn.style.color = 'white';
+            }
+          });
+        });
+        
+        // 显示总分
+        const score = Math.round((correct / questions.length) * 100);
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `得分：${correct}/${questions.length} (${score}分)`;
+        submitBtn.style.background = score >= 60 ? 'linear-gradient(135deg, #10b981, #059669)' : 'linear-gradient(135deg, #f59e0b, #d97706)';
+        
+        // 滚动到顶部
+        window.scrollTo({ top: quizWrap.getBoundingClientRect().top + window.scrollY - 20, behavior: 'smooth' });
+        
+        // 显示成绩横幅
+        const resultBanner = document.createElement('div');
+        resultBanner.style.cssText = `
+          background: ${score >= 60 ? 'linear-gradient(135deg, #10b981, #059669)' : 'linear-gradient(135deg, #f59e0b, #d97706)'};
+          border-radius: 12px;
+          padding: 20px;
+          margin-bottom: 20px;
+          color: white;
+          text-align: center;
+        `;
+        resultBanner.innerHTML = `
+          <h2 style="margin: 0 0 8px 0; font-size: 2rem;">${score >= 60 ? '🎉' : '💪'} ${score}分</h2>
+          <p style="margin: 0; opacity: 0.9;">答对 ${correct} 题，共 ${questions.length} 题</p>
+          <p style="margin: 8px 0 0; font-size: 0.9rem;">${score >= 85 ? '优秀！继续保持！' : score >= 60 ? '及格了，还有提升空间！' : '需要多加练习哦！'}</p>
+        `;
+        banner.after(resultBanner);
+      });
+      
+      submitArea.appendChild(submitBtn);
+      quizWrap.appendChild(submitArea);
+      
+      // 重新开始按钮
+      const restartBtn = document.createElement('button');
+      restartBtn.style.cssText = `
+        margin-top: 12px;
+        padding: 10px 24px;
+        background: #6c757d;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        cursor: pointer;
+      `;
+      restartBtn.innerHTML = '<i class="fas fa-redo"></i> 重新测试';
+      restartBtn.addEventListener('click', () => {
+        renderAIGeneratedQuiz(questions, examId, examData);
+      });
+      submitArea.appendChild(restartBtn);
+    }
+    
+    function renderQuiz(items, examData){
+      quizWrap.innerHTML=''; resWrap.style.display='none';
+      quizWrap.style.display='block';
+      
+      // 如果没有题目但指定了试卷，显示音频练习模式
+      if(items.length===0 && window._currentExamFilter && examData){ 
+        const audioOnlyBanner = document.createElement('div');
+        audioOnlyBanner.style.cssText = `
+          background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+          border-radius: 16px;
+          padding: 24px 28px;
+          margin-bottom: 24px;
+          box-shadow: 0 4px 16px rgba(245, 158, 11, 0.3);
+          color: white;
+        `;
+        audioOnlyBanner.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px;">
+            <div style="width: 56px; height: 56px; background: rgba(255,255,255,0.25); border-radius: 14px; display: flex; align-items: center; justify-content: center;">
+              <i class="fas fa-headphones" style="font-size: 1.5rem;"></i>
+            </div>
+            <div>
+              <h3 style="margin: 0 0 6px 0; font-size: 1.3rem; font-weight: 700;">🎧 听力音频练习模式</h3>
+              <p style="margin: 0; font-size: 0.95rem; opacity: 0.95;">
+                试卷：<strong>${window._currentExamFilter}</strong> · 
+                此试卷暂无题目数据，但您可以播放音频进行听力练习
+              </p>
+            </div>
+          </div>
+        `;
+        
+        // 为每个section创建音频播放器（带音频可用性检查）
+        if(examData.sections && examData.sections.length > 0) {
+          // 只显示第一个section的音频（通常整套试卷共用一个音频文件）
+          const sec = examData.sections[0];
+          if(sec.audio) {
+            const secCard = document.createElement('div');
+            secCard.style.cssText = `
+              background: rgba(255,255,255,0.15);
+              border-radius: 12px;
+              padding: 16px 20px;
+              margin-top: 12px;
+            `;
+            
+            // 检查音频是否存在，不存在则尝试回退
+            const audioEl = document.createElement('audio');
+            audioEl.controls = true;
+            audioEl.style.cssText = 'width: 100%; border-radius: 8px;';
+            audioEl.src = sec.audio;
+            
+            const statusDiv = document.createElement('div');
+            statusDiv.style.cssText = 'margin-top: 8px; font-size: 0.85rem;';
+            
+            audioEl.addEventListener('error', async () => {
+              // 尝试回退到set1
+              const fallbackSrc = sec.audio.replace(/-set[23]\.mp3$/, '-set1.mp3');
+              if (fallbackSrc !== sec.audio) {
+                statusDiv.innerHTML = '<span style="color: #fbbf24;"><i class="fas fa-info-circle"></i> 原音频不存在，已切换到同期set1音频</span>';
+                audioEl.src = fallbackSrc;
+              } else {
+                statusDiv.innerHTML = '<span style="color: #ff6b6b;"><i class="fas fa-exclamation-triangle"></i> 音频文件不存在，请上传对应音频文件</span>';
+              }
+            });
+            
+            secCard.innerHTML = `
+              <div style="font-weight: 600; margin-bottom: 10px;">
+                <i class="fas fa-volume-up"></i> 完整听力音频
+              </div>
+            `;
+            secCard.appendChild(audioEl);
+            secCard.innerHTML += `
+              <p style="margin: 8px 0 0; font-size: 0.85rem; opacity: 0.8;">
+                ${sec.description || ''} · ${sec.duration || ''}
+              </p>
+            `;
+            secCard.appendChild(statusDiv);
+            audioOnlyBanner.appendChild(secCard);
+          }
+        }
+        
+        // AI生成题目按钮区域
+        const aiGenerateArea = document.createElement('div');
+        aiGenerateArea.style.cssText = `
+          margin-top: 20px;
+          padding: 20px;
+          background: rgba(255,255,255,0.95);
+          border-radius: 12px;
+          color: #333;
+        `;
+        
+        const aiGenerateBtn = document.createElement('button');
+        aiGenerateBtn.style.cssText = `
+          width: 100%;
+          padding: 16px 24px;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+          border: none;
+          border-radius: 12px;
+          font-size: 1.1rem;
+          font-weight: 600;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+          transition: all 0.3s ease;
+          box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        `;
+        aiGenerateBtn.innerHTML = '<i class="fas fa-magic"></i> AI智能生成题目';
+        
+        const aiGenerateStatus = document.createElement('div');
+        aiGenerateStatus.style.cssText = `
+          margin-top: 12px;
+          padding: 12px;
+          border-radius: 8px;
+          font-size: 0.9rem;
+          display: none;
+        `;
+        
+        const aiGenerateDesc = document.createElement('p');
+        aiGenerateDesc.style.cssText = `
+          margin: 0 0 16px 0;
+          font-size: 0.9rem;
+          color: #666;
+          line-height: 1.6;
+        `;
+        aiGenerateDesc.innerHTML = `
+          <i class="fas fa-bolt" style="color: #f59e0b;"></i> 
+          点击按钮，AI将<strong>极速</strong>生成<strong>5道听力题目</strong>，约需<strong>15-25秒</strong>。
+        `;
+        
+        aiGenerateArea.appendChild(aiGenerateDesc);
+        aiGenerateArea.appendChild(aiGenerateBtn);
+        aiGenerateArea.appendChild(aiGenerateStatus);
+        audioOnlyBanner.appendChild(aiGenerateArea);
+        
+        // AI生成题目点击事件
+        const currentExamId = window._currentExamFilter;
+        const currentExamData = examData;
+        
+        aiGenerateBtn.addEventListener('click', async () => {
+          // 检查是否有缓存的AI生成题目
+          const cacheKey = `ai-generated-questions-${currentExamId}`;
+          const cached = localStorage.getItem(cacheKey);
+          if (cached) {
+            try {
+              const cachedQuestions = JSON.parse(cached);
+              if (cachedQuestions && cachedQuestions.length > 0) {
+                if (confirm('检测到已生成的题目缓存，是否直接使用？\n点击"取消"将重新生成。')) {
+                  renderAIGeneratedQuiz(cachedQuestions, currentExamId, currentExamData);
+                  return;
+                }
+              }
+            } catch(e) {}
+          }
+          
+          aiGenerateBtn.disabled = true;
+          aiGenerateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 正在识别音频...';
+          aiGenerateStatus.style.display = 'block';
+          aiGenerateStatus.style.background = '#e8f4fd';
+          aiGenerateStatus.style.color = '#0071e3';
+          aiGenerateStatus.innerHTML = '<i class="fas fa-headphones"></i> 第1步：识别音频中...';
+          
+          // 添加进度计时器
+          let seconds = 0;
+          const timer = setInterval(() => {
+            seconds++;
+            aiGenerateStatus.innerHTML = `<i class="fas fa-spinner fa-spin"></i> 处理中... ${seconds}秒`;
+          }, 1000);
+          
+          try {
+            // 获取音频文件（支持回退到set1）
+            let audioSrc = currentExamData.sections?.[0]?.audio;
+            if (!audioSrc) throw new Error('未找到音频配置');
+            
+            // 尝试加载音频
+            let audioResponse = await fetch(audioSrc);
+            
+            // 如果音频不存在，尝试回退到set1（同一考试通常共用听力音频）
+            if (!audioResponse.ok) {
+              const fallbackSrc = audioSrc.replace(/-set[23]\.mp3$/, '-set1.mp3');
+              if (fallbackSrc !== audioSrc) {
+                aiGenerateStatus.innerHTML = '<i class="fas fa-sync"></i> 原音频不存在，尝试使用同期set1音频...';
+                audioResponse = await fetch(fallbackSrc);
+                if (audioResponse.ok) {
+                  audioSrc = fallbackSrc;
+                }
+              }
+            }
+            
+            if (!audioResponse.ok) throw new Error('音频文件不存在，请确保已上传对应音频');
+            const audioBlob = await audioResponse.blob();
+            
+            // 调用SiliconFlow API识别音频
+            const apiKey = 'sk-zxwcsadwzlqigvrgvxphpavfangpazhbxtlvgkwtapolwndm';
+            const formData = new FormData();
+            formData.append('file', audioBlob, 'audio.mp3');
+            formData.append('model', 'FunAudioLLM/SenseVoiceSmall');
+            
+            aiGenerateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> AI识别中...';
+            
+            const transcriptResponse = await fetch('https://api.siliconflow.cn/v1/audio/transcriptions', {
+              method: 'POST',
+              headers: { 'Authorization': `Bearer ${apiKey}` },
+              body: formData
+            });
+            
+            if (!transcriptResponse.ok) throw new Error('音频识别失败');
+            const transcriptResult = await transcriptResponse.json();
+            const transcript = transcriptResult.text;
+            
+            if (!transcript || transcript.length < 100) {
+              throw new Error('音频识别结果过短，请确保音频文件正常');
+            }
+            
+            aiGenerateStatus.innerHTML = '<i class="fas fa-brain"></i> 第2步：正在快速生成题目...';
+            aiGenerateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 生成题目中...';
+            
+            // 极速：只截取1500字符
+            const truncatedTranscript = transcript.substring(0, 1500);
+            
+            // 极简prompt - 5道题快速生成
+            const prompt = `根据原文生成5道英语选择题,直接输出JSON:
+{"questions":[{"id":1,"stem":"问题","options":["A","B","C","D"],"answer":"A"}]}
+原文:${truncatedTranscript}`;
+
+            const llmResponse = await fetch('https://api.siliconflow.cn/v1/chat/completions', {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${apiKey}`,
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                model: 'Qwen/Qwen2.5-7B-Instruct',
+                messages: [{ role: 'user', content: prompt }],
+                temperature: 0.3,
+                max_tokens: 1500
+              })
+            });
+            
+            if (!llmResponse.ok) throw new Error('题目生成失败');
+            const llmResult = await llmResponse.json();
+            const content = llmResult.choices?.[0]?.message?.content || '';
+            
+            // 解析JSON - 增强容错
+            let questions = [];
+            try {
+              // 尝试多种方式提取JSON
+              let jsonStr = content;
+              
+              // 移除可能的markdown代码块标记
+              jsonStr = jsonStr.replace(/```json\s*/g, '').replace(/```\s*/g, '');
+              
+              // 尝试提取JSON对象
+              const jsonMatch = jsonStr.match(/\{[\s\S]*"questions"[\s\S]*\}/);
+              if (jsonMatch) {
+                jsonStr = jsonMatch[0];
+              }
+              
+              // 修复常见的JSON格式问题
+              jsonStr = jsonStr.replace(/,\s*}/g, '}').replace(/,\s*]/g, ']');
+              
+              const parsed = JSON.parse(jsonStr);
+              questions = parsed.questions || [];
+              
+              // 验证题目格式
+              questions = questions.filter(q => q.stem && q.options && q.answer);
+              
+            } catch(e) {
+              console.error('JSON解析失败:', e, '\n原始内容:', content);
+              throw new Error('题目格式解析失败，请重试');
+            }
+            
+            if (questions.length < 3) {
+              throw new Error('生成的题目数量不足，请重试');
+            }
+            
+            // 保存到缓存
+            localStorage.setItem(cacheKey, JSON.stringify(questions));
+            // 同时保存原文
+            localStorage.setItem(`ai-transcript-shared-${currentExamId}`, transcript);
+            
+            clearInterval(timer); // 清除计时器
+            aiGenerateStatus.style.background = '#d4edda';
+            aiGenerateStatus.style.color = '#155724';
+            aiGenerateStatus.innerHTML = `<i class="fas fa-check-circle"></i> 成功生成 ${questions.length} 道题目！用时${seconds}秒`;
+            
+            // 渲染生成的题目
+            setTimeout(() => {
+              renderAIGeneratedQuiz(questions, currentExamId, currentExamData);
+            }, 1000);
+            
+          } catch (err) {
+            clearInterval(timer); // 清除计时器
+            console.error('AI生成失败:', err);
+            aiGenerateBtn.disabled = false;
+            aiGenerateBtn.innerHTML = '<i class="fas fa-magic"></i> 重新生成';
+            aiGenerateStatus.style.background = '#f8d7da';
+            aiGenerateStatus.style.color = '#721c24';
+            aiGenerateStatus.innerHTML = `<i class="fas fa-exclamation-circle"></i> 生成失败：${err.message || '请检查网络后重试'}`;
+          }
+        });
+        
+        quizWrap.appendChild(audioOnlyBanner);
+        return; 
+      }
+      
+      if(items.length===0){ 
+        quizWrap.textContent='没有匹配到题目，请调整技能或先多做题完善画像。'; 
+        return; 
+      }
+      
+      // 如果是完整试卷测试，显示特殊提示
+      if (window._currentExamFilter && items.length > 0) {
+        const examBanner = document.createElement('div');
+        examBanner.style.cssText = `
+          background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+          border-radius: 16px;
+          padding: 20px 28px;
+          margin-bottom: 24px;
+          box-shadow: 0 4px 16px rgba(6, 182, 212, 0.3);
+          color: white;
+          animation: fadeInUp 0.5s ease-out;
+        `;
+        examBanner.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 16px;">
+            <div style="width: 56px; height: 56px; background: rgba(255,255,255,0.25); backdrop-filter: blur(10px); border-radius: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              <i class="fas fa-clipboard-check" style="font-size: 1.5rem;"></i>
+            </div>
+            <div style="flex: 1;">
+              <h3 style="margin: 0 0 6px 0; font-size: 1.3rem; font-weight: 700;">📝 完整试卷测试模式</h3>
+              <p style="margin: 0; font-size: 0.95rem; opacity: 0.95;">
+                试卷：<strong>${window._currentExamFilter}</strong> · 
+                共 <strong style="font-size: 1.1rem; color: #fbbf24;">${items.length}</strong> 道题 · 
+                建议用时 <strong>25-30分钟</strong>
+              </p>
+            </div>
+          </div>
+        `;
+        quizWrap.appendChild(examBanner);
+      }
+      
+      const quizStart = Date.now();
+      const list=document.createElement('div'); list.className='listening-list'; list.style.display='grid'; list.style.gap='10px';
+      const state = new Map();
+      const timeSpent = new Map(); // idx -> ms
+      let activeIdx = null; let activeStartTs = null;
+      const cards = [];
+      items.forEach((it,idx)=>{
+        const card=document.createElement('div'); card.className='question';
+        
+        // 高级来源信息卡片 - 苹果风格
+        const sourceCard = document.createElement('div');
+        sourceCard.style.cssText = `
+          background: #f5f5f7;
+          padding: 12px 16px;
+          border-radius: 12px;
+          margin-bottom: 12px;
+          color: #1d1d1f;
+          box-shadow: none;
+          border: 1px solid rgba(0,0,0,0.08);
+          position: relative;
+          overflow: hidden;
+        `;
+        
+        // 试卷信息行
+        const examRow = document.createElement('div');
+        examRow.style.cssText = 'display: flex; align-items: center; gap: 8px; margin-bottom: 6px; position: relative; z-index: 1;';
+        
+        const examIcon = document.createElement('i');
+        examIcon.className = 'fas fa-file-alt';
+        examIcon.style.cssText = 'font-size: 1.1rem; opacity: 0.9;';
+        
+        const examText = document.createElement('span');
+        examText.textContent = it.examId;
+        examText.style.cssText = 'font-weight: 600; font-size: 0.95rem; letter-spacing: 0.5px;';
+        
+        examRow.appendChild(examIcon);
+        examRow.appendChild(examText);
+        
+        // Section徽章
+        const sectionRow = document.createElement('div');
+        sectionRow.style.cssText = 'display: flex; align-items: center; gap: 8px; position: relative; z-index: 1;';
+        
+        const sectionBadge = document.createElement('div');
+        sectionBadge.style.cssText = `
+          background: #ffffff;
+          padding: 4px 12px;
+          border-radius: 980px;
+          font-size: 0.85rem;
+          font-weight: 500;
+          border: 1px solid rgba(0,0,0,0.1);
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          color: #1d1d1f;
+        `;
+        
+        const sectionIcon = document.createElement('i');
+        const sectionName = it.section.toLowerCase();
+        if (sectionName.includes('conversation')) {
+          sectionIcon.className = 'fas fa-comments';
+        } else if (sectionName.includes('passage')) {
+          sectionIcon.className = 'fas fa-book-open';
+        } else if (sectionName.includes('lecture')) {
+          sectionIcon.className = 'fas fa-chalkboard-teacher';
+        } else {
+          sectionIcon.className = 'fas fa-headphones';
+        }
+        
+        const sectionText = document.createElement('span');
+        sectionText.textContent = it.section;
+        
+        sectionBadge.appendChild(sectionIcon);
+        sectionBadge.appendChild(sectionText);
+        sectionRow.appendChild(sectionBadge);
+        
+        sourceCard.appendChild(examRow);
+        sourceCard.appendChild(sectionRow);
+        card.appendChild(sourceCard);
+        
+        // 题目编号和内容
+        const questionHeader = document.createElement('div');
+        questionHeader.style.cssText = 'display: flex; align-items: flex-start; gap: 12px; margin-bottom: 8px;';
+        
+        const qNumber = document.createElement('div');
+        qNumber.style.cssText = `
+          background: #0071e3;
+          color: white;
+          width: 40px;
+          height: 40px;
+          border-radius: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: bold;
+          font-size: 1.15rem;
+          flex-shrink: 0;
+          box-shadow: none;
+        `;
+        qNumber.textContent = idx + 1;
+        
+        const qText = document.createElement('div');
+        qText.style.cssText = 'flex: 1; padding-top: 4px; font-size: 1.05rem; line-height: 1.6;';
+        qText.innerHTML = it.q.stem || '';
+        
+        questionHeader.appendChild(qNumber);
+        questionHeader.appendChild(qText);
+        card.appendChild(questionHeader);
+        // 音频：优先题级，其次段级
+        const audioSrc = it.q?.audio || it.sectionAudio || '';
+        // 时间戳：优先使用题目级别，如果没有则使用Section级别
+        const hasQuestionTimestamp = typeof it.q?.audioStart === 'number' && typeof it.q?.audioEnd === 'number';
+        const hasSectionTimestamp = typeof it.sectionStart === 'number' && typeof it.sectionEnd === 'number';
+        const hasTimestamp = hasQuestionTimestamp || hasSectionTimestamp;
+        const timestampStart = hasQuestionTimestamp ? it.q.audioStart : it.sectionStart;
+        const timestampEnd = hasQuestionTimestamp ? it.q.audioEnd : it.sectionEnd;
+        let qa=null; let abState=null;
+        if (audioSrc) {
+          // 音频定位信息 - 醒目卡片
+          if (hasTimestamp) {
+            const timestampCard = document.createElement('div');
+            timestampCard.style.cssText = `
+              background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+              padding: 1.25rem 1.5rem;
+              border-radius: 14px;
+              margin: 1rem 0 1.25rem;
+              border: 2px solid rgba(102, 126, 234, 0.3);
+              box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+              display: flex;
+              align-items: center;
+              gap: 1rem;
+            `;
+            
+            const iconBox = document.createElement('div');
+            iconBox.style.cssText = `
+              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+              color: white;
+              width: 48px;
+              height: 48px;
+              border-radius: 12px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              flex-shrink: 0;
+              box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            `;
+            iconBox.innerHTML = '<i class="fas fa-map-marker-alt" style="font-size: 1.3rem;"></i>';
+            
+            const textBox = document.createElement('div');
+            textBox.style.cssText = 'flex: 1;';
+            
+            const source = hasQuestionTimestamp ? '📍 题目精确定位' : '📍 Section区间定位';
+            const label = document.createElement('div');
+            label.style.cssText = 'font-size: 0.85rem; color: #667eea; font-weight: 700; margin-bottom: 0.5rem; letter-spacing: 0.3px;';
+            label.textContent = source;
+            
+            const timeRow = document.createElement('div');
+            timeRow.style.cssText = 'display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;';
+            
+            const timeLabel = document.createElement('span');
+            timeLabel.style.cssText = 'font-size: 0.9rem; color: #666; font-weight: 500;';
+            timeLabel.textContent = '录音位置：';
+            
+            const time = document.createElement('div');
+            time.style.cssText = 'font-size: 1.25rem; color: #1d1d1f; font-weight: 800; font-family: "SF Mono", Monaco, monospace; background: white; padding: 0.4rem 1rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);';
+            time.innerHTML = `<i class="fas fa-clock" style="color: #667eea; font-size: 1rem; margin-right: 0.5rem;"></i>${formatTime(timestampStart)} - ${formatTime(timestampEnd)}`;
+            
+            const duration = timestampEnd - timestampStart;
+            const durationTag = document.createElement('span');
+            durationTag.style.cssText = 'font-size: 0.85rem; color: #667eea; background: white; padding: 0.3rem 0.75rem; border-radius: 6px; font-weight: 600;';
+            durationTag.textContent = `时长 ${Math.floor(duration / 60)}:${String(Math.floor(duration % 60)).padStart(2, '0')}`;
+            
+            timeRow.appendChild(timeLabel);
+            timeRow.appendChild(time);
+            timeRow.appendChild(durationTag);
+            
+            const hint = document.createElement('div');
+            hint.style.cssText = 'font-size: 0.8rem; color: #888; margin-top: 0.5rem; font-style: italic;';
+            hint.innerHTML = '<i class="fas fa-info-circle" style="color: #667eea;"></i> 音频将自动定位到此时间段，方便精准练习';
+            
+            textBox.appendChild(label);
+            textBox.appendChild(timeRow);
+            textBox.appendChild(hint);
+            
+            timestampCard.appendChild(iconBox);
+            timestampCard.appendChild(textBox);
+            card.appendChild(timestampCard);
+          }
+          // 控件容器
+          const ctrl=document.createElement('div'); ctrl.style.display='flex'; ctrl.style.gap='8px'; ctrl.style.alignItems='center'; ctrl.style.margin='6px 0 4px';
+          // 倍速
+          const rateSel=document.createElement('select'); ['0.75','1','1.25','1.5'].forEach(v=>{ const o=document.createElement('option'); o.value=v; o.textContent=v+'x'; if(v==='1') o.selected=true; rateSel.appendChild(o); });
+          // A-B 循环按钮
+          const btnA=document.createElement('button'); btnA.className='action-btn'; btnA.type='button'; btnA.textContent='标记 A';
+          const btnB=document.createElement('button'); btnB.className='action-btn'; btnB.type='button'; btnB.textContent='标记 B';
+          const btnLoop=document.createElement('button'); btnLoop.className='action-btn'; btnLoop.type='button'; btnLoop.textContent='循环 关';
+          ctrl.appendChild(rateSel); ctrl.appendChild(btnA); ctrl.appendChild(btnB); ctrl.appendChild(btnLoop);
+          card.appendChild(ctrl);
+          // 播放器
+          qa=document.createElement('audio'); qa.className='listening-mini-audio'; qa.controls=true; qa.src=audioSrc;
+          card.appendChild(qa);
+          
+          // Section时间标记区域
+          const sectionMarkerArea = document.createElement('div');
+          sectionMarkerArea.style.cssText = `
+            margin-top: 8px;
+            padding: 8px 0;
+          `;
+          
+          // 进度条背景
+          const sectionProgressBg = document.createElement('div');
+          sectionProgressBg.style.cssText = `
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            position: relative;
+            margin-bottom: 6px;
+          `;
+          
+          // Section标记点（四级/六级听力标准时间分布）
+          const sectionMarkers = [
+            { time: 0, label: 'A', color: '#10b981', desc: '短篇新闻' },
+            { time: 0.2, label: 'B', color: '#3b82f6', desc: '长对话' },
+            { time: 0.52, label: 'C', color: '#8b5cf6', desc: '听力篇章' }
+          ];
+          
+          sectionMarkers.forEach(m => {
+            const marker = document.createElement('div');
+            marker.style.cssText = `
+              position: absolute;
+              left: ${m.time * 100}%;
+              top: -5px;
+              width: 14px;
+              height: 14px;
+              background: ${m.color};
+              border-radius: 50%;
+              border: 2px solid white;
+              box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+              cursor: pointer;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 9px;
+              color: white;
+              font-weight: bold;
+              z-index: 2;
+            `;
+            marker.textContent = m.label;
+            marker.title = `点击跳转到${m.desc}`;
+            
+            // 点击跳转
+            marker.addEventListener('click', () => {
+              if (qa.duration) {
+                qa.currentTime = m.time * qa.duration;
+                qa.play();
+              }
+            });
+            
+            sectionProgressBg.appendChild(marker);
+          });
+          
+          sectionMarkerArea.appendChild(sectionProgressBg);
+          
+          // 标记说明
+          const sectionLegend = document.createElement('div');
+          sectionLegend.style.cssText = `
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: #666;
+          `;
+          sectionLegend.innerHTML = `
+            <span style="color: #10b981;">● 短篇新闻</span>
+            <span style="color: #3b82f6;">● 长对话</span>
+            <span style="color: #8b5cf6; font-weight: 600;">● 听力篇章 ←</span>
+          `;
+          sectionMarkerArea.appendChild(sectionLegend);
+          
+          card.appendChild(sectionMarkerArea);
+          
+          // 逻辑
+          abState={ a:null, b:null, on:false };
+          rateSel.addEventListener('change', ()=>{ try{ qa.playbackRate=parseFloat(rateSel.value)||1; }catch(_){} });
+          btnA.addEventListener('click', ()=>{ abState.a = qa.currentTime; if (abState.b!=null && abState.b<abState.a) abState.b=null; btnA.textContent='A= '+abState.a.toFixed(1)+'s'; });
+          btnB.addEventListener('click', ()=>{ abState.b = qa.currentTime; if (abState.a!=null && abState.b<abState.a){ const t=abState.a; abState.a=abState.b; abState.b=t; } btnB.textContent='B= '+abState.b.toFixed(1)+'s'; });
+          btnLoop.addEventListener('click', ()=>{ abState.on = !abState.on; btnLoop.textContent = '循环 '+(abState.on?'开':'关'); });
+          // 时间戳片段播放逻辑
+          if (hasTimestamp) {
+            const start = timestampStart;
+            const end = timestampEnd;
+            // 监听 loadedmetadata 事件，音频元数据加载完成后设置起始位置
+            qa.addEventListener('loadedmetadata', ()=>{ try{ qa.currentTime = start; }catch(_){} });
+            // 监听 play 事件，每次播放时重置到起始位置（如果在片段外）
+            qa.addEventListener('play', ()=>{ if (qa.currentTime < start || qa.currentTime > end) { try{ qa.currentTime = start; }catch(_){} } });
+            // 监听 timeupdate 事件，到达结束时间时暂停
+            qa.addEventListener('timeupdate', ()=>{
+              // A-B循环优先
+              if (abState.on && abState.a!=null && abState.b!=null) {
+                if (qa.currentTime > abState.b) { try{ qa.currentTime = abState.a; }catch(_){} }
+                return;
+              }
+              // 片段限制
+              if (qa.currentTime > end) { qa.pause(); try{ qa.currentTime = start; }catch(_){} }
+            });
+          } else {
+            // 无时间戳，保留原A-B循环逻辑
+            qa.addEventListener('timeupdate', ()=>{
+              if (!abState.on || abState.a==null || abState.b==null) return;
+              if (qa.currentTime > abState.b) { try{ qa.currentTime = abState.a; }catch(_){} }
+            });
+          }
+        }
+        
+        // 听力原文显示（所有含听力的试卷都可用）
+        if (audioSrc) {
+          const transcript = it.q?.transcript || it.sectionTranscript || '';
+          const hasTranscript = transcript && transcript.trim();
+          // 即使没有原文也显示按钮区域（提示暂无原文）
+          {
+            const readingMode = $('#reading-mode')?.checked || false;
+            const transcriptCard = document.createElement('div');
+            transcriptCard.style.cssText = `
+              background: linear-gradient(135deg, rgba(255, 193, 7, 0.08) 0%, rgba(255, 152, 0, 0.08) 100%);
+              padding: 1.5rem;
+              border-radius: 14px;
+              margin: 1.25rem 0;
+              border: 2px solid rgba(255, 193, 7, 0.3);
+              box-shadow: 0 2px 8px rgba(255, 193, 7, 0.15);
+            `;
+            
+            const header = document.createElement('div');
+            header.style.cssText = `
+              display: flex;
+              align-items: center;
+              gap: 10px;
+              margin-bottom: 1rem;
+              padding-bottom: 0.75rem;
+              border-bottom: 2px solid rgba(255, 193, 7, 0.2);
+            `;
+            
+            const icon = document.createElement('div');
+            icon.style.cssText = `
+              background: linear-gradient(135deg, #ffd54f 0%, #ffb300 100%);
+              color: white;
+              width: 36px;
+              height: 36px;
+              border-radius: 10px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              flex-shrink: 0;
+              box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+            `;
+            icon.innerHTML = '<i class="fas fa-book-reader" style="font-size: 1.1rem;"></i>';
+            
+            const title = document.createElement('div');
+            title.style.cssText = `
+              font-size: 1.05rem;
+              color: #f57c00;
+              font-weight: 700;
+              letter-spacing: -0.01em;
+              flex: 1;
+            `;
+            title.innerHTML = '<i class="fas fa-headphones" style="margin-right: 6px;"></i>听力原文';
+            
+            // 添加隐藏/显示切换按钮
+            const toggleBtn = document.createElement('button');
+            toggleBtn.className = 'transcript-toggle-btn';
+            toggleBtn.style.cssText = `
+              background: #34C759;
+              color: white;
+              border: none;
+              padding: 10px 20px;
+              border-radius: 8px;
+              font-size: 0.9rem;
+              font-weight: 700;
+              font-family: 'SimHei', 'Microsoft YaHei', sans-serif;
+              cursor: pointer;
+              transition: all 0.3s ease;
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              box-shadow: 0 2px 8px rgba(52, 199, 89, 0.3);
+              position: relative;
+              filter: none;
+              backdrop-filter: none;
+            `;
+            toggleBtn.innerHTML = `
+              <i class="fas fa-eye" style="font-size: 1rem;"></i>
+              <span style="letter-spacing: 0.5px;">显示原文</span>
+            `;
+            
+            // 默认隐藏原文（听力阅读模式下默认显示）
+            let isVisible = readingMode;
+            
+            header.appendChild(icon);
+            header.appendChild(title);
+            header.appendChild(toggleBtn);
+            
+            const textContent = document.createElement('div');
+            textContent.style.cssText = `
+              color: #2d3436;
+              line-height: 1.9;
+              font-size: 1rem;
+              background: white;
+              padding: 1.25rem;
+              border-radius: 10px;
+              box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+              white-space: pre-wrap;
+              font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+              transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+              overflow: hidden;
+              max-height: ${isVisible ? '5000px' : '0'};
+              opacity: ${isVisible ? '1' : '0'};
+            `;
+            if (hasTranscript) {
+              textContent.textContent = transcript;
+            } else {
+              // AI语音识别界面
+              const aiContainer = document.createElement('div');
+              aiContainer.style.cssText = 'text-align: center; padding: 1.5rem 1rem;';
+              
+              const aiIcon = document.createElement('div');
+              aiIcon.innerHTML = '<i class="fas fa-robot" style="font-size: 2.5rem; color: #667eea; margin-bottom: 1rem;"></i>';
+              
+              const aiTitle = document.createElement('div');
+              aiTitle.style.cssText = 'font-weight: 600; color: #666; margin-bottom: 0.75rem;';
+              aiTitle.textContent = '原文暂未录入';
+              
+              const aiDesc = document.createElement('div');
+              aiDesc.style.cssText = 'font-size: 0.85rem; color: #888; margin-bottom: 1rem;';
+              aiDesc.textContent = '您可以使用AI自动识别听力原文';
+              
+              const aiBtn = document.createElement('button');
+              aiBtn.type = 'button';
+              aiBtn.style.cssText = `
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                border-radius: 10px;
+                font-size: 0.95rem;
+                font-weight: 700;
+                cursor: pointer;
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+                transition: all 0.3s ease;
+              `;
+              aiBtn.innerHTML = '<i class="fas fa-magic"></i> AI识别原文';
+              
+              // AI识别状态显示区域
+              const aiStatus = document.createElement('div');
+              aiStatus.style.cssText = 'margin-top: 1rem; display: none;';
+              
+              // AI识别结果显示区域
+              const aiResult = document.createElement('div');
+              aiResult.style.cssText = `
+                margin-top: 1rem;
+                padding: 1rem;
+                background: #f8f9fa;
+                border-radius: 8px;
+                text-align: left;
+                white-space: pre-wrap;
+                line-height: 1.8;
+                font-size: 0.95rem;
+                color: #333;
+                display: none;
+                max-height: 400px;
+                overflow-y: auto;
+              `;
+              
+              // AI识别按钮点击事件 - 使用硅基流动(SiliconFlow) API（已内置密钥，用户无需注册）
+              aiBtn.addEventListener('click', async () => {
+                if (!audioSrc) {
+                  alert('未找到音频文件');
+                  return;
+                }
+                
+                // 内置API密钥，用户无需注册
+                const apiKey = 'sk-zxwcsadwzlqigvrgvxphpavfangpazhbxtlvgkwtapolwndm';
+                
+                aiBtn.disabled = true;
+                aiBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 正在上传音频...';
+                aiStatus.style.display = 'block';
+                aiStatus.innerHTML = `
+                  <div style="color: #667eea; font-size: 0.85rem;">
+                    <i class="fas fa-cloud-upload-alt"></i> 正在上传音频到云端进行识别...
+                  </div>
+                `;
+                
+                try {
+                  // 获取音频文件
+                  const audioResponse = await fetch(audioSrc);
+                  if (!audioResponse.ok) throw new Error('音频文件加载失败');
+                  const audioBlob = await audioResponse.blob();
+                  
+                  // 准备FormData
+                  const formData = new FormData();
+                  formData.append('file', audioBlob, 'audio.mp3');
+                  formData.append('model', 'FunAudioLLM/SenseVoiceSmall');
+                  
+                  aiBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> AI识别中...';
+                  aiStatus.innerHTML = `
+                    <div style="color: #667eea; font-size: 0.85rem;">
+                      <i class="fas fa-robot"></i> 硅基流动云端正在识别，请稍候...
+                    </div>
+                  `;
+                  
+                  // 调用硅基流动 API
+                  const response = await fetch('https://api.siliconflow.cn/v1/audio/transcriptions', {
+                    method: 'POST',
+                    headers: {
+                      'Authorization': `Bearer ${apiKey}`
+                    },
+                    body: formData
+                  });
+                  
+                  if (!response.ok) {
+                    const errData = await response.json().catch(() => ({}));
+                    if (response.status === 401) {
+                      throw new Error('API服务暂时不可用，请稍后重试');
+                    }
+                    throw new Error(errData.error?.message || `识别服务暂时繁忙，请稍后重试`);
+                  }
+                  
+                  const result = await response.json();
+                  
+                  // 智能格式化识别结果
+                  function formatTranscript(text) {
+                    if (!text) return '';
+                    let formatted = text;
+                    
+                    // 1. 在主要章节标记前添加换行
+                    formatted = formatted.replace(/(Section [A-C])/gi, '\n\n━━━━━━━━━━━━━━━━━━━━\n【$1】\n━━━━━━━━━━━━━━━━━━━━\n');
+                    formatted = formatted.replace(/(Part\s*\d)/gi, '\n\n━━━ $1 ━━━\n');
+                    
+                    // 2. 对话/段落标记
+                    formatted = formatted.replace(/(Conversation\s*\d+)/gi, '\n\n📝 【$1】\n');
+                    formatted = formatted.replace(/(Passage\s*\d+)/gi, '\n\n📝 【$1】\n');
+                    formatted = formatted.replace(/(News Report\s*\d+)/gi, '\n\n📰 【$1】\n');
+                    formatted = formatted.replace(/(Lecture\s*\d+)/gi, '\n\n🎓 【$1】\n');
+                    
+                    // 3. 问题标记
+                    formatted = formatted.replace(/Question\s*(\d+)/gi, '\n\n❓ Question $1: ');
+                    formatted = formatted.replace(/Questions?\s*(\d+)\s*(to|and|through|-)\s*(\d+)/gi, '\n\n❓ Questions $1-$3: ');
+                    
+                    // 4. 在Directions前添加换行
+                    formatted = formatted.replace(/(Directions)/gi, '\n\n📋 $1');
+                    
+                    // 5. 说话者标记（常见模式）
+                    formatted = formatted.replace(/\b(M:|W:|Man:|Woman:|Speaker\s*\d*:)/gi, '\n$1 ');
+                    formatted = formatted.replace(/\b(A:|B:|Host:|Guest:|Interviewer:|Interviewee:)/gi, '\n$1 ');
+                    
+                    // 6. 在长句后添加适当换行（句号+大写字母开头）
+                    formatted = formatted.replace(/\.(\s*)([A-Z])/g, '.\n$2');
+                    
+                    // 7. 问号和感叹号后换行
+                    formatted = formatted.replace(/\?(\s*)([A-Z])/g, '?\n$2');
+                    formatted = formatted.replace(/!(\s*)([A-Z])/g, '!\n$2');
+                    
+                    // 8. 清理多余空行
+                    formatted = formatted.replace(/\n{3,}/g, '\n\n');
+                    formatted = formatted.trim();
+                    
+                    return formatted;
+                  }
+                  
+                  const formattedText = formatTranscript(result.text);
+                  
+                  // 显示识别结果（使用HTML保留格式）
+                  aiResult.style.display = 'block';
+                  aiResult.innerHTML = formattedText
+                    .replace(/\n/g, '<br>')
+                    .replace(/【(.+?)】/g, '<strong style="color: #667eea;">【$1】</strong>')
+                    .replace(/❓/g, '<span style="color: #f39c12;">❓</span>')
+                    .replace(/📝/g, '<span style="color: #3498db;">📝</span>')
+                    .replace(/📰/g, '<span style="color: #e74c3c;">📰</span>')
+                    .replace(/🎓/g, '<span style="color: #9b59b6;">🎓</span>')
+                    .replace(/📋/g, '<span style="color: #1abc9c;">📋</span>')
+                    .replace(/━/g, '<span style="color: #ddd;">━</span>');
+                  
+                  if (!formattedText) {
+                    aiResult.textContent = '识别结果为空';
+                  }
+                  
+                  // 隐藏多余的UI元素，只保留原文
+                  aiIcon.style.display = 'none';
+                  aiTitle.style.display = 'none';
+                  aiDesc.style.display = 'none';
+                  aiBtn.style.display = 'none';
+                  aiStatus.style.display = 'none';
+                  
+                  // 保存到本地存储（保存到共享位置，让所有题目都能访问）
+                  try {
+                    // 保存完整原文到共享位置（按试卷ID）
+                    const sharedKey = `ai-transcript-shared-${it.examId}`;
+                    localStorage.setItem(sharedKey, formattedText);
+                    
+                    // 同时保存到当前题目
+                    const cacheKey = `ai-transcript-${it.examId}-${idx}`;
+                    localStorage.setItem(cacheKey, formattedText);
+                    
+                    // 广播事件，通知所有题目更新原文显示
+                    window.dispatchEvent(new CustomEvent('transcriptUpdated', {
+                      detail: { examId: it.examId, text: formattedText }
+                    }));
+                  } catch(_) {}
+                  
+                } catch (err) {
+                  console.error('AI识别失败:', err);
+                  aiBtn.disabled = false;
+                  aiBtn.innerHTML = '<i class="fas fa-magic"></i> 重新识别';
+                  aiStatus.innerHTML = `
+                    <div style="color: #dc3545; font-size: 0.85rem;">
+                      <i class="fas fa-exclamation-circle"></i> 识别失败：${err.message || '请检查网络连接后重试'}
+                    </div>
+                  `;
+                }
+              });
+              
+              // 悬停效果
+              aiBtn.addEventListener('mouseenter', () => {
+                if (!aiBtn.disabled) {
+                  aiBtn.style.transform = 'translateY(-2px)';
+                  aiBtn.style.boxShadow = '0 6px 20px rgba(102, 126, 234, 0.5)';
+                }
+              });
+              aiBtn.addEventListener('mouseleave', () => {
+                aiBtn.style.transform = 'translateY(0)';
+                aiBtn.style.boxShadow = '0 4px 15px rgba(102, 126, 234, 0.4)';
+              });
+              
+              // 格式化并显示原文的函数（同时隐藏多余UI）
+              function displayFormattedText(text, hideUI = true) {
+                aiResult.style.display = 'block';
+                aiResult.innerHTML = text
+                  .replace(/\n/g, '<br>')
+                  .replace(/【(.+?)】/g, '<strong style="color: #667eea;">【$1】</strong>')
+                  .replace(/❓/g, '<span style="color: #f39c12;">❓</span>')
+                  .replace(/📝/g, '<span style="color: #3498db;">📝</span>')
+                  .replace(/📰/g, '<span style="color: #e74c3c;">📰</span>')
+                  .replace(/🎓/g, '<span style="color: #9b59b6;">🎓</span>')
+                  .replace(/📋/g, '<span style="color: #1abc9c;">📋</span>')
+                  .replace(/━/g, '<span style="color: #ddd;">━</span>');
+                
+                // 隐藏多余的UI元素，只保留原文
+                if (hideUI) {
+                  aiIcon.style.display = 'none';
+                  aiTitle.style.display = 'none';
+                  aiDesc.style.display = 'none';
+                  aiBtn.style.display = 'none';
+                  aiStatus.style.display = 'none';
+                }
+              }
+              
+              // 检查是否有缓存的识别结果（优先读取共享原文）
+              try {
+                const sharedKey = `ai-transcript-shared-${it.examId}`;
+                const cacheKey = `ai-transcript-${it.examId}-${idx}`;
+                const sharedCached = localStorage.getItem(sharedKey);
+                const cached = localStorage.getItem(cacheKey);
+                
+                if (sharedCached) {
+                  displayFormattedText(sharedCached);
+                } else if (cached) {
+                  displayFormattedText(cached);
+                }
+              } catch(_) {}
+              
+              // 监听原文更新事件（当其他题目识别完成时自动更新）
+              window.addEventListener('transcriptUpdated', (e) => {
+                if (e.detail && e.detail.examId === it.examId && e.detail.text) {
+                  displayFormattedText(e.detail.text, true); // 隐藏UI
+                }
+              });
+              
+              aiContainer.appendChild(aiIcon);
+              aiContainer.appendChild(aiTitle);
+              aiContainer.appendChild(aiDesc);
+              aiContainer.appendChild(aiBtn);
+              aiContainer.appendChild(aiStatus);
+              aiContainer.appendChild(aiResult);
+              textContent.appendChild(aiContainer);
+            }
+            
+            const hint = document.createElement('div');
+            hint.style.cssText = `
+              margin-top: ${isVisible ? '1rem' : '0'};
+              padding: 0.75rem 1rem;
+              background: rgba(255, 193, 7, 0.1);
+              border-radius: 8px;
+              font-size: 0.85rem;
+              color: #f57c00;
+              font-weight: 600;
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+              overflow: hidden;
+              max-height: ${isVisible ? '200px' : '0'};
+              opacity: ${isVisible ? '1' : '0'};
+            `;
+            if (hasTranscript) {
+              hint.innerHTML = '<i class="fas fa-lightbulb"></i>提示：边听音频边阅读文本，可以提高听读结合能力，更好地理解听力内容';
+            } else {
+              hint.innerHTML = '<i class="fas fa-bolt"></i>提示：点击按钮即可AI识别听力原文（免费使用，无需注册）';
+            }
+            
+            // 根据readingMode设置初始按钮状态
+            if (isVisible) {
+              toggleBtn.style.background = '#667eea';
+              toggleBtn.innerHTML = `
+                <i class="fas fa-eye-slash" style="font-size: 1rem;"></i>
+                <span style="letter-spacing: 0.5px;">隐藏原文</span>
+              `;
+              toggleBtn.style.boxShadow = '0 2px 8px rgba(102, 126, 234, 0.3)';
+            }
+            
+            transcriptCard.appendChild(header);
+            transcriptCard.appendChild(textContent);
+            transcriptCard.appendChild(hint);
+            
+            // 添加切换按钮事件
+            toggleBtn.addEventListener('click', () => {
+              isVisible = !isVisible;
+              if (isVisible) {
+                // 显示
+                textContent.style.maxHeight = '5000px';
+                textContent.style.opacity = '1';
+                textContent.style.marginBottom = '0';
+                hint.style.maxHeight = '200px';
+                hint.style.opacity = '1';
+                hint.style.marginTop = '1rem';
+                toggleBtn.innerHTML = `
+                  <i class="fas fa-eye-slash" style="font-size: 1rem;"></i>
+                  <span style="letter-spacing: 0.5px;">隐藏原文</span>
+                `;
+                toggleBtn.style.background = '#667eea';
+              } else {
+                // 隐藏
+                textContent.style.maxHeight = '0';
+                textContent.style.opacity = '0';
+                textContent.style.marginBottom = '0';
+                hint.style.maxHeight = '0';
+                hint.style.opacity = '0';
+                hint.style.marginTop = '0';
+                toggleBtn.innerHTML = `
+                  <i class="fas fa-eye" style="font-size: 1rem;"></i>
+                  <span style="letter-spacing: 0.5px;">显示原文</span>
+                `;
+                toggleBtn.style.background = '#34C759';
+              }
+            });
+            
+            // 添加悬停效果
+            toggleBtn.addEventListener('mouseenter', () => {
+              toggleBtn.style.transform = 'translateY(-2px)';
+              if (isVisible) {
+                toggleBtn.style.boxShadow = '0 4px 12px rgba(102, 126, 234, 0.4)';
+                toggleBtn.style.background = '#5568d3';
+              } else {
+                toggleBtn.style.boxShadow = '0 4px 12px rgba(52, 199, 89, 0.4)';
+                toggleBtn.style.background = '#2eb350';
+              }
+            });
+            
+            toggleBtn.addEventListener('mouseleave', () => {
+              toggleBtn.style.transform = 'translateY(0)';
+              if (isVisible) {
+                toggleBtn.style.boxShadow = '0 2px 8px rgba(102, 126, 234, 0.3)';
+                toggleBtn.style.background = '#667eea';
+              } else {
+                toggleBtn.style.boxShadow = '0 2px 8px rgba(52, 199, 89, 0.3)';
+                toggleBtn.style.background = '#34C759';
+              }
+            });
+            
+            card.appendChild(transcriptCard);
+          }
+        }
+        
+        const opts=document.createElement('div'); opts.className='options'; const letters=['A','B','C','D'];
+        (it.q.options||[]).forEach((txt,i)=>{
+          const lab=document.createElement('label'); lab.className='option'; lab.style.display='block';
+          const input=document.createElement('input'); input.type='radio'; input.name=`mq_${idx}`; input.value=letters[i]; input.style.marginRight='8px';
+          input.addEventListener('change',()=>{ state.set(idx, input.value); setActive(idx); });
+          lab.appendChild(input); const span=document.createElement('span'); span.textContent=`${letters[i]}) ${txt}`; lab.appendChild(span);
+          opts.appendChild(lab);
+        });
+        card.appendChild(opts);
+        card.addEventListener('click', ()=> setActive(idx));
+        list.appendChild(card);
+        cards.push(card);
+      });
+      quizWrap.appendChild(list);
+
+      const submit=document.createElement('button'); submit.className='action-btn download-btn'; submit.type='button'; submit.style.marginTop='8px'; submit.innerHTML='<i class="fas fa-check"></i> 提交并判分';
+      submit.addEventListener('click',()=>{
+        stopTiming();
+        score(items, state, timeSpent);
+      });
+      quizWrap.appendChild(submit);
+
+      function setActive(idx){
+        const now = Date.now();
+        if (activeIdx===null) {
+          activeIdx = idx; activeStartTs = now; return;
+        }
+        if (activeIdx !== idx) {
+          const prev = timeSpent.get(activeIdx)||0;
+          timeSpent.set(activeIdx, prev + (now - (activeStartTs||quizStart)));
+          activeIdx = idx; activeStartTs = now;
+        }
+      }
+      function stopTiming(){
+        const now = Date.now();
+        if (activeIdx!==null) {
+          const prev = timeSpent.get(activeIdx)||0;
+          timeSpent.set(activeIdx, prev + (now - (activeStartTs||quizStart)));
+        }
+      }
+    }
+
+    function score(items, state, timeSpent){
+      let correct=0; const detail=[];
+      items.forEach((it,idx)=>{
+        const user = (state.get(idx)||'-').toUpperCase();
+        const ok = user === String(it.q.answer||'').toUpperCase();
+        if(ok) correct++;
+        const t = Math.max(0, (timeSpent?.get(idx)||0));
+        detail.push({ idx, examId: it.examId, user, answer: it.q.answer||'', ok, stem: it.q.stem||'', q: it.q, timeMs: t });
+      });
+      resWrap.innerHTML=''; resWrap.style.display='block';
+      const h=document.createElement('h3'); h.textContent=`得分：${correct} / ${items.length}`; resWrap.appendChild(h);
+      const ul=document.createElement('ul'); ul.style.margin='0 0 0 1.2rem';
+      detail.forEach(d=>{ const li=document.createElement('li'); li.textContent = `${d.ok?'✅':'❌'} ${d.examId} ｜ ${d.stem} ｜ 用时 ${(d.timeMs/1000).toFixed(1)}s`; ul.appendChild(li); });
+      resWrap.appendChild(ul);
+      // 写入历史并更新画像
+      try { saveHistoryMicro(correct, items.length); } catch(_){}
+      try { updateProfileMicro(detail); } catch(_){}
+      try { showTimeEfficiencyAdvice(detail); } catch(_){}
+      try { showVisualAnalysis(detail, correct, items.length); } catch(_){}
+    }
+
+    function saveHistoryMicro(correct, total){
+      const key='listening:history';
+      let arr=[]; try{ arr=JSON.parse(localStorage.getItem(key)||'[]')}catch(_){ }
+      const rec={ id:'micro', title:'跨试卷微练习', correct, total, ts: Date.now() };
+      arr.unshift(rec);
+      try{ localStorage.setItem(key, JSON.stringify(arr.slice(0,20))) }catch(_){ }
+    }
+
+    function updateProfileMicro(detail){
+      const key='listening:profile';
+      let prof={}; try{ prof=JSON.parse(localStorage.getItem(key)||'{}') }catch(_){ }
+      prof.skill=prof.skill||{}; prof.topic=prof.topic||{}; prof.error=prof.error||{}; prof.time=prof.time||{}; // time per skill
+      detail.forEach(d=>{
+        const tags=d.q?.tags||{};
+        const skills=Array.isArray(tags.skill)? tags.skill:[];
+        const topics=Array.isArray(tags.topic)? tags.topic:[];
+        const distract=Array.isArray(tags.distractor)? tags.distractor:[];
+        skills.forEach(s=>{ const cur=prof.skill[s]||{right:0,wrong:0}; cur[d.ok?'right':'wrong']++; prof.skill[s]=cur; const tm=prof.time[s]||{ms:0,count:0}; tm.ms += (d.timeMs||0); tm.count += 1; prof.time[s]=tm; });
+        topics.forEach(t=>{ const cur=prof.topic[t]||{right:0,wrong:0}; cur[d.ok?'right':'wrong']++; prof.topic[t]=cur; });
+        if(!d.ok) distract.forEach(x=>{ prof.error[x]=(prof.error[x]||0)+1; });
+      });
+      try{ localStorage.setItem(key, JSON.stringify(prof)) }catch(_){ }
+    }
+
+    function showTimeEfficiencyAdvice(detail){
+      // 计算每技能平均用时与正确率
+      const agg = new Map(); // skill -> { ms, n, right }
+      detail.forEach(d=>{
+        const skills = Array.isArray(d.q?.tags?.skill)? d.q.tags.skill:[];
+        skills.forEach(s=>{
+          const o = agg.get(s)||{ ms:0, n:0, right:0 };
+          o.ms += (d.timeMs||0); o.n += 1; if (d.ok) o.right += 1;
+          agg.set(s,o);
+        });
+      });
+      if (agg.size===0) return;
+      const rows = Array.from(agg.entries()).map(([k,v])=>({ skill:k, avg:v.ms/Math.max(1,v.n), acc: v.right/Math.max(1,v.n), n:v.n }));
+      rows.sort((a,b)=> (b.avg - a.avg) || (a.acc - b.acc));
+      const box=document.createElement('div'); box.className='listening-result'; box.style.marginTop='8px';
+      const h=document.createElement('h4'); h.style.margin='0 0 6px 0'; h.textContent='时间效率建议'; box.appendChild(h);
+      const ul=document.createElement('ul'); ul.style.margin='0 0 0 1.2rem';
+      rows.slice(0,3).forEach(r=>{
+        const li=document.createElement('li');
+        const sec=(r.avg/1000).toFixed(1);
+        const acc=Math.round(r.acc*100);
+        li.textContent = `${r.skill} ｜ 平均用时 ${sec}s/题 ｜ 正确率 ${acc}% ｜ 建议：` + adviceForSkill(r.skill);
+        ul.appendChild(li);
+      });
+      box.appendChild(ul);
+      resWrap.appendChild(box);
+    }
+
+    function adviceForSkill(skill){
+      switch (skill){
+        case 'synonym': return '重点练同义替换识别：积累常见替换对，遇到陌生表达先找关键词。';
+        case 'number': return '数字/时间优先定位：先扫题干抓数字单位与区间，听到转折词立即复核。';
+        case 'logic': return '强化逻辑信号词：but/however/therefore 附近常是答案与反转点。';
+        case 'keyword': return '先关键词再细节：预读题干勾关键词，听时快速定位对应句段。';
+        default: return '针对本技能做 3-5 题微练习，观察用时是否下降。';
+      }
+    }
+
+    function showVisualAnalysis(detail, correct, total){
+      const box = document.createElement('div');
+      box.className = 'visual-analysis-container';
+      box.style.cssText = 'margin-top: 24px; background: white; border-radius: 16px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);';
+      
+      const title = document.createElement('h3');
+      title.textContent = '📊 错题可视化分析';
+      title.style.cssText = 'margin: 0 0 20px 0; font-size: 1.4rem; color: #1d1d1f; font-weight: 700;';
+      box.appendChild(title);
+      
+      // 1. 正确率环形图
+      const accuracySection = createAccuracyChart(correct, total);
+      box.appendChild(accuracySection);
+      
+      // 2. 每道题用时柱状图
+      const timeSection = createTimeChart(detail);
+      box.appendChild(timeSection);
+      
+      // 3. 技能点分析
+      const skillSection = createSkillAnalysis(detail);
+      box.appendChild(skillSection);
+      
+      // 4. 错题详细分析
+      const errorSection = createErrorAnalysis(detail);
+      box.appendChild(errorSection);
+      
+      resWrap.appendChild(box);
+    }
+
+    function createAccuracyChart(correct, total){
+      const section = document.createElement('div');
+      section.style.cssText = 'margin-bottom: 32px;';
+      
+      const h = document.createElement('h4');
+      h.textContent = '正确率统计';
+      h.style.cssText = 'margin: 0 0 16px 0; font-size: 1.1rem; color: #1d1d1f; font-weight: 600;';
+      section.appendChild(h);
+      
+      const chartContainer = document.createElement('div');
+      chartContainer.style.cssText = 'display: flex; align-items: center; gap: 32px;';
+      
+      // 环形图
+      const percentage = Math.round((correct / total) * 100);
+      const wrong = total - correct;
+      
+      const pieChart = document.createElement('div');
+      pieChart.style.cssText = 'position: relative; width: 160px; height: 160px;';
+      
+      const svg = `
+        <svg viewBox="0 0 36 36" style="transform: rotate(-90deg);">
+          <circle cx="18" cy="18" r="15.91549430918954" fill="transparent" stroke="#f0f0f0" stroke-width="3"/>
+          <circle cx="18" cy="18" r="15.91549430918954" fill="transparent" 
+                  stroke="${percentage >= 60 ? '#34C759' : percentage >= 40 ? '#FF9500' : '#FF3B30'}" 
+                  stroke-width="3" 
+                  stroke-dasharray="${percentage} ${100-percentage}"
+                  stroke-linecap="round"/>
+        </svg>
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+          <div style="font-size: 2rem; font-weight: 700; color: #1d1d1f;">${percentage}%</div>
+          <div style="font-size: 0.85rem; color: #6e6e73; margin-top: 4px;">正确率</div>
+        </div>
+      `;
+      pieChart.innerHTML = svg;
+      chartContainer.appendChild(pieChart);
+      
+      // 统计信息
+      const stats = document.createElement('div');
+      stats.style.cssText = 'flex: 1;';
+      stats.innerHTML = `
+        <div style="margin-bottom: 12px;">
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+            <span style="width: 12px; height: 12px; background: #34C759; border-radius: 2px;"></span>
+            <span style="color: #1d1d1f; font-weight: 600;">答对：${correct} 题</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="width: 12px; height: 12px; background: #FF3B30; border-radius: 2px;"></span>
+            <span style="color: #1d1d1f; font-weight: 600;">答错：${wrong} 题</span>
+          </div>
+        </div>
+        <div style="padding: 12px; background: #f5f5f7; border-radius: 8px; margin-top: 16px;">
+          <div style="font-size: 0.9rem; color: #6e6e73;">
+            ${percentage >= 80 ? '🎉 太棒了！继续保持！' : 
+              percentage >= 60 ? '👍 不错的表现，继续加油！' : 
+              percentage >= 40 ? '💪 还有进步空间，加油！' : 
+              '📚 多加练习，你会更好的！'}
+          </div>
+        </div>
+      `;
+      chartContainer.appendChild(stats);
+      
+      section.appendChild(chartContainer);
+      return section;
+    }
+
+    function createTimeChart(detail){
+      const section = document.createElement('div');
+      section.style.cssText = 'margin-bottom: 32px;';
+      
+      const h = document.createElement('h4');
+      h.textContent = '答题用时分析';
+      h.style.cssText = 'margin: 0 0 16px 0; font-size: 1.1rem; color: #1d1d1f; font-weight: 600;';
+      section.appendChild(h);
+      
+      const maxTime = Math.max(...detail.map(d => d.timeMs));
+      const avgTime = detail.reduce((sum, d) => sum + d.timeMs, 0) / detail.length;
+      
+      const chartContainer = document.createElement('div');
+      chartContainer.style.cssText = 'background: #f5f5f7; border-radius: 12px; padding: 16px;';
+      
+      detail.forEach((d, i) => {
+        const bar = document.createElement('div');
+        bar.style.cssText = 'margin-bottom: 12px;';
+        
+        const timeSeconds = (d.timeMs / 1000).toFixed(1);
+        const widthPercent = (d.timeMs / maxTime) * 100;
+        const color = d.ok ? '#34C759' : '#FF3B30';
+        
+        bar.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+            <span style="font-size: 0.85rem; color: #6e6e73; width: 30px;">Q${i+1}</span>
+            <span style="font-size: 0.85rem; color: #1d1d1f; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+              ${d.stem.substring(0, 30)}...
+            </span>
+            <span style="font-size: 0.85rem; color: #1d1d1f; font-weight: 600;">${timeSeconds}s</span>
+          </div>
+          <div style="background: #e5e5e7; height: 8px; border-radius: 4px; overflow: hidden;">
+            <div style="background: ${color}; height: 100%; width: ${widthPercent}%; border-radius: 4px; transition: width 0.5s ease;"></div>
+          </div>
+        `;
+        chartContainer.appendChild(bar);
+      });
+      
+      const summary = document.createElement('div');
+      summary.style.cssText = 'margin-top: 16px; padding: 12px; background: white; border-radius: 8px; font-size: 0.9rem; color: #6e6e73;';
+      summary.innerHTML = `平均用时：<strong style="color: #1d1d1f;">${(avgTime/1000).toFixed(1)}s/题</strong>`;
+      chartContainer.appendChild(summary);
+      
+      section.appendChild(chartContainer);
+      return section;
+    }
+
+    function createSkillAnalysis(detail){
+      const section = document.createElement('div');
+      section.style.cssText = 'margin-bottom: 32px;';
+      
+      const h = document.createElement('h4');
+      h.textContent = '技能点分析';
+      h.style.cssText = 'margin: 0 0 16px 0; font-size: 1.1rem; color: #1d1d1f; font-weight: 600;';
+      section.appendChild(h);
+      
+      // 统计各技能点
+      const skillStats = new Map();
+      detail.forEach(d => {
+        const skills = Array.isArray(d.q?.tags?.skill) ? d.q.tags.skill : [];
+        skills.forEach(skill => {
+          if (!skillStats.has(skill)) {
+            skillStats.set(skill, { correct: 0, total: 0 });
+          }
+          const stat = skillStats.get(skill);
+          stat.total++;
+          if (d.ok) stat.correct++;
+        });
+      });
+      
+      if (skillStats.size === 0) {
+        section.innerHTML += '<p style="color: #6e6e73; font-size: 0.9rem;">暂无技能点数据</p>';
+        return section;
+      }
+      
+      const chartContainer = document.createElement('div');
+      chartContainer.style.cssText = 'background: #f5f5f7; border-radius: 12px; padding: 16px;';
+      
+      const skillNames = {
+        'synonym': '同义替换',
+        'number': '数字信息',
+        'logic': '逻辑推理',
+        'keyword': '关键词定位',
+        'detail': '细节理解',
+        'advanced conversation': '复杂对话'
+      };
+      
+      Array.from(skillStats.entries()).forEach(([skill, stat]) => {
+        const accuracy = Math.round((stat.correct / stat.total) * 100);
+        const displayName = skillNames[skill] || skill;
+        
+        const item = document.createElement('div');
+        item.style.cssText = 'margin-bottom: 16px;';
+        
+        item.innerHTML = `
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <span style="font-size: 0.95rem; color: #1d1d1f; font-weight: 600;">${displayName}</span>
+            <span style="font-size: 0.9rem; color: ${accuracy >= 60 ? '#34C759' : accuracy >= 40 ? '#FF9500' : '#FF3B30'}; font-weight: 600;">
+              ${stat.correct}/${stat.total} (${accuracy}%)
+            </span>
+          </div>
+          <div style="background: #e5e5e7; height: 8px; border-radius: 4px; overflow: hidden;">
+            <div style="background: ${accuracy >= 60 ? '#34C759' : accuracy >= 40 ? '#FF9500' : '#FF3B30'}; 
+                        height: 100%; width: ${accuracy}%; border-radius: 4px; transition: width 0.5s ease;"></div>
+          </div>
+        `;
+        chartContainer.appendChild(item);
+      });
+      
+      section.appendChild(chartContainer);
+      return section;
+    }
+
+    function createErrorAnalysis(detail){
+      const section = document.createElement('div');
+      section.style.cssText = 'margin-bottom: 0;';
+      
+      const h = document.createElement('h4');
+      h.textContent = '错题详细分析';
+      h.style.cssText = 'margin: 0 0 16px 0; font-size: 1.1rem; color: #1d1d1f; font-weight: 600;';
+      section.appendChild(h);
+      
+      const errors = detail.filter(d => !d.ok);
+      
+      if (errors.length === 0) {
+        const msg = document.createElement('div');
+        msg.style.cssText = 'padding: 24px; background: linear-gradient(135deg, #34C759 0%, #30D158 100%); border-radius: 12px; text-align: center; color: white;';
+        msg.innerHTML = `
+          <div style="font-size: 2.5rem; margin-bottom: 8px;">🎉</div>
+          <div style="font-size: 1.2rem; font-weight: 600; margin-bottom: 4px;">全部正确！</div>
+          <div style="font-size: 0.9rem; opacity: 0.9;">太棒了，继续保持！</div>
+        `;
+        section.appendChild(msg);
+        return section;
+      }
+      
+      const errorContainer = document.createElement('div');
+      errorContainer.style.cssText = 'display: flex; flex-direction: column; gap: 12px;';
+      
+      errors.forEach((e, i) => {
+        const errorCard = document.createElement('div');
+        errorCard.style.cssText = 'background: #fff5f5; border-left: 4px solid #FF3B30; padding: 16px; border-radius: 8px;';
+        
+        const skills = Array.isArray(e.q?.tags?.skill) ? e.q.tags.skill : [];
+        const skillNames = {
+          'synonym': '同义替换',
+          'number': '数字信息',
+          'logic': '逻辑推理',
+          'keyword': '关键词定位',
+          'detail': '细节理解',
+          'advanced conversation': '复杂对话'
+        };
+        const skillTags = skills.map(s => skillNames[s] || s).join(', ');
+        
+        errorCard.innerHTML = `
+          <div style="display: flex; justify-content: between; align-items: start; margin-bottom: 8px;">
+            <div style="flex: 1;">
+              <span style="color: #FF3B30; font-weight: 700; font-size: 0.85rem;">错题 ${i+1}</span>
+              <span style="color: #6e6e73; font-size: 0.85rem; margin-left: 8px;">${e.examId}</span>
+            </div>
+            <div style="font-size: 0.85rem; color: #6e6e73;">用时 ${(e.timeMs/1000).toFixed(1)}s</div>
+          </div>
+          <div style="color: #1d1d1f; font-size: 0.95rem; margin-bottom: 8px; line-height: 1.5;">
+            ${e.stem}
+          </div>
+          <div style="display: flex; gap: 12px; font-size: 0.9rem; margin-bottom: 8px;">
+            <div><span style="color: #6e6e73;">你的答案：</span><strong style="color: #FF3B30;">${e.user || '-'}</strong></div>
+            <div><span style="color: #6e6e73;">正确答案：</span><strong style="color: #34C759;">${e.answer}</strong></div>
+          </div>
+          ${skillTags ? `<div style="font-size: 0.85rem; color: #6e6e73;">
+            <span>考查技能：</span><strong style="color: #0071e3;">${skillTags}</strong>
+          </div>` : ''}
+        `;
+        errorContainer.appendChild(errorCard);
+      });
+      
+      section.appendChild(errorContainer);
+      return section;
+    }
+
+    $('#start-btn').addEventListener('click', async()=>{
+      try{
+        // 获取原始listening.json数据
+        const resp = await fetch('./listening.json', { cache:'no-store' });
+        const allData = await resp.json();
+        
+        const pool = [];
+        Object.entries(allData).forEach(([examId,payload])=>{
+          (payload.sections||[]).forEach(sec=>{
+            const secAudio = sec.audio || '';
+            const secStart = sec.audioStart;
+            const secEnd = sec.audioEnd;
+            const secTranscript = sec.transcript || '';
+            (sec.questions||[]).forEach(q=>{
+              pool.push({ 
+                examId, 
+                section: sec.name||'', 
+                sectionAudio: secAudio,
+                sectionStart: secStart,
+                sectionEnd: secEnd,
+                sectionTranscript: secTranscript,
+                q 
+              });
+            });
+          });
+        });
+        
+        const sel = Array.from($('#skill-select').selectedOptions).map(o=>o.value);
+        const n = parseInt($('#count-select').value,10) || 5;
+        const examFilter = window._currentExamFilter || null;
+        const items = pickBySkills(pool, sel, n, $('#only-tagged')?.checked ?? true, examFilter);
+        
+        // 获取当前试卷的完整数据（用于音频播放模式）
+        const examData = examFilter ? allData[examFilter] : null;
+        
+        // 显示题目数量提示
+        if (examFilter && items.length > 0) {
+          toast(`已加载试卷 ${examFilter} 的全部 ${items.length} 道听力题`, 'ok');
+        } else if (examFilter && items.length === 0 && examData) {
+          toast(`试卷 ${examFilter} 暂无题目，已进入音频练习模式`, 'info');
+        }
+        
+        renderQuiz(items, examData);
+        window.scrollTo({top: (quizWrap.getBoundingClientRect().top + window.scrollY - 20), behavior:'smooth'});
+      }catch(e){ console.error(e); quizWrap.style.display='block'; quizWrap.textContent='加载题库失败'; }
+    });
+
+    $('#reset-btn').addEventListener('click', ()=>{ quizWrap.style.display='none'; resWrap.style.display='none'; quizWrap.innerHTML=''; resWrap.innerHTML=''; });
+
+    // 解除试卷锁定
+    const clearFilterBtn = $('#clear-exam-filter');
+    if (clearFilterBtn) {
+      clearFilterBtn.addEventListener('click', ()=>{
+        window._currentExamFilter = null;
+        const notice = $('#exam-filter-notice');
+        if (notice) notice.style.display = 'none';
+        const badge = $('#preset-badge');
+        if (badge) badge.style.display = 'none';
+        
+        // 恢复技能选择和题目数量卡片
+        const skillCard = $('#skill-select')?.closest('div[style*="background: white"]');
+        const countCard = $('#count-select')?.closest('div[style*="background: white"]');
+        if (skillCard) {
+          skillCard.style.opacity = '1';
+          skillCard.style.pointerEvents = 'auto';
+          skillCard.style.filter = 'none';
+          // 移除锁定提示
+          const hint = skillCard.querySelector('div[style*="完整试卷模式"]');
+          if (hint) hint.remove();
+        }
+        if (countCard) {
+          countCard.style.opacity = '1';
+          countCard.style.pointerEvents = 'auto';
+          countCard.style.filter = 'none';
+          // 移除锁定提示
+          const hint = countCard.querySelector('div[style*="测试全部题目"]');
+          if (hint) hint.remove();
+        }
+        
+        // 移除URL中的exam参数
+        const sp = new URLSearchParams(location.search);
+        sp.delete('exam');
+        const newUrl = sp.toString() ? `${location.pathname}?${sp.toString()}` : location.pathname;
+        history.replaceState(null, '', newUrl);
+        toast('已解除试卷锁定，现在可以抽取所有试卷的题目', 'ok');
+      });
+    }
+
+    // 监听听力阅读训练模式复选框变化，动态显示/隐藏提示
+    const readingModeCheckbox = $('#reading-mode');
+    const readingModeHint = $('#reading-mode-hint');
+    if (readingModeCheckbox && readingModeHint) {
+      readingModeCheckbox.addEventListener('change', () => {
+        if (readingModeCheckbox.checked) {
+          readingModeHint.style.display = 'block';
+          readingModeHint.style.opacity = '1';
+          readingModeHint.style.maxHeight = '200px';
+        } else {
+          readingModeHint.style.opacity = '0';
+          readingModeHint.style.maxHeight = '0';
+          setTimeout(() => {
+            if (!readingModeCheckbox.checked) {
+              readingModeHint.style.display = 'none';
+            }
+          }, 300);
+        }
+      });
+    }
+
+    loadProfileSkills();
+    // 应用 URL 预设参数：skills, count, onlyTagged, exam
+    (function applyUrlPresets(){
+      try{
+        const sp = new URLSearchParams(location.search);
+        const skillsParam = sp.get('skills');
+        const countParam = sp.get('count');
+        const onlyTaggedParam = sp.get('onlyTagged');
+        const autoParam = sp.get('auto');
+        const examParam = sp.get('exam');
+        // 保存exam参数到全局变量并显示提示卡片
+        if (examParam) {
+          window._currentExamFilter = examParam;
+          // 显示试卷锁定提示
+          const notice = $('#exam-filter-notice');
+          const noticeText = $('#exam-filter-text');
+          if (notice && noticeText) {
+            notice.style.display = 'block';
+            noticeText.textContent = `当前已锁定到试卷：${examParam}，将直接测试该试卷的全部听力题目`;
+          }
+          // 完整试卷模式下，隐藏技能选择和题目数量选择（因为会测试全部题目）
+          const skillCard = $('#skill-select')?.closest('div[style*="background: white"]');
+          const countCard = $('#count-select')?.closest('div[style*="background: white"]');
+          if (skillCard) {
+            skillCard.style.opacity = '0.5';
+            skillCard.style.pointerEvents = 'none';
+            skillCard.style.filter = 'grayscale(0.5)';
+            const disableHint = document.createElement('div');
+            disableHint.style.cssText = 'position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(6, 182, 212, 0.95); color: white; padding: 12px 20px; border-radius: 12px; font-weight: 600; font-size: 0.9rem; z-index: 10; box-shadow: 0 4px 12px rgba(0,0,0,0.2);';
+            disableHint.innerHTML = '<i class="fas fa-lock" style="margin-right: 6px;"></i>完整试卷模式';
+            skillCard.style.position = 'relative';
+            skillCard.appendChild(disableHint);
+          }
+          if (countCard) {
+            countCard.style.opacity = '0.5';
+            countCard.style.pointerEvents = 'none';
+            countCard.style.filter = 'grayscale(0.5)';
+            const disableHint = document.createElement('div');
+            disableHint.style.cssText = 'position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(6, 182, 212, 0.95); color: white; padding: 12px 20px; border-radius: 12px; font-weight: 600; font-size: 0.9rem; z-index: 10; box-shadow: 0 4px 12px rgba(0,0,0,0.2);';
+            disableHint.innerHTML = '<i class="fas fa-lock" style="margin-right: 6px;"></i>测试全部题目';
+            countCard.style.position = 'relative';
+            countCard.appendChild(disableHint);
+          }
+        }
+        // 预设徽章
+        const hasPresetForBadge = (skillsParam && skillsParam.length>0) || (countParam!=null) || (onlyTaggedParam!=null) || (examParam!=null);
+        if (hasPresetForBadge) { 
+          const b=$('#preset-badge'); 
+          if (b) {
+            b.style.display='inline-block'; 
+            if (examParam) {
+              b.innerHTML = `✓ 已锁定试卷：<strong>${examParam}</strong>`;
+              b.style.background = 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)';
+            }
+          }
+        }
+        // 应用 count
+        if (countParam) {
+          const v = String(countParam);
+          const sel = $('#count-select');
+          if (sel) { const opt = Array.from(sel.options).find(o=>o.value===v); if (opt) sel.value=v; }
+        }
+        // 应用 onlyTagged
+        if (onlyTaggedParam!==null) {
+          const val = String(onlyTaggedParam).toLowerCase();
+          const on = (val==='1'||val==='true'||val==='yes');
+          if ($('#only-tagged')) $('#only-tagged').checked = on;
+        }
+        // 应用 skills（需在选项加载完成后）
+        if (skillsParam) {
+          const list = skillsParam.split(',').map(s=>s.trim()).filter(Boolean);
+          const sel = $('#skill-select');
+          if (sel) {
+            // 若 option 不存在则创建后选中
+            const existing = new Set(Array.from(sel.options).map(o=>o.value));
+            list.forEach(k=>{
+              if (!existing.has(k)) { const o=document.createElement('option'); o.value=k; o.textContent=k; sel.appendChild(o); }
+            });
+            Array.from(sel.options).forEach(o=>{ o.selected = list.includes(o.value); });
+          }
+        }
+        // 自动开始：有任意预设或 auto 参数
+        const hasPreset = (skillsParam && skillsParam.length>0) || (countParam!=null) || (onlyTaggedParam!=null) || (examParam!=null);
+        const shouldAuto = hasPreset || (autoParam && ['1','true','yes'].includes(String(autoParam).toLowerCase()));
+        if (shouldAuto) {
+          setTimeout(()=>{ try{ $('#start-btn')?.click(); }catch(_){ } }, 60);
+        }
+      }catch(_){ }
+    })();
+
+    // 生成当前参数链接
+    function currentShareUrl(){
+      const selSkills = Array.from($('#skill-select').selectedOptions).map(o=>o.value).join(',');
+      const count = $('#count-select')?.value || '';
+      const onlyTagged = ($('#only-tagged')?.checked ? 'true':'false');
+      const sp = new URLSearchParams();
+      if (selSkills) sp.set('skills', selSkills);
+      if (count) sp.set('count', count);
+      sp.set('onlyTagged', onlyTagged);
+      sp.set('auto','1');
+      return `${location.origin}${location.pathname}?${sp.toString()}`;
+    }
+    function pushUrlFromControls(){ try{ history.replaceState(null,'', currentShareUrl()); }catch(_){ } }
+    $('#share-btn').addEventListener('click', ()=>{
+      const url = currentShareUrl();
+      navigator.clipboard?.writeText(url).then(()=> toast('已复制分享链接', 'ok')).catch(()=>{ try{ prompt('复制此链接', url); }catch(_){ } });
+    });
+    // 控件变化即更新 URL
+    ['change','input'].forEach(ev=>{
+      $('#count-select')?.addEventListener(ev, pushUrlFromControls);
+      $('#only-tagged')?.addEventListener(ev, pushUrlFromControls);
+      $('#skill-select')?.addEventListener(ev, pushUrlFromControls);
+    });
+  </script>
+  
+  <!-- 简洁页脚 -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-section">
+        <h4>四六级学习站</h4>
+        <p>免费开放的四六级真题听力资源共享站</p>
+      </div>
+      <div class="footer-section footer-section-links">
+        <h4>快速链接</h4>
+        <ul class="footer-links">
+          <li><a href="index.html">首页</a></li>
+          <li><a href="cet4.html">四级真题</a></li>
+          <li><a href="cet6.html">六级真题</a></li>
+          <li><a href="translator.html">阅读神器</a></li>
+          <li><a href="listening-micro.html">听力微练习</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>关于</h4>
+        <ul class="footer-links">
+          <li><a href="news.html">考试资讯</a></li>
+          <li><a href="#">关于本站</a></li>
+          <li><a href="#">联系我们</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 All Rights Reserved</p>
+      <p style="margin-top: 0.5rem;">本站仅用于学习交流，真题版权归原版权所有者所有。</p>
+    </div>
+  </footer>
+</body>
+</html>

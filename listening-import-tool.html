@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>听力导入工具 - 四六级学习站</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    :root{--c1:#667eea;--c2:#764ba2;--ok:#34C759;--warn:#FF9500;--err:#FF3B30}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(135deg,#f5f7fb 0%,#eef2fb 100%);margin:0;padding:2rem}
+    .container{max-width:1200px;margin:0 auto}
+    .header{color:#333;margin-bottom:1.2rem}
+    .header h1{margin:0 0 .4rem;font-size:1.8rem}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}
+    .panel{background:#fff;border-radius:14px;padding:1.2rem 1.2rem;box-shadow:0 10px 28px rgba(0,0,0,.06);border:1px solid #eef2f7}
+    .panel h2{margin:.2rem 0 1rem;color:#39465e;font-size:1.2rem}
+    .row{margin:.8rem 0}
+    label{display:block;font-weight:600;margin-bottom:.4rem;color:#39465e}
+    input[type=text],select,textarea{width:100%;padding:.75rem;border:2px solid #e6ebf2;border-radius:10px;font-size:.95rem;transition:.2s;background:#fff}
+    textarea{min-height:120px;resize:vertical}
+    input[type=text]:focus,select:focus,textarea:focus{outline:none;border-color:#8aa2ff;box-shadow:0 0 0 3px rgba(102,126,234,.12)}
+    .btn{display:inline-flex;align-items:center;gap:.4rem;border:none;border-radius:10px;padding:.65rem 1rem;font-weight:700;cursor:pointer;transition:.2s}
+    .btn-primary{background:linear-gradient(135deg,var(--c1),var(--c2));color:#fff}
+    .btn-ghost{background:#f6f7fb;border:2px solid #e9edf6;color:#4b5563}
+    .btn:hover{transform:translateY(-1px)}
+    .hint{font-size:.9rem;color:#6b7280}
+    .code{background:#0f172a;color:#e2e8f0;border-radius:10px;padding:1rem;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,'Courier New',monospace;overflow:auto;max-height:380px}
+    .alert{padding:.75rem 1rem;border-radius:10px;margin:.6rem 0;border:1px solid}
+    .ok{background:#e9f9ee;border-color:#c7f0d1;color:#1b7a36}
+    .warn{background:#fff7e6;border-color:#ffe1b3;color:#8c6d1f}
+    .err{background:#ffecec;border-color:#ffd0d0;color:#b42318}
+    .split{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+    small{color:#8b95a1}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1><i class="fas fa-file-import"></i> 听力导入工具</h1>
+      <div class="hint">支持 CSV/TSV/JSON 三种格式，生成可直接写入 listening.json 的片段；并可下载为单独 JSON。</div>
+    </div>
+    <div class="grid">
+      <div class="panel">
+        <h2><i class="fas fa-edit"></i> 基本信息</h2>
+        <div class="row">
+          <label>试卷 ID（examId）</label>
+          <input id="examId" type="text" placeholder="例如：cet4-2024-12-set1" />
+        </div>
+        <div class="split">
+          <div class="row">
+            <label>Section 名称</label>
+            <input id="sectionName" type="text" placeholder="例如：Section A - News Reports" value="Section A - News Reports" />
+          </div>
+          <div class="row">
+            <label>整段音频地址（可选）</label>
+            <input id="sectionAudio" type="text" placeholder="例如：assets/audio/cet4-2024-12-set1/sectionA.mp3" />
+          </div>
+        </div>
+        <div class="row">
+          <label>字幕/原文 transcript（可选）</label>
+          <textarea id="sectionTranscript" placeholder="可粘贴整段原文/字幕..."></textarea>
+        </div>
+        <div class="row">
+          <label>题目数据</label>
+          <textarea id="rawInput" placeholder="三种输入方式：
+1) CSV/TSV：id,stem,A,B,C,D,answer,explain,audio
+   例：1,What...,OptionA,OptionB,OptionC,OptionD,B,Reason,assets/audio/.../q1.mp3
+2) 行分隔：用 | 分隔（同上字段顺序）
+   例：1|What...|OptionA|OptionB|OptionC|OptionD|B|Reason|assets/audio/.../q1.mp3
+3) JSON 数组：[{ id, stem, options:[A,B,C,D], answer, explain?, audio? }, ...]
+"></textarea>
+          <small>最少提供 id、stem、四个 options、answer。explain、audio 可选。</small>
+        </div>
+        <div class="row" style="display:flex;gap:.6rem;flex-wrap:wrap">
+          <button class="btn btn-primary" id="btnPreview"><i class="fas fa-eye"></i> 生成预览</button>
+          <button class="btn btn-ghost" id="btnCopy"><i class="fas fa-copy"></i> 复制 JSON</button>
+          <button class="btn btn-ghost" id="btnDownload"><i class="fas fa-download"></i> 下载 JSON</button>
+          <button class="btn btn-ghost" id="btnCheck"><i class="fas fa-stethoscope"></i> 校验音频可用性</button>
+        </div>
+        <div id="msg" class="alert warn" style="display:none"></div>
+      </div>
+      <div class="panel">
+        <h2><i class="fas fa-code"></i> 生成的 JSON 片段</h2>
+        <div id="jsonOut" class="code">// 点击“生成预览”后显示</div>
+        <h2 style="margin-top:1rem"><i class="fas fa-list-check"></i> 解析预览</h2>
+        <div id="preview" class="panel" style="padding:1rem;background:#fafbfe"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const $ = sel => document.querySelector(sel);
+    const msg = (type, text) => { const el = $('#msg'); el.className = 'alert ' + (type||'warn'); el.textContent = text; el.style.display = 'block'; }
+    const clearMsg = () => { const el = $('#msg'); el.style.display = 'none'; }
+
+    function parseInput(raw){
+      raw = (raw||'').trim();
+      if(!raw) return [];
+      // JSON 数组
+      if(/^\s*\[/.test(raw)){
+        const arr = JSON.parse(raw);
+        return (arr||[]).map(n => ({
+          id: Number(n.id),
+          stem: String(n.stem||'').trim(),
+          options: Array.isArray(n.options)? n.options.slice(0,4) : [n.A,n.B,n.C,n.D],
+          answer: String(n.answer||'').trim().toUpperCase(),
+          explain: n.explain? String(n.explain) : '',
+          audio: n.audio? String(n.audio) : ''
+        })).filter(q=>q && q.id && q.stem && Array.isArray(q.options) && q.options.length===4 && q.answer)
+      }
+      // 行分隔 | 或 CSV/TSV
+      const lines = raw.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
+      const sep = lines.some(l=>l.includes('|')) ? '|' : (lines.some(l=>l.includes('\t')) ? '\t' : ',');
+      return lines.map(line=>{
+        const parts = line.split(new RegExp(sep)).map(s=>s.trim());
+        const [id, stem, A, B, C, D, answer, explain, audio] = parts;
+        return {
+          id: Number(id), stem,
+          options: [A, B, C, D],
+          answer: String(answer||'').toUpperCase(),
+          explain: explain||'',
+          audio: audio||''
+        }
+      }).filter(q=>q && q.id && q.stem && q.options.every(Boolean) && q.answer)
+    }
+
+    function buildJson(examId, sectionName, sectionAudio, sectionTranscript, questions){
+      return {
+        [examId]: {
+          sections: [
+            {
+              name: sectionName,
+              audio: sectionAudio || '',
+              transcript: sectionTranscript || '',
+              questions: questions
+            }
+          ]
+        }
+      }
+    }
+
+    function renderPreview(list){
+      const box = $('#preview'); box.innerHTML='';
+      if(!list.length){ box.innerHTML = '<div class="hint">暂无可预览内容</div>'; return; }
+      list.forEach(q=>{
+        const div = document.createElement('div');
+        div.style.border='1px solid #eef2f7';
+        div.style.borderRadius='10px';
+        div.style.padding='10px';
+        div.style.margin='6px 0';
+        const p = document.createElement('p'); p.innerHTML = `<strong>${q.id}.</strong> ${q.stem}`; div.appendChild(p);
+        const ul = document.createElement('ul'); ul.style.margin='0 0 0 1.2rem';
+        (q.options||[]).forEach((t,i)=>{ const li=document.createElement('li'); li.textContent = String.fromCharCode(65+i)+') '+t; ul.appendChild(li) });
+        div.appendChild(ul);
+        const small = document.createElement('div'); small.className='hint'; small.textContent = `答案：${q.answer}${q.explain? ' ｜ 解析：'+q.explain:''}${q.audio? ' ｜ 音频：'+q.audio:''}`; div.appendChild(small);
+        box.appendChild(div);
+      });
+    }
+
+    function stringify(obj){
+      return JSON.stringify(obj, null, 2);
+    }
+
+    async function checkAudios(questions, sectionAudio){
+      const urls = [];
+      if(sectionAudio) urls.push(sectionAudio);
+      (questions||[]).forEach(q=>{ if(q.audio) urls.push(q.audio) })
+      if(urls.length===0){ msg('warn','没有可校验的音频地址'); return; }
+      clearMsg();
+      const results = [];
+      for(const u of urls){
+        try{
+          const r = await fetch(u, { method:'HEAD', mode:'no-cors' });
+          results.push({ url:u, ok:true });
+        }catch(e){ results.push({ url:u, ok:false }) }
+      }
+      const pass = results.filter(x=>x.ok).length;
+      msg(pass===results.length? 'ok':'warn', `音频可访问(可能受 CORS 影响仅做探测)：${pass}/${results.length}`);
+      const code = results.map(x=>`${x.ok?'✅':'❌'} ${x.url}`).join('\n');
+      $('#jsonOut').textContent = code + '\n\n' + $('#jsonOut').textContent;
+    }
+
+    let lastJson = '';
+
+    $('#btnPreview').addEventListener('click', ()=>{
+      clearMsg();
+      const examId = $('#examId').value.trim();
+      const sectionName = $('#sectionName').value.trim() || 'Section A - News Reports';
+      const sectionAudio = $('#sectionAudio').value.trim();
+      const sectionTranscript = $('#sectionTranscript').value.trim();
+      if(!examId){ msg('err','请填写试卷 ID'); return; }
+      const list = parseInput($('#rawInput').value);
+      if(!list.length){ msg('err','未解析到有效题目，请检查输入格式'); return; }
+      renderPreview(list);
+      const obj = buildJson(examId, sectionName, sectionAudio, sectionTranscript, list);
+      lastJson = stringify(obj);
+      $('#jsonOut').textContent = lastJson;
+      msg('ok','已生成 JSON 片段，可复制到 listening.json（或下载为单独文件）。');
+    });
+
+    $('#btnCopy').addEventListener('click', async()=>{
+      if(!lastJson){ msg('warn','请先生成预览'); return; }
+      try{ await navigator.clipboard.writeText(lastJson); msg('ok','已复制到剪贴板'); }catch(e){ msg('err','复制失败，请手动选择文本复制'); }
+    });
+
+    $('#btnDownload').addEventListener('click', ()=>{
+      if(!lastJson){ msg('warn','请先生成预览'); return; }
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([lastJson], {type:'application/json'}));
+      a.download = ($('#examId').value.trim() || 'listening') + '.json';
+      a.click();
+      URL.revokeObjectURL(a.href);
+    });
+
+    $('#btnCheck').addEventListener('click', async()=>{
+      const list = parseInput($('#rawInput').value);
+      const sectionAudio = $('#sectionAudio').value.trim();
+      await checkAudios(list, sectionAudio);
+    });
+  </script>
+</body>
+</html>

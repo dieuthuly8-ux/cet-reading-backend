@@ -1,0 +1,13 @@
+{
+  "name": "cet-exam-analyzer",
+  "version": "1.0.0",
+  "description": "四六级真题分析工具",
+  "main": "analyze-real-exams-pdf.js",
+  "scripts": {
+    "analyze": "node analyze-real-exams-pdf.js",
+    "analyze-basic": "node analyze-real-exams.js"
+  },
+  "dependencies": {
+    "pdf-parse": "^1.1.4"
+  }
+}

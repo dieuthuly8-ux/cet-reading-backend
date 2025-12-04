@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">真题详情 - 四六级学习站</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23007AFF' /><text x='50' y='50' font-size='50' fill='%23FFF' text-anchor='middle' dominant-baseline='central' font-family='system-ui' font-weight='bold'>CET</text></svg>" type="image/svg+xml">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 隐藏任何可能的紫蓝色渐变横幅 */
+        #listening-section,
+        .listening-promo,
+        [style*="linear-gradient"][style*="667eea"],
+        [style*="linear-gradient"][style*="764ba2"],
+        .page-content > section:first-of-type:empty,
+        .page-content > div:first-of-type:empty {
+            display: none !important;
+        }
+        
+        /* 移除空的紫蓝色背景元素 */
+        .page-content > *[style*="background"][style*="gradient"]:empty {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- 页面滚动进度条 -->
+    <div class="scroll-progress" id="scroll-progress"></div>
+    
+    <!-- WeHUSTER 导航栏 -->
+    <nav class="apple-nav wehuster-nav">
+        <div class="nav-container">
+            <a class="nav-logo wehuster-logo" href="index.html">
+                <i class="fas fa-graduation-cap"></i>
+                <span class="logo-text">四六级学习站</span>
+            </a>
+            
+            <ul class="nav-menu wehuster-menu">
+                <li class="nav-item"><a href="index.html" class="nav-link">首页</a></li>
+                <li class="nav-item"><a href="cet4.html" class="nav-link">四级真题</a></li>
+                <li class="nav-item"><a href="cet6.html" class="nav-link">六级真题</a></li>
+                <li class="nav-item"><a href="translator.html" class="nav-link">阅读神器</a></li>
+                <li class="nav-item"><a href="listening-micro.html" class="nav-link">听力练习</a></li>
+                <li class="nav-item"><a href="news.html" class="nav-link">资讯</a></li>
+                <li class="nav-item"><a href="about.html" class="nav-link">About Us</a></li>
+            </ul>
+            
+            <div class="nav-tools">
+                <button class="search-btn" id="search-toggle" aria-label="搜索">
+                    <i class="fas fa-search"></i>
+                </button>
+                <button class="mobile-toggle" id="mobile-toggle" aria-label="菜单">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- PDF 预览区域 -->
+        <section id="pdf-preview-panel" style="display:none; margin-top: 16px;">
+            <div style="display:flex; justify-content: space-between; align-items:center; margin-bottom:8px;">
+                <h2 style="margin:0; font-size:1.1rem;">PDF 预览</h2>
+                <button class="action-btn" id="close-preview-btn" type="button">关闭预览</button>
+            </div>
+            <div style="border:1px solid #e6e6e6; border-radius:8px; overflow:hidden; background:#fff;">
+                <iframe id="pdf-preview-iframe" title="pdf-preview" style="width:100%; height:720px; border:0;" src="about:blank"></iframe>
+            </div>
+        </section>
+    </nav>
+
+    <main class="page-content">
+        <!-- 听力测试入口已移除，改为更简洁的设计 -->
+
+        <!-- 返回按钮 -->
+        <div class="back-button-container">
+            <a href="javascript:history.back()" class="back-button">
+                <i class="fas fa-arrow-left"></i> 返回真题列表
+            </a>
+        </div>
+
+        <!-- 真题标题和操作栏 - 居中布局 -->
+        <div class="exam-header-centered">
+            <h1 id="exam-title" class="exam-title-main">加载中...</h1>
+            <div class="exam-actions-centered">
+                <button class="action-btn-modern" id="preview-pdf-btn">
+                    <i class="fas fa-file-pdf"></i>
+                    <span>预览PDF</span>
+                </button>
+                <a class="action-btn-modern download-pdf-btn" id="download-pdf-btn" href="#" target="_blank">
+                    <i class="fas fa-download"></i>
+                    <span>下载PDF</span>
+                </a>
+                <button class="action-btn-modern print-btn" id="print-btn">
+                    <i class="fas fa-print"></i>
+                    <span>打印试卷</span>
+                </button>
+                <button class="action-btn-modern share-btn" id="share-btn">
+                    <i class="fas fa-share-alt"></i>
+                    <span>分享</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 真题信息 -->
+        <div class="exam-info-bar">
+            <div class="info-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span id="exam-date">-</span>
+            </div>
+            <div class="info-item">
+                <i class="fas fa-clock"></i>
+                <span id="exam-duration">考试时长: 130分钟</span>
+            </div>
+            <div class="info-item">
+                <i class="fas fa-file-alt"></i>
+                <span id="exam-type">-</span>
+            </div>
+        </div>
+
+        <!-- 历史成绩（听力） -->
+        <section id="listening-history-section" class="glass-card shadow-soft" style="display:none; margin: 1rem 0; border-radius:12px; padding:.2rem 0 .6rem;">
+            <div class="exam-header" style="margin-bottom: 0.8rem;">
+                <h2 style="margin: 0; font-size: 1.2rem;">听力历史成绩</h2>
+                <div class="exam-actions" style="margin-top: 0.5rem;">
+                    <button class="action-btn" id="clear-history-btn" type="button">
+                        <i class="fas fa-trash"></i> 清空本试卷历史
+                    </button>
+                </div>
+            </div>
+            <div id="listening-history-list" class="listening-result"></div>
+        </section>
+
+        <!-- 真题内容 -->
+        <div class="exam-content" id="exam-content">
+            <div class="loading-spinner">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>正在加载真题内容...</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- 优化页脚 -->
+    <footer class="site-footer" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; position: relative; overflow: hidden; box-shadow: 0 -4px 20px rgba(102, 126, 234, 0.15);">
+        <div style="position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, rgba(251, 191, 36, 0.5), transparent);"></div>
+        
+        <div style="text-align: center; padding: 2rem 2rem 1.5rem;">
+            <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem; margin-bottom: 1.5rem;">
+                <a href="news.html" style="color: rgba(255,255,255,0.85); text-decoration: none;">考试资讯</a>
+                <a href="about.html" style="color: rgba(255,255,255,0.85); text-decoration: none;">关于本站</a>
+                <a href="#" style="color: rgba(255,255,255,0.85); text-decoration: none;">联系我们</a>
+                <a href="#" style="color: rgba(255,255,255,0.85); text-decoration: none;">使用帮助</a>
+            </div>
+            
+            <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 1.5rem;">
+                <a href="#" style="width: 45px; height: 45px; background: rgba(255,255,255,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; border: 1px solid rgba(255,255,255,0.2);">
+                    <i class="fab fa-weixin" style="font-size: 1.3rem;"></i>
+                </a>
+                <a href="#" style="width: 45px; height: 45px; background: rgba(255,255,255,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; border: 1px solid rgba(255,255,255,0.2);">
+                    <i class="fab fa-qq" style="font-size: 1.3rem;"></i>
+                </a>
+                <a href="#" style="width: 45px; height: 45px; background: rgba(255,255,255,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; border: 1px solid rgba(255,255,255,0.2);">
+                    <i class="fab fa-weibo" style="font-size: 1.3rem;"></i>
+                </a>
+                <a href="#" style="width: 45px; height: 45px; background: rgba(255,255,255,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; border: 1px solid rgba(255,255,255,0.2);">
+                    <i class="fab fa-github" style="font-size: 1.3rem;"></i>
+                </a>
+            </div>
+        </div>
+
+        <div style="background: rgba(0,0,0,0.2); padding: 1.5rem 2rem; text-align: center; border-top: 1px solid rgba(255,255,255,0.1);">
+            <p style="margin: 0 0 0.5rem; color: rgba(255,255,255,0.7);">&copy; 2025 四六级学习站 All Rights Reserved</p>
+            <p style="margin: 0; color: rgba(255,255,255,0.6); font-size: 0.9rem;">本站仅用于学习交流 · 真题版权归原版权所有者所有</p>
+        </div>
+    </footer>
+    <!-- html2pdf.js 用于导出 PDF -->
+    <script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js"></script>
+    <script src="app.js"></script>
+    <script src="exam-loader.js"></script>
+    <script>
+        // 删除紫蓝色横幅元素
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                // 查找并删除所有包含紫蓝色渐变的元素
+                const elements = document.querySelectorAll('*');
+                elements.forEach(function(el) {
+                    const style = el.getAttribute('style') || '';
+                    const computedStyle = window.getComputedStyle(el).background || '';
+                    
+                    // 检查是否包含紫蓝色渐变
+                    if ((style.includes('667eea') || style.includes('764ba2')) && 
+                        (style.includes('gradient') || style.includes('linear-gradient'))) {
+                        // 如果元素几乎为空或只包含很少内容
+                        if (el.textContent.trim().length < 20 || el.children.length === 0) {
+                            el.remove();
+                            console.log('已删除紫蓝色横幅元素');
+                        }
+                    }
+                });
+            }, 100);
+        });
+    </script>
+</body>
+</html>
+
+
+

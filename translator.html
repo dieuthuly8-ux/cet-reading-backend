@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>四六级阅读神器 - 翻译工具</title>
+   <!-- 👇👇 终极版 Favicon (内联SVG, 无需外部请求, 100% 绕过缓存) 👇👇 -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23007AFF' /><text x='50' y='50' font-size='50' fill='%23FFF' text-anchor='middle' dominant-baseline='central' font-family='system-ui' font-weight='bold'>CET</text></svg>" type="image/svg+xml">
+    <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome 图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- 页面滚动进度条 -->
+    <div class="scroll-progress" id="scroll-progress"></div>
+    <!-- 简洁导航栏 -->
+    <nav class="apple-nav wehuster-nav">
+        <div class="nav-container">
+            <a class="nav-logo wehuster-logo" href="index.html">
+                <i class="fas fa-graduation-cap"></i>
+                <span class="logo-text">四六级学习站</span>
+            </a>
+            
+            <ul class="nav-menu wehuster-menu">
+                <li class="nav-item"><a href="index.html" class="nav-link">首页</a></li>
+                <li class="nav-item"><a href="cet4.html" class="nav-link">四级真题</a></li>
+                <li class="nav-item"><a href="cet6.html" class="nav-link">六级真题</a></li>
+                <li class="nav-item"><a href="translator.html" class="nav-link">阅读神器</a></li>
+                <li class="nav-item"><a href="listening-micro.html" class="nav-link">听力练习</a></li>
+                <li class="nav-item"><a href="news.html" class="nav-link">资讯</a></li>
+                <li class="nav-item"><a href="about.html" class="nav-link">About Us</a></li>
+            </ul>
+            
+            <div class="nav-tools">
+                <button class="search-btn" id="search-toggle" aria-label="搜索">
+                    <i class="fas fa-search"></i>
+                </button>
+                <button class="mobile-toggle" id="mobile-toggle" aria-label="菜单">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+    <main class="page-content" style="background: #fafbff; min-height: 80vh; padding: 3rem 2rem;">
+        <!-- 页面标题区域 -->
+        <div style="text-align: center; margin-bottom: 3rem;">
+            <div style="display: inline-block; position: relative;">
+                <h1 style="font-size: 2.8rem; font-weight: 800; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 0.5rem;">
+                    <i class="fas fa-language" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
+                    四六级阅读神器
+                </h1>
+                <div style="height: 4px; background: linear-gradient(90deg, transparent, #667eea, transparent); border-radius: 2px;"></div>
+            </div>
+            <p style="color: #64748b; margin-top: 1rem; font-size: 1.05rem;">智能翻译助手，轻松理解英文内容</p>
+        </div>
+        
+        <!-- 主翻译卡片 -->
+        <div style="max-width: 900px; margin: 0 auto;">
+            <div id="main-container" style="background: white; padding: 2.5rem; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); border: 2px solid #f0f0f0; transition: all 0.3s ease;">
+                <!-- 输入区域标题 -->
+                <div style="display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid #f0f0f0;">
+                    <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);">
+                        <i class="fas fa-pen" style="color: white; font-size: 1.1rem;"></i>
+                    </div>
+                    <h3 style="color: #2d3436; font-size: 1.3rem; font-weight: 700; margin: 0;">输入英文内容</h3>
+                </div>
+                
+                <!-- 文本框 -->
+                <textarea id="english-text" 
+                    placeholder="请在这里粘贴英语原文（支持长文翻译）..." 
+                    style="width: 100%; min-height: 250px; padding: 1.2rem; border: 2px solid #e2e8f0; background: #f8fafc; border-radius: 12px; color: #2d3436; font-size: 1rem; line-height: 1.8; outline: none; transition: all 0.3s ease; resize: vertical; font-family: 'Microsoft YaHei', sans-serif;"
+                    onfocus="this.style.border='2px solid #667eea'; this.style.background='white'; this.style.boxShadow='0 0 0 4px rgba(102, 126, 234, 0.1)';"
+                    onblur="this.style.border='2px solid #e2e8f0'; this.style.background='#f8fafc'; this.style.boxShadow='none';"></textarea>
+                
+                <!-- 翻译按钮 -->
+                <button id="translate-btn" 
+                    style="width: 100%; margin-top: 1.5rem; padding: 1rem 2rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);"
+                    onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(102, 126, 234, 0.4)';"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(102, 126, 234, 0.3)';">
+                    <i class="fas fa-language"></i> 开始翻译
+                </button>
+                
+                <!-- 翻译结果输出 -->
+                <div id="translation-output"></div>
+            </div>
+            
+            <!-- 特性展示 -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+                <div style="background: white; padding: 1.8rem; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); border: 2px solid #f0f0f0; transition: all 0.3s ease;"
+                    onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.1)';"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.06)';">
+                    <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3);">
+                        <i class="fas fa-bolt" style="color: white; font-size: 1.3rem;"></i>
+                    </div>
+                    <h4 style="color: #2d3436; font-size: 1.1rem; margin-bottom: 0.5rem;">快速翻译</h4>
+                    <p style="color: #64748b; font-size: 0.95rem; line-height: 1.6;">毫秒级响应，即时获取翻译结果</p>
+                </div>
+                
+                <div style="background: white; padding: 1.8rem; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); border: 2px solid #f0f0f0; transition: all 0.3s ease;"
+                    onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.1)';"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.06)';">
+                    <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #34d399 0%, #10b981 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);">
+                        <i class="fas fa-shield-alt" style="color: white; font-size: 1.3rem;"></i>
+                    </div>
+                    <h4 style="color: #2d3436; font-size: 1.1rem; margin-bottom: 0.5rem;">安全可靠</h4>
+                    <p style="color: #64748b; font-size: 0.95rem; line-height: 1.6;">采用百度翻译API，稳定高效</p>
+                </div>
+                
+                <div style="background: white; padding: 1.8rem; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); border: 2px solid #f0f0f0; transition: all 0.3s ease;"
+                    onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.1)';"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.06)';">
+                    <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);">
+                        <i class="fas fa-infinity" style="color: white; font-size: 1.3rem;"></i>
+                    </div>
+                    <h4 style="color: #2d3436; font-size: 1.1rem; margin-bottom: 0.5rem;">无限使用</h4>
+                    <p style="color: #64748b; font-size: 0.95rem; line-height: 1.6;">每月100万字符免费额度</p>
+                </div>
+            </div>
+        
+            <!-- 使用说明卡片 -->
+            <details style="margin-top: 2rem; background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); border: 2px solid #f0f0f0;">
+                <summary style="cursor: pointer; font-weight: 700; color: #667eea; font-size: 1.2rem; list-style: none; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-question-circle"></i> 如何使用翻译功能？
+                    <i class="fas fa-chevron-down" style="margin-left: auto; font-size: 0.9rem; transition: transform 0.3s;"></i>
+                </summary>
+                <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 2px solid #f0f0f0;">
+                    <div style="display: grid; gap: 1.5rem;">
+                        <div style="display: flex; gap: 1rem;">
+                            <div style="width: 35px; height: 35px; min-width: 35px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700;">1</div>
+                            <div>
+                                <h4 style="color: #2d3436; margin-bottom: 0.3rem;">粘贴英文内容</h4>
+                                <p style="color: #64748b; font-size: 0.95rem; line-height: 1.6;">在上方文本框中粘贴需要翻译的英文内容，支持长文翻译</p>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 1rem;">
+                            <div style="width: 35px; height: 35px; min-width: 35px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700;">2</div>
+                            <div>
+                                <h4 style="color: #2d3436; margin-bottom: 0.3rem;">点击翻译按钮</h4>
+                                <p style="color: #64748b; font-size: 0.95rem; line-height: 1.6;">点击"开始翻译"按钮，系统将自动处理您的请求</p>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 1rem;">
+                            <div style="width: 35px; height: 35px; min-width: 35px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700;">3</div>
+                            <div>
+                                <h4 style="color: #2d3436; margin-bottom: 0.3rem;">查看翻译结果</h4>
+                                <p style="color: #64748b; font-size: 0.95rem; line-height: 1.6;">稍等片刻，翻译结果将自动显示在下方</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 2rem; padding: 1.5rem; background: linear-gradient(135deg, #d1f2eb 0%, #a7f3d0 100%); border-left: 4px solid #10b981; border-radius: 8px;">
+                        <h4 style="margin: 0 0 0.8rem 0; color: #047857; display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-info-circle"></i> 技术说明
+                        </h4>
+                        <p style="margin: 0; color: #065f46; line-height: 1.7; font-size: 0.95rem;">
+                            本翻译功能使用百度翻译API，已预配置完成。每月100万字符免费额度，稳定可靠，无需任何配置即可使用。
+                        </p>
+                    </div>
+                </div>
+            </details>
+        </div>
+    </main>
+    
+    <!-- 简洁页脚 -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h4>四六级学习站</h4>
+                <p>免费开放的四六级真题听力资源共享站</p>
+            </div>
+            <div class="footer-section footer-section-links">
+                <h4>快速链接</h4>
+                <ul class="footer-links">
+                    <li><a href="index.html">首页</a></li>
+                    <li><a href="cet4.html">四级真题</a></li>
+                    <li><a href="cet6.html">六级真题</a></li>
+                    <li><a href="translator.html">阅读神器</a></li>
+                    <li><a href="listening-micro.html">听力微练习</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>关于</h4>
+                <ul class="footer-links">
+                    <li><a href="news.html">考试资讯</a></li>
+                    <li><a href="#">关于本站</a></li>
+                    <li><a href="#">联系我们</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 All Rights Reserved</p>
+            <p style="margin-top: 0.5rem;">本站仅用于学习交流，真题版权归原版权所有者所有。</p>
+        </div>
+    </footer>
+    <script src="app.js"></script>
+    <script>
+        // Vercel API端点
+        const API_ENDPOINT = 'https://cet-reading-backend.vercel.app/api/translate';
+
+        // 翻译功能
+        document.addEventListener('DOMContentLoaded', () => {
+            const translateBtn = document.getElementById('translate-btn');
+            
+            translateBtn.addEventListener('click', async () => {
+                const text = document.getElementById('english-text').value.trim();
+                const outputDiv = document.getElementById('translation-output');
+                
+                if (!text) {
+                    outputDiv.innerHTML = `
+                        <div style="padding: 2rem; text-align: center; color: #856404; background: #fff3cd; border-radius: 8px; margin-top: 1.5rem;">
+                            <i class="fas fa-exclamation-circle" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                            <p>请输入英文内容后再翻译</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // 显示加载状态
+                outputDiv.innerHTML = `
+                    <div style="padding: 2rem; text-align: center; color: #004085; background: #cce5ff; border-radius: 8px; margin-top: 1.5rem;">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                        <p>正在翻译中，请稍候...</p>
+                    </div>
+                `;
+                
+                try {
+                    // 调用Vercel代理API
+                    const response = await fetch(API_ENDPOINT, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ text })
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('翻译服务暂时不可用');
+                    }
+                    
+                    const data = await response.json();
+                    
+                    if (data.error) {
+                        throw new Error(data.error);
+                    }
+                    
+                    // 显示翻译结果
+                    outputDiv.innerHTML = `
+                        <div style="margin-top: 2rem; padding: 2rem; background: white; border-radius: 12px; box-shadow: 0 2px 15px rgba(0,0,0,0.1);">
+                            <h3 style="margin: 0 0 1rem 0; color: #333; border-bottom: 2px solid #007AFF; padding-bottom: 0.5rem;">
+                                <i class="fas fa-check-circle" style="color: #10b981;"></i> 翻译结果
+                            </h3>
+                            <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; line-height: 1.8; color: #333; font-size: 1.05rem;">
+                                ${data.result}
+                            </div>
+                        </div>
+                    `;
+                } catch (error) {
+                    outputDiv.innerHTML = `
+                        <div style="padding: 2rem; text-align: center; color: #721c24; background: #f8d7da; border-radius: 8px; margin-top: 1.5rem;">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                            <p><strong>翻译失败！</strong></p>
+                            <p style="margin-top: 0.5rem; font-size: 0.9rem;">错误信息：${error.message}</p>
+                            <p style="margin-top: 0.5rem; font-size: 0.9rem;">请稍后再试</p>
+                        </div>
+                    `;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

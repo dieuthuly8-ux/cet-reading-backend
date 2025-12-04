@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Section时间戳标记助手 - 四六级学习站</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    .marker-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+    .audio-panel { background: #f9f9f9; padding: 20px; border-radius: 12px; }
+    .sections-panel { background: #fff; padding: 20px; border-radius: 12px; border: 1px solid #e0e0e0; }
+    .section-item { padding: 16px; margin: 10px 0; background: #fafafa; border-radius: 8px; border-left: 4px solid #ddd; cursor: pointer; }
+    .section-item:hover { background: #f0f0f0; }
+    .section-item.active { border-left-color: #007AFF; background: #e3f2fd; }
+    .section-item.marked { border-left-color: #4CAF50; background: #e8f5e9; }
+    .time-display { font-size: 2rem; font-weight: bold; color: #007AFF; margin: 10px 0; }
+    .control-buttons { display: flex; gap: 8px; margin: 10px 0; flex-wrap: wrap; }
+    .marker-info { background: #fff3cd; padding: 12px; border-radius: 8px; margin: 10px 0; border-left: 4px solid #ffc107; }
+    audio { width: 100%; margin: 10px 0; }
+    .timestamp-badge { display: inline-block; padding: 4px 10px; background: #4CAF50; color: white; border-radius: 4px; font-size: 0.9rem; margin-top: 6px; }
+    .export-section { margin-top: 20px; padding: 20px; background: #e8f5e9; border-radius: 12px; }
+    textarea { width: 100%; min-height: 200px; font-family: monospace; font-size: 0.9rem; padding: 10px; border: 1px solid #ccc; border-radius: 4px; }
+    .instruction { background: #e3f2fd; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+    .shortcut-hint { background: #fff; padding: 10px; border-radius: 6px; margin: 10px 0; font-size: 0.9rem; }
+    .section-desc { font-size: 0.9rem; color: #666; margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <div class="page-content">
+    <div class="exam-header">
+      <h1><i class="fas fa-scissors"></i> Section 时间戳标记助手</h1>
+      <p class="hint">为每个Section标记音频起止时间，该Section下的所有题目自动共享此片段</p>
+    </div>
+
+    <div class="instruction">
+      <h3><i class="fas fa-info-circle"></i> 使用说明 - 更简单的标记方式</h3>
+      <ol style="margin: 10px 0; padding-left: 20px;">
+        <li>输入试卷ID并加载（如 cet6-2020-07-set1）</li>
+        <li>上传或输入音频地址，播放音频</li>
+        <li>点击第一个Section（如Section A - Long Conversations）</li>
+        <li>播放到<strong>Section开始位置</strong>时点击"标记起点"</li>
+        <li>播放到<strong>Section结束位置</strong>时点击"标记终点"</li>
+        <li>自动跳到下一个Section，重复步骤4-5</li>
+        <li>完成后点击"导出时间戳数据"，应用到 listening.json</li>
+      </ol>
+      <div class="shortcut-hint">
+        <strong>💡 核心优势：</strong>一个Section只需标记一次（约2分钟），该Section下的所有题目（通常8-10题）自动共享这个音频片段！<br>
+        <strong>快捷键：</strong>空格=暂停/播放 | S=标记起点 | E=标记终点 | ←/→=后退/前进5秒
+      </div>
+    </div>
+
+    <div style="margin: 20px 0;">
+      <label><strong>试卷ID：</strong>
+        <input type="text" id="exam-id" placeholder="如: cet6-2020-07-set1" style="width: 300px; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" />
+      </label>
+      <button class="action-btn" id="load-btn" style="margin-left: 10px;"><i class="fas fa-download"></i> 加载Sections</button>
+    </div>
+
+    <div class="marker-container">
+      <div class="audio-panel">
+        <h3><i class="fas fa-music"></i> 音频播放器</h3>
+        <label><strong>音频地址：</strong>
+          <input type="text" id="audio-url" placeholder="输入音频URL或选择文件" style="width: 100%; padding: 8px; margin: 5px 0; border: 1px solid #ccc; border-radius: 4px;" />
+        </label>
+        <div style="margin: 10px 0;">
+          <input type="file" id="audio-file" accept="audio/*" style="display: none;" />
+          <button class="btn" onclick="document.getElementById('audio-file').click()"><i class="fas fa-folder-open"></i> 选择本地文件</button>
+          <button class="btn btn-secondary" id="load-audio-btn" style="margin-left: 8px;"><i class="fas fa-play-circle"></i> 加载音频</button>
+        </div>
+        <audio id="audio-player" controls></audio>
+        <div class="time-display" id="current-time">0:00 / 0:00</div>
+        <div class="marker-info" id="marker-info">
+          <strong>当前Section：</strong><span id="current-section">未选择</span><br>
+          <strong>起点：</strong><span id="start-time-display">未标记</span><br>
+          <strong>终点：</strong><span id="end-time-display">未标记</span><br>
+          <strong>时长：</strong><span id="duration-display">-</span>
+        </div>
+        <div class="control-buttons">
+          <button class="action-btn" id="mark-start-btn"><i class="fas fa-flag"></i> 标记起点 (S)</button>
+          <button class="action-btn" id="mark-end-btn"><i class="fas fa-flag-checkered"></i> 标记终点 (E)</button>
+          <button class="btn" id="preview-btn"><i class="fas fa-play"></i> 预览片段</button>
+          <button class="btn btn-secondary" id="clear-btn"><i class="fas fa-eraser"></i> 清除标记</button>
+        </div>
+        <div class="control-buttons">
+          <button class="btn" id="back-5s"><i class="fas fa-backward"></i> -5s (←)</button>
+          <button class="btn" id="back-1s"><i class="fas fa-step-backward"></i> -1s</button>
+          <button class="btn" id="forward-1s"><i class="fas fa-step-forward"></i> +1s</button>
+          <button class="btn" id="forward-5s"><i class="fas fa-forward"></i> +5s (→)</button>
+        </div>
+        <div style="margin-top: 10px;">
+          <label><strong>倍速：</strong>
+            <select id="playback-rate" style="padding: 6px;">
+              <option value="0.5">0.5x</option>
+              <option value="0.75">0.75x</option>
+              <option value="1" selected>1x</option>
+              <option value="1.25">1.25x</option>
+              <option value="1.5">1.5x</option>
+              <option value="2">2x</option>
+            </select>
+          </label>
+        </div>
+      </div>
+
+      <div class="sections-panel">
+        <h3><i class="fas fa-list"></i> Sections列表 <span id="section-count" class="badge">0个</span></h3>
+        <div id="sections-list" style="max-height: 600px; overflow-y: auto;">
+          <p class="hint">请先加载试卷数据</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="export-section">
+      <h3><i class="fas fa-download"></i> 导出时间戳数据</h3>
+      <button class="action-btn download-btn" id="export-btn"><i class="fas fa-file-export"></i> 生成JSON数据</button>
+      <button class="btn" id="copy-btn" style="margin-left: 10px;"><i class="fas fa-copy"></i> 复制到剪贴板</button>
+      <button class="btn btn-secondary" id="apply-btn" style="margin-left: 10px;"><i class="fas fa-save"></i> 直接应用到listening.json</button>
+      <p class="hint" style="margin-top: 8px;">已标记 <strong id="marked-count">0</strong> / <strong id="total-count">0</strong> 个Section</p>
+      <textarea id="output-json" placeholder="时间戳数据将显示在这里..." readonly></textarea>
+    </div>
+  </div>
+
+  <script>
+    const audio = document.getElementById('audio-player');
+    const timeDisplay = document.getElementById('current-time');
+    const sectionsList = document.getElementById('sections-list');
+    const outputJson = document.getElementById('output-json');
+    
+    let sections = [];
+    let currentSectionIndex = null;
+    let timestamps = new Map(); // sectionName -> {start, end}
+    let examId = '';
+
+    // 格式化时间
+    function formatTime(sec) {
+      const m = Math.floor(sec / 60);
+      const s = Math.floor(sec % 60);
+      return `${m}:${s.toString().padStart(2, '0')}`;
+    }
+
+    // 更新时间显示
+    audio.addEventListener('timeupdate', () => {
+      timeDisplay.textContent = `${formatTime(audio.currentTime)} / ${formatTime(audio.duration || 0)}`;
+    });
+
+    // 倍速控制
+    document.getElementById('playback-rate').addEventListener('change', (e) => {
+      audio.playbackRate = parseFloat(e.target.value);
+    });
+
+    // 时间跳转
+    document.getElementById('back-5s').addEventListener('click', () => { audio.currentTime = Math.max(0, audio.currentTime - 5); });
+    document.getElementById('back-1s').addEventListener('click', () => { audio.currentTime = Math.max(0, audio.currentTime - 1); });
+    document.getElementById('forward-1s').addEventListener('click', () => { audio.currentTime = Math.min(audio.duration, audio.currentTime + 1); });
+    document.getElementById('forward-5s').addEventListener('click', () => { audio.currentTime = Math.min(audio.duration, audio.currentTime + 5); });
+
+    // 加载音频
+    document.getElementById('load-audio-btn').addEventListener('click', () => {
+      const url = document.getElementById('audio-url').value.trim();
+      if (!url) return alert('请输入音频地址');
+      audio.src = url;
+      audio.load();
+    });
+
+    document.getElementById('audio-file').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const url = URL.createObjectURL(file);
+        document.getElementById('audio-url').value = file.name;
+        audio.src = url;
+        audio.load();
+      }
+    });
+
+    // 加载Sections
+    document.getElementById('load-btn').addEventListener('click', async () => {
+      examId = document.getElementById('exam-id').value.trim();
+      if (!examId) return alert('请输入试卷ID');
+      
+      try {
+        const resp = await fetch('./listening.json', { cache: 'no-store' });
+        const data = await resp.json();
+        const exam = data[examId];
+        if (!exam) return alert('找不到该试卷: ' + examId);
+        
+        sections = exam.sections || [];
+        renderSections();
+        
+        // 自动填充音频地址（从第一个section获取）
+        if (sections[0]?.audio) {
+          document.getElementById('audio-url').value = sections[0].audio;
+        }
+      } catch (e) {
+        alert('加载失败: ' + e.message);
+      }
+    });
+
+    // 渲染Sections列表
+    function renderSections() {
+      sectionsList.innerHTML = '';
+      document.getElementById('section-count').textContent = `${sections.length}个`;
+      document.getElementById('total-count').textContent = sections.length;
+      
+      sections.forEach((sec, idx) => {
+        const div = document.createElement('div');
+        div.className = 'section-item';
+        const ts = timestamps.get(sec.name);
+        div.innerHTML = `
+          <strong>${sec.name}</strong>
+          <div class="section-desc">${sec.description || ''} | ${sec.questions?.length || 0}题</div>
+          ${ts ? `<div class="timestamp-badge">${formatTime(ts.start)} - ${formatTime(ts.end)} (${Math.round((ts.end - ts.start) / 60)}分钟)</div>` : ''}
+        `;
+        div.addEventListener('click', () => selectSection(idx));
+        sectionsList.appendChild(div);
+      });
+      
+      updateMarkCount();
+    }
+
+    // 选择Section
+    function selectSection(idx) {
+      currentSectionIndex = idx;
+      document.querySelectorAll('.section-item').forEach((el, i) => {
+        el.classList.toggle('active', i === idx);
+        el.classList.toggle('marked', timestamps.has(sections[i].name));
+      });
+      
+      const sec = sections[idx];
+      document.getElementById('current-section').textContent = sec.name;
+      
+      const ts = timestamps.get(sec.name);
+      document.getElementById('start-time-display').textContent = ts ? formatTime(ts.start) : '未标记';
+      document.getElementById('end-time-display').textContent = ts ? formatTime(ts.end) : '未标记';
+      document.getElementById('duration-display').textContent = ts ? `${Math.round((ts.end - ts.start) / 60)}分钟` : '-';
+    }
+
+    // 标记起点
+    document.getElementById('mark-start-btn').addEventListener('click', markStart);
+    function markStart() {
+      if (currentSectionIndex === null) return alert('请先选择Section');
+      const sec = sections[currentSectionIndex];
+      const start = Math.round(audio.currentTime * 10) / 10;
+      
+      let ts = timestamps.get(sec.name) || {};
+      ts.start = start;
+      timestamps.set(sec.name, ts);
+      
+      document.getElementById('start-time-display').textContent = formatTime(start);
+      if (ts.end) {
+        document.getElementById('duration-display').textContent = `${Math.round((ts.end - start) / 60)}分钟`;
+      }
+      renderSections();
+    }
+
+    // 标记终点
+    document.getElementById('mark-end-btn').addEventListener('click', markEnd);
+    function markEnd() {
+      if (currentSectionIndex === null) return alert('请先选择Section');
+      const sec = sections[currentSectionIndex];
+      const end = Math.round(audio.currentTime * 10) / 10;
+      
+      let ts = timestamps.get(sec.name) || {};
+      ts.end = end;
+      timestamps.set(sec.name, ts);
+      
+      document.getElementById('end-time-display').textContent = formatTime(end);
+      if (ts.start) {
+        document.getElementById('duration-display').textContent = `${Math.round((end - ts.start) / 60)}分钟`;
+      }
+      renderSections();
+      
+      // 自动跳到下一个Section
+      if (currentSectionIndex < sections.length - 1) {
+        selectSection(currentSectionIndex + 1);
+      }
+    }
+
+    // 预览片段
+    document.getElementById('preview-btn').addEventListener('click', () => {
+      if (currentSectionIndex === null) return alert('请先选择Section');
+      const sec = sections[currentSectionIndex];
+      const ts = timestamps.get(sec.name);
+      if (!ts || ts.start === undefined) return alert('请先标记起点');
+      
+      audio.currentTime = ts.start;
+      audio.play();
+      
+      if (ts.end !== undefined) {
+        const checkEnd = setInterval(() => {
+          if (audio.currentTime >= ts.end) {
+            audio.pause();
+            clearInterval(checkEnd);
+          }
+        }, 100);
+      }
+    });
+
+    // 清除当前标记
+    document.getElementById('clear-btn').addEventListener('click', () => {
+      if (currentSectionIndex === null) return;
+      const sec = sections[currentSectionIndex];
+      timestamps.delete(sec.name);
+      document.getElementById('start-time-display').textContent = '未标记';
+      document.getElementById('end-time-display').textContent = '未标记';
+      document.getElementById('duration-display').textContent = '-';
+      renderSections();
+    });
+
+    // 导出JSON
+    document.getElementById('export-btn').addEventListener('click', () => {
+      const result = sections.map(sec => {
+        const ts = timestamps.get(sec.name);
+        return {
+          name: sec.name,
+          audioStart: ts?.start,
+          audioEnd: ts?.end
+        };
+      });
+      
+      outputJson.value = JSON.stringify({ examId, sections: result }, null, 2);
+    });
+
+    // 复制到剪贴板
+    document.getElementById('copy-btn').addEventListener('click', () => {
+      if (!outputJson.value) {
+        alert('请先点击"生成JSON数据"');
+        return;
+      }
+      outputJson.select();
+      document.execCommand('copy');
+      alert('已复制到剪贴板！');
+    });
+
+    // 直接应用到listening.json（需要后端支持）
+    document.getElementById('apply-btn').addEventListener('click', async () => {
+      if (!outputJson.value) {
+        alert('请先点击"生成JSON数据"');
+        return;
+      }
+      
+      alert('此功能需要手动操作：\n\n1. 点击"复制到剪贴板"\n2. 打开 listening.json\n3. 找到对应试卷和Section\n4. 添加 audioStart 和 audioEnd 字段');
+    });
+
+    // 更新标记计数
+    function updateMarkCount() {
+      const marked = Array.from(timestamps.values()).filter(ts => ts.start !== undefined && ts.end !== undefined).length;
+      document.getElementById('marked-count').textContent = marked;
+    }
+
+    // 快捷键
+    document.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      
+      switch(e.key.toLowerCase()) {
+        case ' ':
+          e.preventDefault();
+          audio.paused ? audio.play() : audio.pause();
+          break;
+        case 's':
+          e.preventDefault();
+          markStart();
+          break;
+        case 'e':
+          e.preventDefault();
+          markEnd();
+          break;
+        case 'arrowleft':
+          e.preventDefault();
+          audio.currentTime = Math.max(0, audio.currentTime - 5);
+          break;
+        case 'arrowright':
+          e.preventDefault();
+          audio.currentTime = Math.min(audio.duration, audio.currentTime + 5);
+          break;
+      }
+    });
+  </script>
+</body>
+</html>
