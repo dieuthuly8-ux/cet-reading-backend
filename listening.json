@@ -164,7 +164,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet4-listening/cet4-2024-06-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2024-06-set1.mp3"
       },
       {
         "name": "Section B - Long Conversations",
@@ -373,7 +373,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet4-listening/cet4-2024-06-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2024-06-set1.mp3"
       },
       {
         "name": "Section C - Passages",
@@ -668,7 +668,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet4-listening/cet4-2024-06-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2024-06-set1.mp3"
       }
     ],
     "modes": {
@@ -2240,7 +2240,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2019-12-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2019-12-set1.mp3"
       },
       {
         "name": "Section B - Passages",
@@ -2430,7 +2430,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2019-12-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2019-12-set1.mp3"
       },
       {
         "name": "Section C - Lectures",
@@ -2698,7 +2698,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2019-12-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2019-12-set1.mp3"
       }
     ],
     "totalQuestions": 25,
@@ -4275,7 +4275,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2019-12-set2.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2019-12-set2.mp3"
       },
       {
         "name": "Section B - Passages",
@@ -4465,7 +4465,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2019-12-set2.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2019-12-set2.mp3"
       },
       {
         "name": "Section C - Lectures",
@@ -4733,7 +4733,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2019-12-set2.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2019-12-set2.mp3"
       }
     ],
     "totalQuestions": 25,
@@ -6310,7 +6310,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2019-06-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2019-06-set1.mp3"
       },
       {
         "name": "Section B - Passages",
@@ -6500,7 +6500,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2019-06-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2019-06-set1.mp3"
       },
       {
         "name": "Section C - Lectures",
@@ -6768,7 +6768,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2019-06-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2019-06-set1.mp3"
       }
     ],
     "totalQuestions": 25,
@@ -8345,7 +8345,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2019-06-set2.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2019-06-set2.mp3"
       },
       {
         "name": "Section B - Passages",
@@ -8535,7 +8535,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2019-06-set2.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2019-06-set2.mp3"
       },
       {
         "name": "Section C - Lectures",
@@ -8803,7 +8803,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2019-06-set2.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2019-06-set2.mp3"
       }
     ],
     "totalQuestions": 25,
@@ -10380,7 +10380,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2020-12-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2020-12-set1.mp3"
       },
       {
         "name": "Section B - Passages",
@@ -10570,7 +10570,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2020-12-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2020-12-set1.mp3"
       },
       {
         "name": "Section C - Lectures",
@@ -10838,7 +10838,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2020-12-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2020-12-set1.mp3"
       }
     ],
     "totalQuestions": 25,
@@ -12415,7 +12415,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2020-12-set2.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2020-12-set2.mp3"
       },
       {
         "name": "Section B - Passages",
@@ -12605,7 +12605,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2020-12-set2.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2020-12-set2.mp3"
       },
       {
         "name": "Section C - Lectures",
@@ -12873,7 +12873,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2020-12-set2.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2020-12-set2.mp3"
       }
     ],
     "totalQuestions": 25,
@@ -14450,7 +14450,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2020-07-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2020-07-set1.mp3"
       },
       {
         "name": "Section B - Passages",
@@ -14640,7 +14640,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2020-07-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2020-07-set1.mp3"
       },
       {
         "name": "Section C - Lectures",
@@ -14908,7 +14908,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2020-07-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2020-07-set1.mp3"
       }
     ],
     "totalQuestions": 25,
@@ -16485,7 +16485,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2020-09-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2020-09-set1.mp3"
       },
       {
         "name": "Section B - Passages",
@@ -16675,7 +16675,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2020-09-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2020-09-set1.mp3"
       },
       {
         "name": "Section C - Lectures",
@@ -16943,7 +16943,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2020-09-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2020-09-set1.mp3"
       }
     ],
     "totalQuestions": 25,
@@ -18520,7 +18520,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2021-12-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2021-12-set1.mp3"
       },
       {
         "name": "Section B - Passages",
@@ -18710,7 +18710,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2021-12-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2021-12-set1.mp3"
       },
       {
         "name": "Section C - Lectures",
@@ -18978,7 +18978,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2021-12-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2021-12-set1.mp3"
       }
     ],
     "totalQuestions": 25,
@@ -20555,7 +20555,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2021-12-set2.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2021-12-set2.mp3"
       },
       {
         "name": "Section B - Passages",
@@ -20745,7 +20745,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2021-12-set2.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2021-12-set2.mp3"
       },
       {
         "name": "Section C - Lectures",
@@ -21013,7 +21013,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2021-12-set2.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2021-12-set2.mp3"
       }
     ],
     "totalQuestions": 25,
@@ -22590,7 +22590,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2021-06-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2021-06-set1.mp3"
       },
       {
         "name": "Section B - Passages",
@@ -22780,7 +22780,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2021-06-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2021-06-set1.mp3"
       },
       {
         "name": "Section C - Lectures",
@@ -23048,7 +23048,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2021-06-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2021-06-set1.mp3"
       }
     ],
     "totalQuestions": 25,
@@ -24625,7 +24625,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2021-06-set2.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2021-06-set2.mp3"
       },
       {
         "name": "Section B - Passages",
@@ -24815,7 +24815,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2021-06-set2.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2021-06-set2.mp3"
       },
       {
         "name": "Section C - Lectures",
@@ -25083,7 +25083,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2021-06-set2.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2021-06-set2.mp3"
       }
     ],
     "totalQuestions": 25,
@@ -26660,7 +26660,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2022-12-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2022-12-set1.mp3"
       },
       {
         "name": "Section B - Passages",
@@ -26850,7 +26850,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2022-12-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2022-12-set1.mp3"
       },
       {
         "name": "Section C - Lectures",
@@ -27118,7 +27118,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2022-12-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2022-12-set1.mp3"
       }
     ],
     "totalQuestions": 25,
@@ -28695,7 +28695,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2022-12-set2.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2022-12-set2.mp3"
       },
       {
         "name": "Section B - Passages",
@@ -28885,7 +28885,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2022-12-set2.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2022-12-set2.mp3"
       },
       {
         "name": "Section C - Lectures",
@@ -29153,7 +29153,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2022-12-set2.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2022-12-set2.mp3"
       }
     ],
     "totalQuestions": 25,
@@ -30730,7 +30730,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2022-06-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2022-06-set1.mp3"
       },
       {
         "name": "Section B - Passages",
@@ -30920,7 +30920,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2022-06-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2022-06-set1.mp3"
       },
       {
         "name": "Section C - Lectures",
@@ -31188,7 +31188,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2022-06-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2022-06-set1.mp3"
       }
     ],
     "totalQuestions": 25,
@@ -32765,7 +32765,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2022-09-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2022-09-set1.mp3"
       },
       {
         "name": "Section B - Passages",
@@ -32955,7 +32955,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2022-09-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2022-09-set1.mp3"
       },
       {
         "name": "Section C - Lectures",
@@ -33223,7 +33223,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2022-09-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2022-09-set1.mp3"
       }
     ],
     "totalQuestions": 25,
@@ -34800,7 +34800,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2023-12-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2023-12-set1.mp3"
       },
       {
         "name": "Section B - Passages",
@@ -34990,7 +34990,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2023-12-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2023-12-set1.mp3"
       },
       {
         "name": "Section C - Lectures",
@@ -35258,7 +35258,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2023-12-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2023-12-set1.mp3"
       }
     ],
     "totalQuestions": 25,
@@ -36835,7 +36835,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2023-12-set2.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2023-12-set2.mp3"
       },
       {
         "name": "Section B - Passages",
@@ -37025,7 +37025,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2023-12-set2.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2023-12-set2.mp3"
       },
       {
         "name": "Section C - Lectures",
@@ -37293,7 +37293,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2023-12-set2.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2023-12-set2.mp3"
       }
     ],
     "totalQuestions": 25,
@@ -38870,7 +38870,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2023-03-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2023-03-set1.mp3"
       },
       {
         "name": "Section B - Passages",
@@ -39060,7 +39060,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2023-03-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2023-03-set1.mp3"
       },
       {
         "name": "Section C - Lectures",
@@ -39328,7 +39328,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2023-03-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2023-03-set1.mp3"
       }
     ],
     "totalQuestions": 25,
@@ -40905,7 +40905,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2023-06-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2023-06-set1.mp3"
       },
       {
         "name": "Section B - Passages",
@@ -41095,7 +41095,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2023-06-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2023-06-set1.mp3"
       },
       {
         "name": "Section C - Lectures",
@@ -41363,7 +41363,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2023-06-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2023-06-set1.mp3"
       }
     ],
     "totalQuestions": 25,
@@ -42940,7 +42940,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2023-06-set2.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2023-06-set2.mp3"
       },
       {
         "name": "Section B - Passages",
@@ -43130,7 +43130,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2023-06-set2.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2023-06-set2.mp3"
       },
       {
         "name": "Section C - Lectures",
@@ -43398,7 +43398,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2023-06-set2.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2023-06-set2.mp3"
       }
     ],
     "totalQuestions": 25,
@@ -44975,7 +44975,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2024-12-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2024-12-set1.mp3"
       },
       {
         "name": "Section B - Passages",
@@ -45165,7 +45165,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2024-12-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2024-12-set1.mp3"
       },
       {
         "name": "Section C - Lectures",
@@ -45433,7 +45433,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2024-12-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2024-12-set1.mp3"
       }
     ],
     "totalQuestions": 25,
@@ -47010,7 +47010,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2024-12-set2.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2024-12-set2.mp3"
       },
       {
         "name": "Section B - Passages",
@@ -47200,7 +47200,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2024-12-set2.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2024-12-set2.mp3"
       },
       {
         "name": "Section C - Lectures",
@@ -47468,7 +47468,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2024-12-set2.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2024-12-set2.mp3"
       }
     ],
     "totalQuestions": 25,
@@ -49045,7 +49045,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2024-06-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2024-06-set1.mp3"
       },
       {
         "name": "Section B - Passages",
@@ -49235,7 +49235,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2024-06-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2024-06-set1.mp3"
       },
       {
         "name": "Section C - Lectures",
@@ -49503,7 +49503,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2024-06-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2024-06-set1.mp3"
       }
     ],
     "totalQuestions": 25,
@@ -51080,7 +51080,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2024-06-set2.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2024-06-set2.mp3"
       },
       {
         "name": "Section B - Passages",
@@ -51270,7 +51270,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2024-06-set2.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2024-06-set2.mp3"
       },
       {
         "name": "Section C - Lectures",
@@ -51538,7 +51538,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2024-06-set2.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2024-06-set2.mp3"
       }
     ],
     "totalQuestions": 25,
@@ -53115,7 +53115,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2025-06-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2025-06-set1.mp3"
       },
       {
         "name": "Section B - Passages",
@@ -53305,7 +53305,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2025-06-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2025-06-set1.mp3"
       },
       {
         "name": "Section C - Lectures",
@@ -53573,7 +53573,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2025-06-set1.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2025-06-set1.mp3"
       }
     ],
     "totalQuestions": 25,
@@ -55150,7 +55150,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2025-06-set2.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2025-06-set2.mp3"
       },
       {
         "name": "Section B - Passages",
@@ -55340,7 +55340,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2025-06-set2.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2025-06-set2.mp3"
       },
       {
         "name": "Section C - Lectures",
@@ -55608,7 +55608,7 @@
             }
           }
         ],
-        "audio": "assets/audio/cet6-listening/cet6-2025-06-set2.mp3"
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet6/audio/cet6-2025-06-set2.mp3"
       }
     ],
     "totalQuestions": 25,
@@ -56981,7 +56981,7 @@
     "sections": [
       {
         "name": "Section A - News Reports",
-        "audio": "assets/audio/cet4-listening/cet4-2018-06-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2018-06-set1.mp3",
         "transcript": "",
         "duration": "约5分钟",
         "description": "3篇新闻报道，每篇后有2个问题",
@@ -56989,7 +56989,7 @@
       },
       {
         "name": "Section B - Conversations",
-        "audio": "assets/audio/cet4-listening/cet4-2018-06-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2018-06-set1.mp3",
         "transcript": "",
         "duration": "约8分钟",
         "description": "两篇长对话，每篇对话后有4个问题",
@@ -56997,7 +56997,7 @@
       },
       {
         "name": "Section C - Passages",
-        "audio": "assets/audio/cet4-listening/cet4-2018-06-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2018-06-set1.mp3",
         "transcript": "",
         "duration": "约12分钟",
         "description": "三篇听力短文，每篇短文后有3-4个问题",
@@ -57016,7 +57016,7 @@
     "sections": [
       {
         "name": "Section A - News Reports",
-        "audio": "assets/audio/cet4-listening/cet4-2018-06-set2.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2018-06-set2.mp3",
         "transcript": "",
         "duration": "约5分钟",
         "description": "3篇新闻报道，每篇后有2个问题",
@@ -57024,7 +57024,7 @@
       },
       {
         "name": "Section B - Conversations",
-        "audio": "assets/audio/cet4-listening/cet4-2018-06-set2.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2018-06-set2.mp3",
         "transcript": "",
         "duration": "约8分钟",
         "description": "两篇长对话，每篇对话后有4个问题",
@@ -57032,7 +57032,7 @@
       },
       {
         "name": "Section C - Passages",
-        "audio": "assets/audio/cet4-listening/cet4-2018-06-set2.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2018-06-set2.mp3",
         "transcript": "",
         "duration": "约12分钟",
         "description": "三篇听力短文，每篇短文后有3-4个问题",
@@ -57051,7 +57051,7 @@
     "sections": [
       {
         "name": "Section A - News Reports",
-        "audio": "assets/audio/cet4-listening/cet4-2018-12-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2018-12-set1.mp3",
         "transcript": "",
         "duration": "约5分钟",
         "description": "3篇新闻报道，每篇后有2个问题",
@@ -57059,7 +57059,7 @@
       },
       {
         "name": "Section B - Conversations",
-        "audio": "assets/audio/cet4-listening/cet4-2018-12-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2018-12-set1.mp3",
         "transcript": "",
         "duration": "约8分钟",
         "description": "两篇长对话，每篇对话后有4个问题",
@@ -57067,7 +57067,7 @@
       },
       {
         "name": "Section C - Passages",
-        "audio": "assets/audio/cet4-listening/cet4-2018-12-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2018-12-set1.mp3",
         "transcript": "",
         "duration": "约12分钟",
         "description": "三篇听力短文，每篇短文后有3-4个问题",
@@ -57086,7 +57086,7 @@
     "sections": [
       {
         "name": "Section A - News Reports",
-        "audio": "assets/audio/cet4-listening/cet4-2018-12-set2.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2018-12-set2.mp3",
         "transcript": "",
         "duration": "约5分钟",
         "description": "3篇新闻报道，每篇后有2个问题",
@@ -57094,7 +57094,7 @@
       },
       {
         "name": "Section B - Conversations",
-        "audio": "assets/audio/cet4-listening/cet4-2018-12-set2.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2018-12-set2.mp3",
         "transcript": "",
         "duration": "约8分钟",
         "description": "两篇长对话，每篇对话后有4个问题",
@@ -57102,7 +57102,7 @@
       },
       {
         "name": "Section C - Passages",
-        "audio": "assets/audio/cet4-listening/cet4-2018-12-set2.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2018-12-set2.mp3",
         "transcript": "",
         "duration": "约12分钟",
         "description": "三篇听力短文，每篇短文后有3-4个问题",
@@ -57121,7 +57121,7 @@
     "sections": [
       {
         "name": "Section A - News Reports",
-        "audio": "assets/audio/cet4-listening/cet4-2019-06-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2019-06-set1.mp3",
         "transcript": "",
         "duration": "约5分钟",
         "description": "3篇新闻报道，每篇后有2个问题",
@@ -57129,7 +57129,7 @@
       },
       {
         "name": "Section B - Conversations",
-        "audio": "assets/audio/cet4-listening/cet4-2019-06-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2019-06-set1.mp3",
         "transcript": "",
         "duration": "约8分钟",
         "description": "两篇长对话，每篇对话后有4个问题",
@@ -57137,7 +57137,7 @@
       },
       {
         "name": "Section C - Passages",
-        "audio": "assets/audio/cet4-listening/cet4-2019-06-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2019-06-set1.mp3",
         "transcript": "",
         "duration": "约12分钟",
         "description": "三篇听力短文，每篇短文后有3-4个问题",
@@ -57156,7 +57156,7 @@
     "sections": [
       {
         "name": "Section A - News Reports",
-        "audio": "assets/audio/cet4-listening/cet4-2019-12-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2019-12-set1.mp3",
         "transcript": "",
         "duration": "约5分钟",
         "description": "3篇新闻报道，每篇后有2个问题",
@@ -57164,7 +57164,7 @@
       },
       {
         "name": "Section B - Conversations",
-        "audio": "assets/audio/cet4-listening/cet4-2019-12-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2019-12-set1.mp3",
         "transcript": "",
         "duration": "约8分钟",
         "description": "两篇长对话，每篇对话后有4个问题",
@@ -57172,7 +57172,7 @@
       },
       {
         "name": "Section C - Passages",
-        "audio": "assets/audio/cet4-listening/cet4-2019-12-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2019-12-set1.mp3",
         "transcript": "",
         "duration": "约12分钟",
         "description": "三篇听力短文，每篇短文后有3-4个问题",
@@ -57191,7 +57191,7 @@
     "sections": [
       {
         "name": "Section A - News Reports",
-        "audio": "assets/audio/cet4-listening/cet4-2019-12-set2.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2019-12-set2.mp3",
         "transcript": "",
         "duration": "约5分钟",
         "description": "3篇新闻报道，每篇后有2个问题",
@@ -57199,7 +57199,7 @@
       },
       {
         "name": "Section B - Conversations",
-        "audio": "assets/audio/cet4-listening/cet4-2019-12-set2.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2019-12-set2.mp3",
         "transcript": "",
         "duration": "约8分钟",
         "description": "两篇长对话，每篇对话后有4个问题",
@@ -57207,7 +57207,7 @@
       },
       {
         "name": "Section C - Passages",
-        "audio": "assets/audio/cet4-listening/cet4-2019-12-set2.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2019-12-set2.mp3",
         "transcript": "",
         "duration": "约12分钟",
         "description": "三篇听力短文，每篇短文后有3-4个问题",
@@ -57226,7 +57226,7 @@
     "sections": [
       {
         "name": "Section A - News Reports",
-        "audio": "assets/audio/cet4-listening/cet4-2020-07-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2020-07-set1.mp3",
         "transcript": "",
         "duration": "约5分钟",
         "description": "3篇新闻报道，每篇后有2个问题",
@@ -57234,7 +57234,7 @@
       },
       {
         "name": "Section B - Conversations",
-        "audio": "assets/audio/cet4-listening/cet4-2020-07-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2020-07-set1.mp3",
         "transcript": "",
         "duration": "约8分钟",
         "description": "两篇长对话，每篇对话后有4个问题",
@@ -57242,7 +57242,7 @@
       },
       {
         "name": "Section C - Passages",
-        "audio": "assets/audio/cet4-listening/cet4-2020-07-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2020-07-set1.mp3",
         "transcript": "",
         "duration": "约12分钟",
         "description": "三篇听力短文，每篇短文后有3-4个问题",
@@ -57261,7 +57261,7 @@
     "sections": [
       {
         "name": "Section A - News Reports",
-        "audio": "assets/audio/cet4-listening/cet4-2020-09-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2020-09-set1.mp3",
         "transcript": "",
         "duration": "约5分钟",
         "description": "3篇新闻报道，每篇后有2个问题",
@@ -57269,7 +57269,7 @@
       },
       {
         "name": "Section B - Conversations",
-        "audio": "assets/audio/cet4-listening/cet4-2020-09-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2020-09-set1.mp3",
         "transcript": "",
         "duration": "约8分钟",
         "description": "两篇长对话，每篇对话后有4个问题",
@@ -57277,7 +57277,7 @@
       },
       {
         "name": "Section C - Passages",
-        "audio": "assets/audio/cet4-listening/cet4-2020-09-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2020-09-set1.mp3",
         "transcript": "",
         "duration": "约12分钟",
         "description": "三篇听力短文，每篇短文后有3-4个问题",
@@ -57296,7 +57296,7 @@
     "sections": [
       {
         "name": "Section A - News Reports",
-        "audio": "assets/audio/cet4-listening/cet4-2020-12-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2020-12-set1.mp3",
         "transcript": "",
         "duration": "约5分钟",
         "description": "3篇新闻报道，每篇后有2个问题",
@@ -57304,7 +57304,7 @@
       },
       {
         "name": "Section B - Conversations",
-        "audio": "assets/audio/cet4-listening/cet4-2020-12-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2020-12-set1.mp3",
         "transcript": "",
         "duration": "约8分钟",
         "description": "两篇长对话，每篇对话后有4个问题",
@@ -57312,7 +57312,7 @@
       },
       {
         "name": "Section C - Passages",
-        "audio": "assets/audio/cet4-listening/cet4-2020-12-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2020-12-set1.mp3",
         "transcript": "",
         "duration": "约12分钟",
         "description": "三篇听力短文，每篇短文后有3-4个问题",
@@ -57331,7 +57331,7 @@
     "sections": [
       {
         "name": "Section A - News Reports",
-        "audio": "assets/audio/cet4-listening/cet4-2020-12-set2.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2020-12-set2.mp3",
         "transcript": "",
         "duration": "约5分钟",
         "description": "3篇新闻报道，每篇后有2个问题",
@@ -57339,7 +57339,7 @@
       },
       {
         "name": "Section B - Conversations",
-        "audio": "assets/audio/cet4-listening/cet4-2020-12-set2.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2020-12-set2.mp3",
         "transcript": "",
         "duration": "约8分钟",
         "description": "两篇长对话，每篇对话后有4个问题",
@@ -57347,7 +57347,7 @@
       },
       {
         "name": "Section C - Passages",
-        "audio": "assets/audio/cet4-listening/cet4-2020-12-set2.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2020-12-set2.mp3",
         "transcript": "",
         "duration": "约12分钟",
         "description": "三篇听力短文，每篇短文后有3-4个问题",
@@ -57366,7 +57366,7 @@
     "sections": [
       {
         "name": "Section A - News Reports",
-        "audio": "assets/audio/cet4-listening/cet4-2021-06-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2021-06-set1.mp3",
         "transcript": "",
         "duration": "约5分钟",
         "description": "3篇新闻报道，每篇后有2个问题",
@@ -57374,7 +57374,7 @@
       },
       {
         "name": "Section B - Conversations",
-        "audio": "assets/audio/cet4-listening/cet4-2021-06-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2021-06-set1.mp3",
         "transcript": "",
         "duration": "约8分钟",
         "description": "两篇长对话，每篇对话后有4个问题",
@@ -57382,7 +57382,7 @@
       },
       {
         "name": "Section C - Passages",
-        "audio": "assets/audio/cet4-listening/cet4-2021-06-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2021-06-set1.mp3",
         "transcript": "",
         "duration": "约12分钟",
         "description": "三篇听力短文，每篇短文后有3-4个问题",
@@ -57401,7 +57401,7 @@
     "sections": [
       {
         "name": "Section A - News Reports",
-        "audio": "assets/audio/cet4-listening/cet4-2021-06-set2.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2021-06-set2.mp3",
         "transcript": "",
         "duration": "约5分钟",
         "description": "3篇新闻报道，每篇后有2个问题",
@@ -57409,7 +57409,7 @@
       },
       {
         "name": "Section B - Conversations",
-        "audio": "assets/audio/cet4-listening/cet4-2021-06-set2.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2021-06-set2.mp3",
         "transcript": "",
         "duration": "约8分钟",
         "description": "两篇长对话，每篇对话后有4个问题",
@@ -57417,7 +57417,7 @@
       },
       {
         "name": "Section C - Passages",
-        "audio": "assets/audio/cet4-listening/cet4-2021-06-set2.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2021-06-set2.mp3",
         "transcript": "",
         "duration": "约12分钟",
         "description": "三篇听力短文，每篇短文后有3-4个问题",
@@ -57436,7 +57436,7 @@
     "sections": [
       {
         "name": "Section A - News Reports",
-        "audio": "assets/audio/cet4-listening/cet4-2021-12-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2021-12-set1.mp3",
         "transcript": "",
         "duration": "约5分钟",
         "description": "3篇新闻报道，每篇后有2个问题",
@@ -57444,7 +57444,7 @@
       },
       {
         "name": "Section B - Conversations",
-        "audio": "assets/audio/cet4-listening/cet4-2021-12-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2021-12-set1.mp3",
         "transcript": "",
         "duration": "约8分钟",
         "description": "两篇长对话，每篇对话后有4个问题",
@@ -57452,7 +57452,7 @@
       },
       {
         "name": "Section C - Passages",
-        "audio": "assets/audio/cet4-listening/cet4-2021-12-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2021-12-set1.mp3",
         "transcript": "",
         "duration": "约12分钟",
         "description": "三篇听力短文，每篇短文后有3-4个问题",
@@ -57471,7 +57471,7 @@
     "sections": [
       {
         "name": "Section A - News Reports",
-        "audio": "assets/audio/cet4-listening/cet4-2021-12-set2.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2021-12-set2.mp3",
         "transcript": "",
         "duration": "约5分钟",
         "description": "3篇新闻报道，每篇后有2个问题",
@@ -57479,7 +57479,7 @@
       },
       {
         "name": "Section B - Conversations",
-        "audio": "assets/audio/cet4-listening/cet4-2021-12-set2.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2021-12-set2.mp3",
         "transcript": "",
         "duration": "约8分钟",
         "description": "两篇长对话，每篇对话后有4个问题",
@@ -57487,7 +57487,7 @@
       },
       {
         "name": "Section C - Passages",
-        "audio": "assets/audio/cet4-listening/cet4-2021-12-set2.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2021-12-set2.mp3",
         "transcript": "",
         "duration": "约12分钟",
         "description": "三篇听力短文，每篇短文后有3-4个问题",
@@ -57506,7 +57506,7 @@
     "sections": [
       {
         "name": "Section A - News Reports",
-        "audio": "assets/audio/cet4-listening/cet4-2022-12-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2022-12-set1.mp3",
         "transcript": "",
         "duration": "约5分钟",
         "description": "3篇新闻报道，每篇后有2个问题",
@@ -57514,7 +57514,7 @@
       },
       {
         "name": "Section B - Conversations",
-        "audio": "assets/audio/cet4-listening/cet4-2022-12-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2022-12-set1.mp3",
         "transcript": "",
         "duration": "约8分钟",
         "description": "两篇长对话，每篇对话后有4个问题",
@@ -57522,7 +57522,7 @@
       },
       {
         "name": "Section C - Passages",
-        "audio": "assets/audio/cet4-listening/cet4-2022-12-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2022-12-set1.mp3",
         "transcript": "",
         "duration": "约12分钟",
         "description": "三篇听力短文，每篇短文后有3-4个问题",
@@ -57541,7 +57541,7 @@
     "sections": [
       {
         "name": "Section A - News Reports",
-        "audio": "assets/audio/cet4-listening/cet4-2022-12-set2.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2022-12-set2.mp3",
         "transcript": "",
         "duration": "约5分钟",
         "description": "3篇新闻报道，每篇后有2个问题",
@@ -57549,7 +57549,7 @@
       },
       {
         "name": "Section B - Conversations",
-        "audio": "assets/audio/cet4-listening/cet4-2022-12-set2.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2022-12-set2.mp3",
         "transcript": "",
         "duration": "约8分钟",
         "description": "两篇长对话，每篇对话后有4个问题",
@@ -57557,7 +57557,7 @@
       },
       {
         "name": "Section C - Passages",
-        "audio": "assets/audio/cet4-listening/cet4-2022-12-set2.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2022-12-set2.mp3",
         "transcript": "",
         "duration": "约12分钟",
         "description": "三篇听力短文，每篇短文后有3-4个问题",
@@ -57576,7 +57576,7 @@
     "sections": [
       {
         "name": "Section A - News Reports",
-        "audio": "assets/audio/cet4-listening/cet4-2022-06-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2022-06-set1.mp3",
         "transcript": "",
         "duration": "约5分钟",
         "description": "3篇新闻报道，每篇后有2个问题",
@@ -57584,7 +57584,7 @@
       },
       {
         "name": "Section B - Conversations",
-        "audio": "assets/audio/cet4-listening/cet4-2022-06-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2022-06-set1.mp3",
         "transcript": "",
         "duration": "约8分钟",
         "description": "两篇长对话，每篇对话后有4个问题",
@@ -57592,7 +57592,7 @@
       },
       {
         "name": "Section C - Passages",
-        "audio": "assets/audio/cet4-listening/cet4-2022-06-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2022-06-set1.mp3",
         "transcript": "",
         "duration": "约12分钟",
         "description": "三篇听力短文，每篇短文后有3-4个问题",
@@ -57611,7 +57611,7 @@
     "sections": [
       {
         "name": "Section A - News Reports",
-        "audio": "assets/audio/cet4-listening/cet4-2022-09-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2022-09-set1.mp3",
         "transcript": "",
         "duration": "约5分钟",
         "description": "3篇新闻报道，每篇后有2个问题",
@@ -57619,7 +57619,7 @@
       },
       {
         "name": "Section B - Conversations",
-        "audio": "assets/audio/cet4-listening/cet4-2022-09-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2022-09-set1.mp3",
         "transcript": "",
         "duration": "约8分钟",
         "description": "两篇长对话，每篇对话后有4个问题",
@@ -57627,7 +57627,7 @@
       },
       {
         "name": "Section C - Passages",
-        "audio": "assets/audio/cet4-listening/cet4-2022-09-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2022-09-set1.mp3",
         "transcript": "",
         "duration": "约12分钟",
         "description": "三篇听力短文，每篇短文后有3-4个问题",
@@ -57646,7 +57646,7 @@
     "sections": [
       {
         "name": "Section A - News Reports",
-        "audio": "assets/audio/cet4-listening/cet4-2023-06-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2023-06-set1.mp3",
         "transcript": "",
         "duration": "约5分钟",
         "description": "3篇新闻报道，每篇后有2个问题",
@@ -57654,7 +57654,7 @@
       },
       {
         "name": "Section B - Conversations",
-        "audio": "assets/audio/cet4-listening/cet4-2023-06-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2023-06-set1.mp3",
         "transcript": "",
         "duration": "约8分钟",
         "description": "两篇长对话，每篇对话后有4个问题",
@@ -57662,7 +57662,7 @@
       },
       {
         "name": "Section C - Passages",
-        "audio": "assets/audio/cet4-listening/cet4-2023-06-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2023-06-set1.mp3",
         "transcript": "",
         "duration": "约12分钟",
         "description": "三篇听力短文，每篇短文后有3-4个问题",
@@ -57681,7 +57681,7 @@
     "sections": [
       {
         "name": "Section A - News Reports",
-        "audio": "assets/audio/cet4-listening/cet4-2023-06-set2.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2023-06-set2.mp3",
         "transcript": "",
         "duration": "约5分钟",
         "description": "3篇新闻报道，每篇后有2个问题",
@@ -57689,7 +57689,7 @@
       },
       {
         "name": "Section B - Conversations",
-        "audio": "assets/audio/cet4-listening/cet4-2023-06-set2.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2023-06-set2.mp3",
         "transcript": "",
         "duration": "约8分钟",
         "description": "两篇长对话，每篇对话后有4个问题",
@@ -57697,7 +57697,7 @@
       },
       {
         "name": "Section C - Passages",
-        "audio": "assets/audio/cet4-listening/cet4-2023-06-set2.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2023-06-set2.mp3",
         "transcript": "",
         "duration": "约12分钟",
         "description": "三篇听力短文，每篇短文后有3-4个问题",
@@ -57716,7 +57716,7 @@
     "sections": [
       {
         "name": "Section A - News Reports",
-        "audio": "assets/audio/cet4-listening/cet4-2023-03-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2023-03-set1.mp3",
         "transcript": "",
         "duration": "约5分钟",
         "description": "3篇新闻报道，每篇后有2个问题",
@@ -57724,7 +57724,7 @@
       },
       {
         "name": "Section B - Conversations",
-        "audio": "assets/audio/cet4-listening/cet4-2023-03-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2023-03-set1.mp3",
         "transcript": "",
         "duration": "约8分钟",
         "description": "两篇长对话，每篇对话后有4个问题",
@@ -57732,7 +57732,7 @@
       },
       {
         "name": "Section C - Passages",
-        "audio": "assets/audio/cet4-listening/cet4-2023-03-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2023-03-set1.mp3",
         "transcript": "",
         "duration": "约12分钟",
         "description": "三篇听力短文，每篇短文后有3-4个问题",
@@ -57751,7 +57751,7 @@
     "sections": [
       {
         "name": "Section A - News Reports",
-        "audio": "assets/audio/cet4-listening/cet4-2023-12-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2023-12-set1.mp3",
         "transcript": "",
         "duration": "约5分钟",
         "description": "3篇新闻报道，每篇后有2个问题",
@@ -57759,7 +57759,7 @@
       },
       {
         "name": "Section B - Conversations",
-        "audio": "assets/audio/cet4-listening/cet4-2023-12-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2023-12-set1.mp3",
         "transcript": "",
         "duration": "约8分钟",
         "description": "两篇长对话，每篇对话后有4个问题",
@@ -57767,7 +57767,7 @@
       },
       {
         "name": "Section C - Passages",
-        "audio": "assets/audio/cet4-listening/cet4-2023-12-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2023-12-set1.mp3",
         "transcript": "",
         "duration": "约12分钟",
         "description": "三篇听力短文，每篇短文后有3-4个问题",
@@ -57786,7 +57786,7 @@
     "sections": [
       {
         "name": "Section A - News Reports",
-        "audio": "assets/audio/cet4-listening/cet4-2023-12-set2.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2023-12-set2.mp3",
         "transcript": "",
         "duration": "约5分钟",
         "description": "3篇新闻报道，每篇后有2个问题",
@@ -57794,7 +57794,7 @@
       },
       {
         "name": "Section B - Conversations",
-        "audio": "assets/audio/cet4-listening/cet4-2023-12-set2.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2023-12-set2.mp3",
         "transcript": "",
         "duration": "约8分钟",
         "description": "两篇长对话，每篇对话后有4个问题",
@@ -57802,7 +57802,7 @@
       },
       {
         "name": "Section C - Passages",
-        "audio": "assets/audio/cet4-listening/cet4-2023-12-set2.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2023-12-set2.mp3",
         "transcript": "",
         "duration": "约12分钟",
         "description": "三篇听力短文，每篇短文后有3-4个问题",
@@ -57821,7 +57821,7 @@
     "sections": [
       {
         "name": "Section A - News Reports",
-        "audio": "assets/audio/cet4-listening/cet4-2024-06-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2024-06-set1.mp3",
         "transcript": "",
         "duration": "约5分钟",
         "description": "3篇新闻报道，每篇后有2个问题",
@@ -57829,7 +57829,7 @@
       },
       {
         "name": "Section B - Conversations",
-        "audio": "assets/audio/cet4-listening/cet4-2024-06-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2024-06-set1.mp3",
         "transcript": "",
         "duration": "约8分钟",
         "description": "两篇长对话，每篇对话后有4个问题",
@@ -57837,7 +57837,7 @@
       },
       {
         "name": "Section C - Passages",
-        "audio": "assets/audio/cet4-listening/cet4-2024-06-set1.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2024-06-set1.mp3",
         "transcript": "",
         "duration": "约12分钟",
         "description": "三篇听力短文，每篇短文后有3-4个问题",
@@ -57856,7 +57856,7 @@
     "sections": [
       {
         "name": "Section A - News Reports",
-        "audio": "assets/audio/cet4-listening/cet4-2024-06-set2.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2024-06-set2.mp3",
         "transcript": "",
         "duration": "约5分钟",
         "description": "3篇新闻报道，每篇后有2个问题",
@@ -57864,7 +57864,7 @@
       },
       {
         "name": "Section B - Conversations",
-        "audio": "assets/audio/cet4-listening/cet4-2024-06-set2.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2024-06-set2.mp3",
         "transcript": "",
         "duration": "约8分钟",
         "description": "两篇长对话，每篇对话后有4个问题",
@@ -57872,7 +57872,7 @@
       },
       {
         "name": "Section C - Passages",
-        "audio": "assets/audio/cet4-listening/cet4-2024-06-set2.mp3",
+        "audio": "http://bf-lgs-kjg-hd-bkl.clouddn.com/cet4/audio/cet4-2024-06-set2.mp3",
         "transcript": "",
         "duration": "约12分钟",
         "description": "三篇听力短文，每篇短文后有3-4个问题",

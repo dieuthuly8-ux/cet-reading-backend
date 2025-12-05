@@ -1,0 +1,10 @@
+{
+  "src_dir": "E:\\cursor\\作业\\六级听力",
+  "bucket": "cet-learning-files",
+  "key_prefix": "cet6/audio/",
+  "overwrite": true,
+  "check_exists": true,
+  "ignore_dir": false,
+  "up_host": "https://up-z0.qiniup.com",
+  "rescan_local": true
+}
