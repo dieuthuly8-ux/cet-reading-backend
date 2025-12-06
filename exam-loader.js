@@ -1531,8 +1531,12 @@ function setupActions(examId) {
                 try { pdfUrl = await resolvePdfUrlUnified(examId); } catch(_) { pdfUrl = null; }
             }
             if (!pdfUrl) { alert('未找到对应的 PDF 资源，暂无法打印。'); return; }
-            try { await printExamPdf(pdfUrl); } catch(_) {
-                try { window.open(pdfUrl + '#print=1', '_blank'); } catch(_) {}
+            // 直接在新窗口打开PDF，用户可使用Ctrl+P打印
+            const printWindow = window.open(pdfUrl, '_blank');
+            if (printWindow) {
+                alert('PDF已在新窗口打开，请在新窗口中按 Ctrl+P 进行打印。');
+            } else {
+                alert('无法打开新窗口，请检查浏览器是否阻止了弹出窗口。');
             }
         });
     }
