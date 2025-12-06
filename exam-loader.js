@@ -1154,12 +1154,13 @@ async function resolveCet6PdfFromPapers() {
 
 // 真题加载器
 document.addEventListener('DOMContentLoaded', () => {
-    // 检查是否在真题详情页
-    if (!window.location.pathname.includes('exam-detail.html')) {
+    // 检查是否在真题详情页（支持带.html和不带.html的URL）
+    const pathname = window.location.pathname.toLowerCase();
+    if (!pathname.includes('exam-detail')) {
         return;
     }
 
-    console.log("真题详情页初始化...");
+    console.log("✓ 真题详情页初始化...", pathname);
 
     // 从 URL 获取真题 ID
     const urlParams = new URLSearchParams(window.location.search);
