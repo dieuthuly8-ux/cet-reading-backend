@@ -47,7 +47,10 @@ async function resolvePdfUrlUnified(examId) {
     }
     
     if (!pdf) return null;
-    // 统一相对路径前缀
+    // 如果是绝对URL（http/https），直接返回；否则添加相对路径前缀
+    if (pdf.startsWith('http://') || pdf.startsWith('https://')) {
+        return pdf;
+    }
     return pdf.startsWith('.') ? pdf : ('./' + pdf.replace(/^\/+/, ''));
 }
 
