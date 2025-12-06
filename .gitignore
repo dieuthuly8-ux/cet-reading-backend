@@ -4,6 +4,9 @@ node_modules/
 # 后端服务（Vercel不需要，单独部署）
 backend/
 
+# Vercel API Functions（在Vercel上单独部署，不需要在Cloudflare）
+api/
+
 # 环境变量文件（包含敏感信息）
 .env
 backend/.env
