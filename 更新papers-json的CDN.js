@@ -2,7 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const CDN_DOMAIN = 'http://bf-lgs-kjg-hd-bkl.clouddn.com';
+const CDN_DOMAIN = 'http://t6r1sg3dy.hd-bkt.clouddn.com';
 
 console.log('========================================');
 console.log('  更新 papers.json 中的 PDF 路径');
