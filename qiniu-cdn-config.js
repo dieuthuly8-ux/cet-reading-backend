@@ -1,9 +1,9 @@
-// 七牛云CDN配置
+// 七牛云 CDN 配置
 // 请将 'YOUR_CDN_DOMAIN' 替换为你的实际CDN域名
 
 const QINIU_CDN = {
   // 七牛云CDN域名
-  domain: 'http://bf-lgs-kjg-hd-bkl.clouddn.com',
+  domain: 'http://t6r1sg3dy.hd-bkt.clouddn.com',
   
   // 获取音频文件URL
   getAudioUrl(level, filename) {
