@@ -730,6 +730,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     console.log(`${paperType.toUpperCase()} 真题列表加载完毕，共 ${allPapers.length} 套`);
                     // 5. 设置筛选和搜索功能
                     setupFiltersAndSearch();
+                    
+                    // 6. 预加载 exam-contents.json 到浏览器缓存（提升详情页加载速度）
+                    setTimeout(() => {
+                        fetch('./exam-contents.json', { cache: 'force-cache' })
+                            .then(() => console.log('✓ exam-contents.json 已预加载'))
+                            .catch(() => {});
+                    }, 1000); // 延迟1秒，避免阻塞主渲染
                 })();
             })
             .catch(error => {
@@ -743,7 +750,7 @@ document.addEventListener('DOMContentLoaded', () => {
         async function getExamHeadingsById(examId) {
             try {
                 if (!examContentsCache) {
-                    const resp = await fetch('./exam-contents.json');
+                    const resp = await fetch('./exam-contents.json', { cache: 'force-cache' });
                     examContentsCache = await resp.json();
                 }
                 const item = examContentsCache && examContentsCache[examId];

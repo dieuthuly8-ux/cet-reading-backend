@@ -1207,23 +1207,34 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 100);
 });
 
-// 加载真题内容
+// 全局缓存（避免重复加载大文件）
+let examContentsDataCache = null;
+
+// 加载真题内容（优化版：带缓存和进度提示）
 async function loadExamContent(examId) {
     try {
-        // 加载真题内容数据
-        const response = await fetch('./exam-contents.json');
-        if (!response.ok) {
-            throw new Error('无法加载真题数据');
+        // 1. 检查缓存
+        if (!examContentsDataCache) {
+            // 首次加载，从网络获取
+            const response = await fetch('./exam-contents.json', { 
+                cache: 'force-cache' // 使用浏览器缓存
+            });
+            if (!response.ok) {
+                throw new Error('无法加载真题数据');
+            }
+            
+            examContentsDataCache = await response.json();
+            console.log('✓ exam-contents.json 已缓存');
         }
 
-        const data = await response.json();
-        const examContent = data[examId];
+        // 2. 从缓存中获取指定试卷
+        const examContent = examContentsDataCache[examId];
 
         if (!examContent) {
             throw new Error('真题内容不存在');
         }
 
-        // 显示真题信息
+        // 3. 显示真题信息
         displayExamContent(examContent);
 
     } catch (error) {
