@@ -15,6 +15,25 @@ backend/.env
 四级听力/
 六级听力/
 
+# 七牛云工具和配置文件（不需要部署到Cloudflare）
+qshell.exe
+qshell
+*.exe
+*.bat
+qiniu-upload-*.json
+file-list.txt
+
+# 本地工具脚本（不需要部署）
+import-cet4-listening.js
+import-cet6-listening.js
+verify-transcript.js
+准备上传文件.js
+恢复本地音频路径.js
+更新CDN链接.js
+更新papers-json的CDN.js
+生成音频文件映射.js
+重命名并上传音频.js
+
 # PDF文件（太大，需要用CDN托管）
 *.pdf
 英语四级/
@@ -52,6 +71,8 @@ Desktop.ini
 *.tmp
 *.temp
 .cache/
+temp-cet4-audio/
+temp-cet6-audio/
 
 # 构建输出
 dist/
