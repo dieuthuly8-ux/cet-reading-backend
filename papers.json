@@ -1025,70 +1025,6 @@
       "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet4/pdf/CET-4 2020.09 第2套.pdf"
     },
     {
-      "id": "cet4-2020-07-set1",
-      "title": "2020年7月 四级真题 (第一套)",
-      "desc": "延期考试真题",
-      "url": "exam-detail.html?id=cet4-2020-07-set1",
-      "year": 2020,
-      "month": "07",
-      "keyPoints": {
-        "difficulty": "较易",
-        "listening": [
-          "新闻关键词",
-          "对话推断",
-          "短文总结"
-        ],
-        "reading": [
-          "数字化生活",
-          "教育创新",
-          "职场发展",
-          "词汇理解"
-        ],
-        "writing": [
-          "应用文：通知/邀请函",
-          "格式规范",
-          "得体表达"
-        ],
-        "translation": [
-          "中国园林艺术",
-          "建筑美学"
-        ]
-      },
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet4/pdf/CET-4 2020.07 第1套.pdf"
-    },
-    {
-      "id": "cet4-2020-07-set2",
-      "title": "2020年7月 四级真题 (第二套)",
-      "desc": "在线教育话题",
-      "url": "exam-detail.html?id=cet4-2020-07-set2",
-      "year": 2020,
-      "month": "07",
-      "keyPoints": {
-        "difficulty": "较易",
-        "listening": [
-          "新闻报道理解",
-          "长对话细节",
-          "短文主旨"
-        ],
-        "reading": [
-          "健康生活方式",
-          "环境保护",
-          "社交媒体",
-          "词汇理解"
-        ],
-        "writing": [
-          "图表作文：变化趋势",
-          "数据描述",
-          "原因分析"
-        ],
-        "translation": [
-          "四大发明",
-          "古代科技"
-        ]
-      },
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet4/pdf/CET-4 2020.07 第2套.pdf"
-    },
-    {
       "id": "cet4-2019-12-set1",
       "title": "2019年12月 四级真题 (第一套)",
       "desc": "改革前经典题型",
@@ -1481,7 +1417,7 @@
       "url": "exam-detail.html?id=cet6-2025-06-set1",
       "year": 2025,
       "month": "06",
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/CET-6 2025.06 第1套.pdf",
+      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/2025年6月 英语六级（第一套）.pdf",
       "keyPoints": {
         "difficulty": "较难",
         "listening": [
@@ -1514,7 +1450,7 @@
       "url": "exam-detail.html?id=cet6-2025-06-set2",
       "year": 2025,
       "month": "06",
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/CET-6 2025.06 第2套.pdf",
+      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/2025年6月 英语六级（第二套）.pdf",
       "keyPoints": {
         "difficulty": "较难",
         "listening": [
@@ -1547,7 +1483,7 @@
       "url": "exam-detail.html?id=cet6-2025-06-set3",
       "year": 2025,
       "month": "06",
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/CET-6 2025.06 第3套.pdf",
+      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/2025年6月 英语六级（第三套）.pdf",
       "keyPoints": {
         "difficulty": "较难",
         "listening": [
@@ -1580,7 +1516,7 @@
       "url": "exam-detail.html?id=cet6-2024-12-set1",
       "year": 2024,
       "month": "12",
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/CET-6 2024.12 第1套.pdf",
+      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/2024年12月 英语六级 （第一套）.pdf",
       "keyPoints": {
         "difficulty": "较难",
         "listening": [
@@ -1613,7 +1549,7 @@
       "url": "exam-detail.html?id=cet6-2024-12-set2",
       "year": 2024,
       "month": "12",
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/CET-6 2024.12 第2套.pdf",
+      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/2024年12月 英语六级 （第二套）.pdf",
       "keyPoints": {
         "difficulty": "较难",
         "listening": [
@@ -1646,7 +1582,7 @@
       "url": "exam-detail.html?id=cet6-2024-12-set3",
       "year": 2024,
       "month": "12",
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/CET-6 2024.12 第3套.pdf",
+      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/2024年12月 英语六级 （第三套）.pdf",
       "keyPoints": {
         "difficulty": "较难",
         "listening": [
@@ -1679,7 +1615,7 @@
       "url": "exam-detail.html?id=cet6-2024-06-set1",
       "year": 2024,
       "month": "06",
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/CET-6 2024.06 第1套.pdf",
+      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/2024年6月 英语六级 （第一套）.pdf",
       "keyPoints": {
         "difficulty": "较难",
         "listening": [
@@ -1712,7 +1648,7 @@
       "url": "exam-detail.html?id=cet6-2024-06-set2",
       "year": 2024,
       "month": "06",
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/CET-6 2024.06 第2套.pdf",
+      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/2024年6月 英语六级 （第二套）.pdf",
       "keyPoints": {
         "difficulty": "较难",
         "listening": [
@@ -1745,7 +1681,7 @@
       "url": "exam-detail.html?id=cet6-2024-06-set3",
       "year": 2024,
       "month": "06",
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/CET-6 2024.06 第3套.pdf",
+      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/2024年6月 英语六级 （第三套）.pdf",
       "keyPoints": {
         "difficulty": "较难",
         "listening": [
@@ -1778,7 +1714,7 @@
       "url": "exam-detail.html?id=cet6-2023-12-set1",
       "year": 2023,
       "month": "12",
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/CET-6 2023.12 第1套.pdf",
+      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/2023年12月 六级真题 （第一套）.pdf",
       "keyPoints": {
         "difficulty": "中等",
         "listening": [
@@ -1811,7 +1747,7 @@
       "url": "exam-detail.html?id=cet6-2023-12-set2",
       "year": 2023,
       "month": "12",
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/CET-6 2023.12 第2套.pdf",
+      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/2023年12月 六级真题 （第二套）.pdf",
       "keyPoints": {
         "difficulty": "中等",
         "listening": [
@@ -1844,7 +1780,7 @@
       "url": "exam-detail.html?id=cet6-2023-12-set3",
       "year": 2023,
       "month": "12",
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/CET-6 2023.12 第3套.pdf",
+      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/2023年12月 六级真题 （第三套）.pdf",
       "keyPoints": {
         "difficulty": "中等",
         "listening": [
@@ -1877,7 +1813,7 @@
       "url": "exam-detail.html?id=cet6-2023-03-set1",
       "year": 2023,
       "month": "03",
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/CET-6 2023.03 第1套.pdf",
+      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/2023年3月 六级真题 （第一套）.pdf",
       "keyPoints": {
         "difficulty": "中等",
         "listening": [
@@ -1910,7 +1846,7 @@
       "url": "exam-detail.html?id=cet6-2023-03-set2",
       "year": 2023,
       "month": "03",
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/CET-6 2023.03 第2套.pdf",
+      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/2023年3月 六级真题 （第二套）.pdf",
       "keyPoints": {
         "difficulty": "中等",
         "listening": [
@@ -1943,7 +1879,7 @@
       "url": "exam-detail.html?id=cet6-2023-03-set3",
       "year": 2023,
       "month": "03",
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/CET-6 2023.03 第3套.pdf",
+      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/2023年3月 六级真题 （第三套）.pdf",
       "keyPoints": {
         "difficulty": "中等",
         "listening": [
@@ -1970,77 +1906,13 @@
       }
     },
     {
-      "id": "cet6-2023-06-set1",
-      "title": "2023年6月 六级真题 (第一套)",
-      "desc": "议论文写作范式",
-      "url": "exam-detail.html?id=cet6-2023-06-set1",
-      "year": 2023,
-      "month": "06",
-      "keyPoints": {
-        "difficulty": "中等",
-        "listening": [
-          "学术讲座理解",
-          "长对话细节",
-          "同义替换"
-        ],
-        "reading": [
-          "远程办公趋势",
-          "代际差异",
-          "社会责任",
-          "长难句分析"
-        ],
-        "writing": [
-          "评论类：现象评述",
-          "独立见解",
-          "深度剖析"
-        ],
-        "translation": [
-          "全面建成小康社会",
-          "社会发展",
-          "政治术语"
-        ]
-      }
-    },
-    {
-      "id": "cet6-2023-06-set2",
-      "title": "2023年6月 六级真题 (第二套)",
-      "desc": "学术词汇积累",
-      "url": "exam-detail.html?id=cet6-2023-06-set2",
-      "year": 2023,
-      "month": "06",
-      "keyPoints": {
-        "difficulty": "中等",
-        "listening": [
-          "讲座主旨把握",
-          "对话言外之意",
-          "信息综合"
-        ],
-        "reading": [
-          "远程办公趋势",
-          "代际差异",
-          "社会责任",
-          "长难句分析"
-        ],
-        "writing": [
-          "评论类：现象评述",
-          "独立见解",
-          "深度剖析"
-        ],
-        "translation": [
-          "中国航天事业成就",
-          "科技成就",
-          "专业表达"
-        ]
-      }
-    },
-    {
       "id": "cet6-2023-06-set3",
       "title": "2023年6月 六级真题 (第三套)",
       "desc": "听力讲座笔记法",
       "url": "exam-detail.html?id=cet6-2023-06-set3",
       "year": 2023,
       "month": "06",
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/CET-6 2023.06 第3套.pdf",
+      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/2023年6月 六级真题 （第三套）.pdf",
       "keyPoints": {
         "difficulty": "中等",
         "listening": [
@@ -2067,45 +1939,13 @@
       }
     },
     {
-      "id": "cet6-2022-12-set1",
-      "title": "2022年12月 六级真题 (第一套)",
-      "desc": "后疫情时代话题",
-      "url": "exam-detail.html?id=cet6-2022-12-set1",
-      "year": 2022,
-      "month": "12",
-      "keyPoints": {
-        "difficulty": "中等",
-        "listening": [
-          "学术讲座理解",
-          "长对话细节",
-          "同义替换"
-        ],
-        "reading": [
-          "人工智能伦理",
-          "气候变化应对",
-          "全球化挑战",
-          "长难句分析"
-        ],
-        "writing": [
-          "深度论证：社会现象",
-          "多角度分析",
-          "逻辑严密"
-        ],
-        "translation": [
-          "共同富裕战略目标",
-          "社会政策",
-          "抽象概念"
-        ]
-      }
-    },
-    {
       "id": "cet6-2022-12-set2",
       "title": "2022年12月 六级真题 (第二套)",
       "desc": "经济全球化主题",
       "url": "exam-detail.html?id=cet6-2022-12-set2",
       "year": 2022,
       "month": "12",
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/CET-6 2022.12 第2套.pdf",
+      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/2022年12月 六级真题 （第二套）.pdf",
       "keyPoints": {
         "difficulty": "中等",
         "listening": [
@@ -2138,7 +1978,7 @@
       "url": "exam-detail.html?id=cet6-2022-12-set3",
       "year": 2022,
       "month": "12",
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/CET-6 2022.12 第3套.pdf",
+      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/2022年12月 六级真题 （第三套）.pdf",
       "keyPoints": {
         "difficulty": "中等",
         "listening": [
@@ -2171,7 +2011,7 @@
       "url": "exam-detail.html?id=cet6-2022-06-set1",
       "year": 2022,
       "month": "06",
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/CET-6 2022.06 第1套.pdf",
+      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/2022年6月 六级真题 （第一套）.pdf",
       "keyPoints": {
         "difficulty": "中等",
         "listening": [
@@ -2204,7 +2044,7 @@
       "url": "exam-detail.html?id=cet6-2022-06-set2",
       "year": 2022,
       "month": "06",
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/CET-6 2022.06 第2套.pdf",
+      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/2022年6月 六级真题 （第二套）.pdf",
       "keyPoints": {
         "difficulty": "中等",
         "listening": [
@@ -2237,7 +2077,7 @@
       "url": "exam-detail.html?id=cet6-2022-06-set3",
       "year": 2022,
       "month": "06",
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/CET-6 2022.06 第3套.pdf",
+      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/2022年6月 六级真题 （第三套）.pdf",
       "keyPoints": {
         "difficulty": "中等",
         "listening": [
@@ -2270,7 +2110,7 @@
       "url": "exam-detail.html?id=cet6-2022-09-set1",
       "year": 2022,
       "month": "09",
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/CET-6 2022.09 第1套.pdf",
+      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/2022年9月 六级真题 （第一套）.pdf",
       "keyPoints": {
         "difficulty": "中等",
         "listening": [
@@ -2297,45 +2137,13 @@
       }
     },
     {
-      "id": "cet6-2021-12-set1",
-      "title": "2021年12月 六级真题 (第一套)",
-      "desc": "数字经济时代",
-      "url": "exam-detail.html?id=cet6-2021-12-set1",
-      "year": 2021,
-      "month": "12",
-      "keyPoints": {
-        "difficulty": "适中",
-        "listening": [
-          "学术讲座理解",
-          "长对话细节",
-          "同义替换"
-        ],
-        "reading": [
-          "社会流动性",
-          "科技与隐私",
-          "文化认同",
-          "长难句分析"
-        ],
-        "writing": [
-          "批判性思维：正反辩论",
-          "观点鲜明",
-          "论据充分"
-        ],
-        "translation": [
-          "脱贫攻坚伟大胜利",
-          "社会成就",
-          "数据翻译"
-        ]
-      }
-    },
-    {
       "id": "cet6-2021-12-set2",
       "title": "2021年12月 六级真题 (第二套)",
       "desc": "社会公平正义",
       "url": "exam-detail.html?id=cet6-2021-12-set2",
       "year": 2021,
       "month": "12",
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/CET-6 2021.12 第2套.pdf",
+      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/2021年12月 六级真题 （第二套）.pdf",
       "keyPoints": {
         "difficulty": "适中",
         "listening": [
@@ -2368,7 +2176,7 @@
       "url": "exam-detail.html?id=cet6-2021-12-set3",
       "year": 2021,
       "month": "12",
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/CET-6 2021.12 第3套.pdf",
+      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/2021年12月 六级真题 （第三套）.pdf",
       "keyPoints": {
         "difficulty": "适中",
         "listening": [
@@ -2401,7 +2209,7 @@
       "url": "exam-detail.html?id=cet6-2021-06-set1",
       "year": 2021,
       "month": "06",
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/CET-6 2021.06 第1套.pdf",
+      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/2021年6月 六级真题 （第一套）.pdf",
       "keyPoints": {
         "difficulty": "适中",
         "listening": [
@@ -2434,7 +2242,7 @@
       "url": "exam-detail.html?id=cet6-2021-06-set2",
       "year": 2021,
       "month": "06",
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/CET-6 2021.06 第2套.pdf",
+      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/2021年6月 六级真题 （第二套）.pdf",
       "keyPoints": {
         "difficulty": "适中",
         "listening": [
@@ -2467,7 +2275,7 @@
       "url": "exam-detail.html?id=cet6-2021-06-set3",
       "year": 2021,
       "month": "06",
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/CET-6 2021.06 第3套.pdf",
+      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/2021年6月 六级真题 （第三套）.pdf",
       "keyPoints": {
         "difficulty": "适中",
         "listening": [
@@ -2500,7 +2308,7 @@
       "url": "exam-detail.html?id=cet6-2020-12-set1",
       "year": 2020,
       "month": "12",
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/CET-6 2020.12 第1套.pdf",
+      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/2020年12月 六级真题 （第一套）.pdf",
       "keyPoints": {
         "difficulty": "适中",
         "listening": [
@@ -2533,7 +2341,7 @@
       "url": "exam-detail.html?id=cet6-2020-12-set2",
       "year": 2020,
       "month": "12",
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/CET-6 2020.12 第2套.pdf",
+      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/2020年12月 六级真题 （第二套）.pdf",
       "keyPoints": {
         "difficulty": "适中",
         "listening": [
@@ -2566,7 +2374,7 @@
       "url": "exam-detail.html?id=cet6-2020-12-set3",
       "year": 2020,
       "month": "12",
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/CET-6 2020.12 第3套.pdf",
+      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/2020年12月 六级真题 （第三套）.pdf",
       "keyPoints": {
         "difficulty": "适中",
         "listening": [
@@ -2599,7 +2407,7 @@
       "url": "exam-detail.html?id=cet6-2020-09-set1",
       "year": 2020,
       "month": "09",
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/CET-6 2020.09 第1套.pdf",
+      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/2020年9月 六级真题 （第一套）.pdf",
       "keyPoints": {
         "difficulty": "适中",
         "listening": [
@@ -2626,45 +2434,13 @@
       }
     },
     {
-      "id": "cet6-2020-09-set2",
-      "title": "2020年9月 六级真题 (第二套)",
-      "desc": "在线经济崛起",
-      "url": "exam-detail.html?id=cet6-2020-09-set2",
-      "year": 2020,
-      "month": "09",
-      "keyPoints": {
-        "difficulty": "适中",
-        "listening": [
-          "讲座主旨把握",
-          "对话言外之意",
-          "信息综合"
-        ],
-        "reading": [
-          "人工智能伦理",
-          "气候变化应对",
-          "全球化挑战",
-          "长难句分析"
-        ],
-        "writing": [
-          "深度论证：社会现象",
-          "多角度分析",
-          "逻辑严密"
-        ],
-        "translation": [
-          "中国画艺术特点",
-          "传统艺术",
-          "美学表达"
-        ]
-      }
-    },
-    {
       "id": "cet6-2020-07-set1",
       "title": "2020年7月 六级真题 (第一套)",
       "desc": "延期考试特辑",
       "url": "exam-detail.html?id=cet6-2020-07-set1",
       "year": 2020,
       "month": "07",
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/CET-6 2020.07 第1套.pdf",
+      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/2020年7月 六级真题 （第一套）.pdf",
       "keyPoints": {
         "difficulty": "适中",
         "listening": [
@@ -2691,45 +2467,13 @@
       }
     },
     {
-      "id": "cet6-2020-07-set2",
-      "title": "2020年7月 六级真题 (第二套)",
-      "desc": "公共卫生话题",
-      "url": "exam-detail.html?id=cet6-2020-07-set2",
-      "year": 2020,
-      "month": "07",
-      "keyPoints": {
-        "difficulty": "适中",
-        "listening": [
-          "学术讲座理解",
-          "长对话细节",
-          "同义替换"
-        ],
-        "reading": [
-          "教育体制改革",
-          "职场性别平等",
-          "创新创业",
-          "长难句分析"
-        ],
-        "writing": [
-          "图表分析：复杂数据",
-          "趋势总结",
-          "深层原因"
-        ],
-        "translation": [
-          "三国演义历史影响",
-          "古典名著",
-          "文学表达"
-        ]
-      }
-    },
-    {
       "id": "cet6-2019-12-set1",
       "title": "2019年12月 六级真题 (第一套)",
       "desc": "5G时代来临",
       "url": "exam-detail.html?id=cet6-2019-12-set1",
       "year": 2019,
       "month": "12",
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/CET-6 2019.12 第1套.pdf",
+      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/2019年12月 六级真题 （第一套）.pdf",
       "keyPoints": {
         "difficulty": "适中",
         "listening": [
@@ -2762,7 +2506,7 @@
       "url": "exam-detail.html?id=cet6-2019-12-set2",
       "year": 2019,
       "month": "12",
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/CET-6 2019.12 第2套.pdf",
+      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/2019年12月 六级真题 （第二套）.pdf",
       "keyPoints": {
         "difficulty": "适中",
         "listening": [
@@ -2795,7 +2539,7 @@
       "url": "exam-detail.html?id=cet6-2019-12-set3",
       "year": 2019,
       "month": "12",
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/CET-6 2019.12 第3套.pdf",
+      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/2019年12月 六级真题 （第三套）.pdf",
       "keyPoints": {
         "difficulty": "适中",
         "listening": [
@@ -2828,7 +2572,7 @@
       "url": "exam-detail.html?id=cet6-2019-06-set1",
       "year": 2019,
       "month": "06",
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/CET-6 2019.06 第1套.pdf",
+      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/2019年6月 六级真题 （第一套）.pdf",
       "keyPoints": {
         "difficulty": "适中",
         "listening": [
@@ -2861,7 +2605,7 @@
       "url": "exam-detail.html?id=cet6-2019-06-set2",
       "year": 2019,
       "month": "06",
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/CET-6 2019.06 第2套.pdf",
+      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/2019年6月 六级真题 （第二套）.pdf",
       "keyPoints": {
         "difficulty": "适中",
         "listening": [
@@ -2894,7 +2638,7 @@
       "url": "exam-detail.html?id=cet6-2019-06-set3",
       "year": 2019,
       "month": "06",
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/CET-6 2019.06 第3套.pdf",
+      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/2019年6月 六级真题 （第三套）.pdf",
       "keyPoints": {
         "difficulty": "适中",
         "listening": [
@@ -2927,7 +2671,7 @@
       "url": "exam-detail.html?id=cet6-2018-12-set1",
       "year": 2018,
       "month": "12",
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/CET-6 2018.12 第1套.pdf",
+      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/2018年12月 六级真题 （第一套）.pdf",
       "keyPoints": {
         "difficulty": "适中",
         "listening": [
@@ -2960,7 +2704,7 @@
       "url": "exam-detail.html?id=cet6-2018-12-set2",
       "year": 2018,
       "month": "12",
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/CET-6 2018.12 第2套.pdf",
+      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/2018年12月 六级真题 （第二套）.pdf",
       "keyPoints": {
         "difficulty": "适中",
         "listening": [
@@ -2993,7 +2737,7 @@
       "url": "exam-detail.html?id=cet6-2018-12-set3",
       "year": 2018,
       "month": "12",
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/CET-6 2018.12 第3套.pdf",
+      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/2018年12月 六级真题 （第三套）.pdf",
       "keyPoints": {
         "difficulty": "适中",
         "listening": [
@@ -3026,7 +2770,7 @@
       "url": "exam-detail.html?id=cet6-2018-06-set1",
       "year": 2018,
       "month": "06",
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/CET-6 2018.06 第1套.pdf",
+      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/2018年6月 六级真题 （第一套）.pdf",
       "keyPoints": {
         "difficulty": "适中",
         "listening": [
@@ -3059,7 +2803,7 @@
       "url": "exam-detail.html?id=cet6-2018-06-set2",
       "year": 2018,
       "month": "06",
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/CET-6 2018.06 第2套.pdf",
+      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/2018年6月 六级真题 （第二套）.pdf",
       "keyPoints": {
         "difficulty": "适中",
         "listening": [
@@ -3092,7 +2836,7 @@
       "url": "exam-detail.html?id=cet6-2018-06-set3",
       "year": 2018,
       "month": "06",
-      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/CET-6 2018.06 第3套.pdf",
+      "pdf": "http://t6r1sg3dy.hd-bkt.clouddn.com/cet6/pdf/2018年6月 六级真题 （第三套）.pdf",
       "keyPoints": {
         "difficulty": "适中",
         "listening": [
