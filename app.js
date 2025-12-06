@@ -669,9 +669,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- 动态加载并显示真题列表 (带筛选和搜索功能) ---
     const papersContainer = document.getElementById('papers-list') || document.querySelector('.papers-list-container');
     if (papersContainer) {
-        // 1. 判断当前页面的 URL 是 CET4 还是 CET6
-        const isCet4Page = window.location.pathname.includes('cet4.html');
-        const isCet6Page = window.location.pathname.includes('cet6.html');
+        // 1. 判断当前页面的 URL 是 CET4 还是 CET6（支持带.html和不带.html的URL）
+        const pathname = window.location.pathname.toLowerCase();
+        const isCet4Page = pathname.includes('cet4');
+        const isCet6Page = pathname.includes('cet6');
         let paperType = null;
         if (isCet4Page) {
             paperType = 'cet4';
