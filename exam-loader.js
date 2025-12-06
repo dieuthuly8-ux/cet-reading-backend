@@ -1210,35 +1210,45 @@ document.addEventListener('DOMContentLoaded', () => {
 // 全局缓存（避免重复加载大文件）
 let examContentsDataCache = null;
 
-// 加载真题内容（优化版：带缓存和进度提示）
+// 加载真题内容（优化版：带缓存、日志和错误处理）
 async function loadExamContent(examId) {
+    console.log('📖 开始加载真题:', examId);
+    
     try {
         // 1. 检查缓存
         if (!examContentsDataCache) {
-            // 首次加载，从网络获取
+            console.log('⏳ 首次加载 exam-contents.json...');
             const response = await fetch('./exam-contents.json', { 
                 cache: 'force-cache' // 使用浏览器缓存
             });
             if (!response.ok) {
-                throw new Error('无法加载真题数据');
+                throw new Error(`HTTP ${response.status}: 无法加载真题数据`);
             }
             
             examContentsDataCache = await response.json();
-            console.log('✓ exam-contents.json 已缓存');
+            console.log('✓ exam-contents.json 已缓存，包含', Object.keys(examContentsDataCache).length, '套试卷');
+        } else {
+            console.log('✓ 使用已缓存的 exam-contents.json');
         }
 
         // 2. 从缓存中获取指定试卷
         const examContent = examContentsDataCache[examId];
 
         if (!examContent) {
-            throw new Error('真题内容不存在');
+            console.error('❌ 试卷不存在:', examId);
+            console.log('可用的试卷ID:', Object.keys(examContentsDataCache).slice(0, 10));
+            throw new Error(`真题内容不存在 (ID: ${examId})`);
         }
+
+        console.log('✓ 找到试卷:', examContent.title);
+        console.log('📄 HTML内容长度:', (examContent.html || '').length, '字符');
 
         // 3. 显示真题信息
         displayExamContent(examContent);
+        console.log('✓ 真题渲染完成');
 
     } catch (error) {
-        console.error('加载真题失败:', error);
+        console.error('❌ 加载真题失败:', error);
         showError('加载真题失败：' + error.message);
     }
 }
@@ -1301,7 +1311,21 @@ function displayExamContent(content) {
 
     // 渲染实际题目内容 HTML
     const examContentDiv = document.getElementById('exam-content');
-    examContentDiv.innerHTML = content.html || '';
+    if (!examContentDiv) {
+        console.error('❌ 找不到 exam-content 元素');
+        return;
+    }
+    
+    const htmlContent = content.html || '';
+    if (!htmlContent || htmlContent.length === 0) {
+        console.error('❌ 试卷HTML内容为空');
+        examContentDiv.innerHTML = '<div style="text-align: center; padding: 3rem; color: #999;"><i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 1rem;"></i><h3>试卷内容为空</h3><p>请联系管理员检查数据</p></div>';
+        return;
+    }
+    
+    console.log('📝 渲染HTML内容...');
+    examContentDiv.innerHTML = htmlContent;
+    console.log('✓ HTML已渲染到页面');
 
     // 清理冗余说明，并追加小结与备考建议
     try { removeExamInfoBoxes(); } catch (e) { console.warn('removeExamInfoBoxes 失败', e); }
