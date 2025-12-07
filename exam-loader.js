@@ -204,6 +204,18 @@ function renderListeningTest(entry, examId) {
     const audio = document.createElement('audio');
     audio.controls = true;
     audio.className = 'listening-audio';
+    audio.preload = 'metadata';
+    
+    // 音频错误处理
+    audio.onerror = function(e) {
+        console.error('音频加载失败:', sec.audio);
+        console.error('错误详情:', e.target.error);
+    };
+    
+    audio.onloadedmetadata = function() {
+        console.log('✅ 音频加载成功:', sec.audio, '时长:', Math.floor(audio.duration), '秒');
+    };
+    
     audio.src = sec.audio || '';
 
     audioWrap.appendChild(toolbar);
