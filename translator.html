@@ -317,16 +317,19 @@
         
         // 显示单词信息弹窗
         function displayWordInfo(data, element) {
-            const basic = data.basic || {};
-            const phonetic = basic['uk-phonetic'] || basic['us-phonetic'] || basic.phonetic || '';
-            const explains = basic.explains || [];
-            const webExplains = data.web ? data.web.slice(0, 3) : [];
+            console.log('[Word Lookup] 解析显示数据:', data);
+            
+            // 适配后端API返回的简化格式
+            const word = data.query || element.getAttribute('data-word') || '';
+            const phonetic = data.phonetic || '';
+            const explains = data.explains || [];
+            const translation = data.translation || '';
             
             let html = `
                 <div style="min-width: 350px; max-width: 450px;">
                     <!-- 单词标题 -->
                     <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 1.2rem; border-radius: 8px 8px 0 0; margin: -1rem -1rem 1rem -1rem;">
-                        <h3 style="margin: 0; color: white; font-size: 1.5rem; font-weight: 700;">${data.query || ''}</h3>
+                        <h3 style="margin: 0; color: white; font-size: 1.5rem; font-weight: 700; text-transform: capitalize;">${word}</h3>
                         ${phonetic ? `<p style="margin: 0.3rem 0 0 0; color: rgba(255,255,255,0.9); font-size: 0.95rem;">📢 [${phonetic}]</p>` : ''}
                     </div>
                     
@@ -342,27 +345,22 @@
                         </div>
                     ` : ''}
                     
-                    <!-- 网络释义/例句 -->
-                    ${webExplains.length > 0 ? `
+                    <!-- 翻译结果 -->
+                    ${translation ? `
                         <div>
                             <h4 style="color: #10b981; font-size: 1rem; margin: 0 0 0.8rem 0; display: flex; align-items: center; gap: 0.5rem;">
-                                <i class="fas fa-globe"></i> 网络释义
+                                <i class="fas fa-language"></i> 中文释义
                             </h4>
                             <div style="background: #f0fdf4; padding: 1rem; border-radius: 8px; border-left: 3px solid #10b981;">
-                                ${webExplains.map(web => `
-                                    <div style="margin-bottom: 0.8rem;">
-                                        <p style="margin: 0; color: #064e3b; font-weight: 600;">${web.key || ''}</p>
-                                        <p style="margin: 0.2rem 0 0 0; color: #065f46; font-size: 0.9rem;">${(web.value || []).join('; ')}</p>
-                                    </div>
-                                `).join('')}
+                                <p style="margin: 0; color: #064e3b; line-height: 1.6;">${translation}</p>
                             </div>
                         </div>
                     ` : ''}
                     
-                    ${explains.length === 0 && webExplains.length === 0 ? `
-                        <div style="text-align: center; padding: 1rem; color: #64748b;">
-                            <i class="fas fa-info-circle" style="font-size: 1.5rem;"></i>
-                            <p style="margin-top: 0.5rem;">未找到该单词的详细释义</p>
+                    ${explains.length === 0 && !translation ? `
+                        <div style="text-align: center; padding: 1.5rem; color: #64748b;">
+                            <i class="fas fa-info-circle" style="font-size: 1.8rem; margin-bottom: 0.8rem;"></i>
+                            <p style="margin: 0; font-size: 0.95rem;">未找到该单词的详细释义</p>
                         </div>
                     ` : ''}
                 </div>
