@@ -1183,10 +1183,26 @@
             // 极速优化：只截取1200字符（更快）
             const truncatedTranscript = transcript.substring(0, 1200);
             
-            // 超简prompt - 极速生成
-            const prompt = `Generate 5 English questions JSON:
-{"questions":[{"id":1,"stem":"What...?","options":["A","B","C","D"],"answer":"A"}]}
-Text:${truncatedTranscript}`;
+            // 优化prompt - 严格要求JSON格式
+            const prompt = `You MUST respond with ONLY valid JSON, no other text.
+
+Generate 5 English listening comprehension questions based on the text below.
+
+Required JSON format:
+{
+  "questions": [
+    {
+      "id": 1,
+      "stem": "What is the main topic?",
+      "options": ["Option A", "Option B", "Option C", "Option D"],
+      "answer": "A"
+    }
+  ]
+}
+
+Text: ${truncatedTranscript}
+
+Respond with JSON only:`;
 
             console.log('[AI生成] 开始生成题目...');
             const llmResponse = await fetchWithRetry(
@@ -1211,33 +1227,99 @@ Text:${truncatedTranscript}`;
             const llmResult = await llmResponse.json();
             const content = llmResult.choices?.[0]?.message?.content || '';
             
-            // 解析JSON - 增强容错
+            // 解析JSON - 超强容错
             let questions = [];
+            console.log('[AI生成] API返回内容:', content);
+            
             try {
-              // 尝试多种方式提取JSON
-              let jsonStr = content;
+              // 第1步：清理内容
+              let jsonStr = content.trim();
               
-              // 移除可能的markdown代码块标记
-              jsonStr = jsonStr.replace(/```json\s*/g, '').replace(/```\s*/g, '');
+              // 移除markdown代码块
+              jsonStr = jsonStr.replace(/```json\s*/gi, '').replace(/```\s*/g, '');
               
-              // 尝试提取JSON对象
-              const jsonMatch = jsonStr.match(/\{[\s\S]*"questions"[\s\S]*\}/);
-              if (jsonMatch) {
-                jsonStr = jsonMatch[0];
+              // 移除前后的非 JSON 内容
+              jsonStr = jsonStr.replace(/^[^{\[]*/, '').replace(/[^}\]]*$/, '');
+              
+              // 第2步：多种方式提取JSON
+              let parsed = null;
+              
+              // 尝试1：直接解析
+              try {
+                parsed = JSON.parse(jsonStr);
+                console.log('[AI生成] 直接解析成功');
+              } catch (e1) {
+                console.log('[AI生成] 直接解析失败，尝试提取...');
+                
+                // 尝试2：提取包含questions的对象
+                const jsonMatch = jsonStr.match(/\{[\s\S]*?"questions"[\s\S]*?\}(?:\s*\})?/);
+                if (jsonMatch) {
+                  try {
+                    // 修复常见的JSON错误
+                    let extracted = jsonMatch[0];
+                    extracted = extracted.replace(/,\s*}/g, '}').replace(/,\s*]/g, ']');
+                    extracted = extracted.replace(/(['"])([^'"]*?)\1\s*:/g, '"$2":'); // 统一使用双引号
+                    parsed = JSON.parse(extracted);
+                    console.log('[AI生成] 提取解析成功');
+                  } catch (e2) {
+                    console.log('[AI生成] 提取解析失败:', e2.message);
+                  }
+                }
+                
+                // 尝试3：如果还是失败，尝试直接提取questions数组
+                if (!parsed) {
+                  const arrayMatch = jsonStr.match(/"questions"\s*:\s*(\[[\s\S]*?\])/); 
+                  if (arrayMatch) {
+                    try {
+                      const questionsArray = JSON.parse(arrayMatch[1]);
+                      parsed = { questions: questionsArray };
+                      console.log('[AI生成] 数组提取成功');
+                    } catch (e3) {
+                      console.log('[AI生成] 数组提取失败:', e3.message);
+                    }
+                  }
+                }
               }
               
-              // 修复常见的JSON格式问题
-              jsonStr = jsonStr.replace(/,\s*}/g, '}').replace(/,\s*]/g, ']');
+              if (!parsed) {
+                throw new Error('无法从响应中提取JSON数据');
+              }
               
-              const parsed = JSON.parse(jsonStr);
+              // 第3步：验证和清理数据
               questions = parsed.questions || [];
               
-              // 验证题目格式
-              questions = questions.filter(q => q.stem && q.options && q.answer);
+              if (!Array.isArray(questions)) {
+                console.error('[AI生成] questions不是数组:', questions);
+                throw new Error('questions字段格式错误');
+              }
+              
+              // 验证每个题目的完整性
+              questions = questions.filter(q => {
+                const isValid = q && 
+                               q.stem && 
+                               Array.isArray(q.options) && 
+                               q.options.length === 4 && 
+                               q.answer;
+                if (!isValid) {
+                  console.warn('[AI生成] 无效题目:', q);
+                }
+                return isValid;
+              });
+              
+              // 标准化题目格式
+              questions = questions.map((q, idx) => ({
+                id: q.id || (idx + 1),
+                stem: String(q.stem).trim(),
+                options: q.options.map(opt => String(opt).trim()),
+                answer: String(q.answer).trim().toUpperCase()
+              }));
+              
+              console.log(`[AI生成] 最终解析到 ${questions.length} 道题目`);
               
             } catch(e) {
-              console.error('JSON解析失败:', e, '\n原始内容:', content);
-              throw new Error('题目格式解析失败，请重试');
+              console.error('[AI生成] JSON解析完全失败:', e);
+              console.error('[AI生成] 原始内容:', content);
+              throw new Error(`题目格式解析失败：${e.message}。请点击重新生成`);
             }
             
             if (questions.length < 3) {
