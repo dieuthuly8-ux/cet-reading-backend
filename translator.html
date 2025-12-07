@@ -359,65 +359,103 @@
             }
         }
         
-        // 显示单词信息弹窗
-        function displayWordInfo(data, element) {
+        // 翻译英文释义为中文
+        async function translateText(text) {
+            try {
+                const response = await fetch(API_ENDPOINT, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text }),
+                    signal: AbortSignal.timeout(5000)
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    return data.result || text;
+                }
+            } catch (e) {
+                console.warn('[Translate] 翻译失败:', e.message);
+            }
+            return text;
+        }
+        
+        // 显示单词信息弹窗（有道词典风格）
+        async function displayWordInfo(data, element) {
             console.log('[Word Lookup] 解析显示数据:', data);
             
-            // 适配后端API返回的简化格式
             const word = data.query || element.getAttribute('data-word') || '';
             const phonetic = data.phonetic || '';
             const explains = data.explains || [];
-            const translation = data.translation || '';
+            
+            // 翻译英文释义为中文（异步）
+            const translatedExplains = [];
+            for (let i = 0; i < Math.min(explains.length, 5); i++) {
+                const exp = explains[i];
+                if (exp && !exp.startsWith('  例:')) {  // 不翻译例句
+                    const translated = await translateText(exp);
+                    translatedExplains.push({ en: exp, zh: translated });
+                }
+            }
             
             let html = `
-                <div style="min-width: 350px; max-width: 450px;">
-                    <!-- 单词标题 -->
-                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 1.2rem; border-radius: 8px 8px 0 0; margin: -1rem -1rem 1rem -1rem;">
-                        <h3 style="margin: 0; color: white; font-size: 1.5rem; font-weight: 700; text-transform: capitalize;">${word}</h3>
-                        ${phonetic ? `<p style="margin: 0.3rem 0 0 0; color: rgba(255,255,255,0.9); font-size: 0.95rem;">📢 [${phonetic}]</p>` : ''}
+                <div style="min-width: 380px; max-width: 500px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;">
+                    <!-- 单词标题（有道风格） -->
+                    <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); padding: 1.3rem 1.5rem; border-radius: 12px 12px 0 0; margin: -1.2rem -1.2rem 0 -1.2rem; box-shadow: 0 2px 8px rgba(79, 172, 254, 0.3);">
+                        <h3 style="margin: 0; color: white; font-size: 1.6rem; font-weight: 700; text-transform: capitalize; letter-spacing: 0.5px;">${word}</h3>
+                        ${phonetic ? `
+                            <div style="margin-top: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <span style="color: rgba(255,255,255,0.95); font-size: 1rem;">[${phonetic}]</span>
+                                <button onclick="responsiveVoice.speak('${word}', 'UK English Female')" 
+                                    style="background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.3rem 0.6rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s;"
+                                    onmouseover="this.style.background='rgba(255,255,255,0.3)'"
+                                    onmouseout="this.style.background='rgba(255,255,255,0.2)'">
+                                    <i class="fas fa-volume-up"></i> 发音
+                                </button>
+                            </div>
+                        ` : ''}
                     </div>
                     
-                    <!-- 基本释义 -->
-                    ${explains.length > 0 ? `
-                        <div style="margin-bottom: 1rem;">
-                            <h4 style="color: #667eea; font-size: 1rem; margin: 0 0 0.8rem 0; display: flex; align-items: center; gap: 0.5rem;">
-                                <i class="fas fa-book"></i> 基本释义
+                    <!-- 中英对照释义（有道风格） -->
+                    ${translatedExplains.length > 0 ? `
+                        <div style="padding: 1.2rem; background: white;">
+                            <h4 style="margin: 0 0 1rem 0; color: #2c3e50; font-size: 0.95rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
+                                <span style="display: inline-block; width: 4px; height: 16px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border-radius: 2px;"></span>
+                                基本释义
                             </h4>
-                            <div style="background: #f8fafc; padding: 1rem; border-radius: 8px; border-left: 3px solid #667eea;">
-                                ${explains.map(exp => `<p style="margin: 0.4rem 0; color: #2d3436; line-height: 1.6;">• ${exp}</p>`).join('')}
+                            <div style="space-y: 0.8rem;">
+                                ${translatedExplains.map((item, idx) => `
+                                    <div style="margin-bottom: 1rem; padding: 0.8rem; background: #f8fafc; border-radius: 8px; border-left: 3px solid #4facfe;">
+                                        <div style="color: #2c3e50; font-size: 0.95rem; line-height: 1.6; margin-bottom: 0.4rem;">
+                                            <span style="display: inline-block; width: 20px; height: 20px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; text-align: center; line-height: 20px; border-radius: 50%; font-size: 0.75rem; font-weight: 600; margin-right: 0.5rem;">${idx + 1}</span>
+                                            <span style="font-weight: 500;">${item.en}</span>
+                                        </div>
+                                        <div style="color: #10b981; font-size: 0.9rem; padding-left: 2rem; line-height: 1.5;">
+                                            <i class="fas fa-language" style="margin-right: 0.3rem; opacity: 0.7;"></i>
+                                            ${item.zh}
+                                        </div>
+                                    </div>
+                                `).join('')}
                             </div>
                         </div>
-                    ` : ''}
-                    
-                    <!-- 翻译结果 -->
-                    ${translation ? `
-                        <div>
-                            <h4 style="color: #10b981; font-size: 1rem; margin: 0 0 0.8rem 0; display: flex; align-items: center; gap: 0.5rem;">
-                                <i class="fas fa-language"></i> 中文释义
-                            </h4>
-                            <div style="background: #f0fdf4; padding: 1rem; border-radius: 8px; border-left: 3px solid #10b981;">
-                                <p style="margin: 0; color: #064e3b; line-height: 1.6;">${translation}</p>
-                            </div>
-                        </div>
-                    ` : ''}
-                    
-                    ${explains.length === 0 && !translation ? `
-                        <div style="text-align: center; padding: 1.5rem; color: #64748b;">
-                            <i class="fas fa-info-circle" style="font-size: 1.8rem; margin-bottom: 0.8rem;"></i>
+                    ` : `
+                        <div style="text-align: center; padding: 2rem; color: #94a3b8;">
+                            <i class="fas fa-info-circle" style="font-size: 2rem; margin-bottom: 0.8rem; display: block;"></i>
                             <p style="margin: 0; font-size: 0.95rem;">未找到该单词的详细释义</p>
                         </div>
-                    ` : ''}
+                    `}
                 </div>
             `;
             
             showWordPopup(element, html);
         }
         
-        // 显示弹窗
+        // 显示弹窗（优化样式和位置）
         function showWordPopup(element, content) {
             // 移除已存在的弹窗
             const existingPopup = document.getElementById('word-popup');
-            if (existingPopup) existingPopup.remove();
+            if (existingPopup) {
+                existingPopup.style.animation = 'popupFadeOut 0.15s ease';
+                setTimeout(() => existingPopup.remove(), 150);
+            }
             
             // 创建新弹窗
             const popup = document.createElement('div');
@@ -426,59 +464,100 @@
             popup.style.cssText = `
                 position: fixed;
                 background: white;
-                padding: 1rem;
-                border-radius: 12px;
-                box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+                padding: 1.2rem;
+                border-radius: 16px;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.15), 0 0 1px rgba(0,0,0,0.1);
                 z-index: 10000;
-                max-height: 80vh;
+                max-height: 85vh;
                 overflow-y: auto;
-                border: 2px solid #e2e8f0;
-                animation: popupFadeIn 0.2s ease;
+                border: 1px solid rgba(79, 172, 254, 0.2);
+                animation: popupFadeIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
             `;
             
-            // 添加动画
-            const style = document.createElement('style');
-            style.textContent = `
-                @keyframes popupFadeIn {
-                    from { opacity: 0; transform: translateY(-10px) scale(0.95); }
-                    to { opacity: 1; transform: translateY(0) scale(1); }
-                }
-            `;
+            // 添加动画样式
             if (!document.getElementById('popup-animation-style')) {
+                const style = document.createElement('style');
                 style.id = 'popup-animation-style';
+                style.textContent = `
+                    @keyframes popupFadeIn {
+                        from { 
+                            opacity: 0; 
+                            transform: translateY(-20px) scale(0.92); 
+                        }
+                        to { 
+                            opacity: 1; 
+                            transform: translateY(0) scale(1); 
+                        }
+                    }
+                    @keyframes popupFadeOut {
+                        from { 
+                            opacity: 1; 
+                            transform: scale(1); 
+                        }
+                        to { 
+                            opacity: 0; 
+                            transform: scale(0.95); 
+                        }
+                    }
+                    #word-popup::-webkit-scrollbar {
+                        width: 8px;
+                    }
+                    #word-popup::-webkit-scrollbar-track {
+                        background: #f1f5f9;
+                        border-radius: 4px;
+                    }
+                    #word-popup::-webkit-scrollbar-thumb {
+                        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+                        border-radius: 4px;
+                    }
+                    #word-popup::-webkit-scrollbar-thumb:hover {
+                        background: linear-gradient(135deg, #3b9ce8 0%, #00d9ea 100%);
+                    }
+                `;
                 document.head.appendChild(style);
             }
             
             document.body.appendChild(popup);
             
-            // 计算位置
+            // 智能计算位置
             const rect = element.getBoundingClientRect();
             const popupRect = popup.getBoundingClientRect();
+            const padding = 15;
             
+            // 默认居中对齐
             let left = rect.left + (rect.width / 2) - (popupRect.width / 2);
-            let top = rect.bottom + 10;
+            let top = rect.bottom + padding;
             
-            // 确保不超出屏幕
-            if (left + popupRect.width > window.innerWidth - 20) {
-                left = window.innerWidth - popupRect.width - 20;
+            // 水平方向调整
+            if (left < padding) {
+                left = padding;
+            } else if (left + popupRect.width > window.innerWidth - padding) {
+                left = window.innerWidth - popupRect.width - padding;
             }
-            if (left < 20) left = 20;
             
-            if (top + popupRect.height > window.innerHeight - 20) {
-                top = rect.top - popupRect.height - 10;
+            // 垂直方向调整（如果下方空间不够，显示在上方）
+            if (top + popupRect.height > window.innerHeight - padding) {
+                top = rect.top - popupRect.height - padding;
+                // 如果上方也放不下，就显示在屏幕中间
+                if (top < padding) {
+                    top = (window.innerHeight - popupRect.height) / 2;
+                    if (top < padding) top = padding;
+                }
             }
             
             popup.style.left = left + 'px';
             popup.style.top = top + 'px';
             
-            // 点击其他地方关闭
+            // 点击其他地方关闭（带动画）
             setTimeout(() => {
-                document.addEventListener('click', function closePopup(e) {
-                    if (!popup.contains(e.target) && e.target !== element) {
-                        popup.remove();
-                        document.removeEventListener('click', closePopup);
+                const closeHandler = function(e) {
+                    if (!popup.contains(e.target) && e.target !== element && !e.target.closest('.clickable-word')) {
+                        popup.style.animation = 'popupFadeOut 0.15s ease';
+                        setTimeout(() => popup.remove(), 150);
+                        document.removeEventListener('click', closeHandler);
                     }
-                });
+                };
+                document.addEventListener('click', closeHandler);
             }, 100);
         }
         
