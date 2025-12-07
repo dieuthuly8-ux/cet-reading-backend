@@ -206,8 +206,9 @@
         // Vercel API端点
         const API_ENDPOINT = 'https://cet-reading-backend.vercel.app/api/translate';
 
-        // 后端API地址
-        const LOOKUP_API = 'https://cet-reading-backend.vercel.app/api/lookup';
+        // 免费词典API（不需要后端）
+        const FREE_DICT_API = 'https://api.dictionaryapi.dev/api/v2/entries/en/';
+        const BACKUP_DICT_API = 'https://api.datamuse.com/words?sp=';
         
         // 将英文文本分词并变成可点击的span
         function makeWordsClickable(text) {
@@ -236,9 +237,8 @@
             });
         }
         
-        // 查询单词（添加重试和超时控制）
+        // 查询单词（使用免费API，不依赖后端）
         async function lookupWord(word, element) {
-            // 显示加载提示
             showWordPopup(element, `
                 <div style="text-align: center; padding: 1.5rem;">
                     <i class="fas fa-spinner fa-spin" style="color: #667eea; font-size: 1.8rem;"></i>
@@ -249,61 +249,105 @@
             console.log('[Word Lookup] 查询单词:', word);
             
             try {
-                // 添加超时控制（10秒）
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => {
-                    console.log('[Word Lookup] 请求超时');
-                    controller.abort();
-                }, 10000);
+                const cleanWord = word.toLowerCase().trim();
                 
-                const response = await fetch(LOOKUP_API, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ word }),
-                    signal: controller.signal
-                });
-                
-                clearTimeout(timeoutId);
-                console.log('[Word Lookup] 响应状态:', response.status);
-                
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error('[Word Lookup] API错误:', errorText);
-                    throw new Error(`查询失败 (${response.status})`);
+                // 方法1：使用免费词典API（dictionaryapi.dev）
+                try {
+                    const response = await fetch(FREE_DICT_API + encodeURIComponent(cleanWord), {
+                        method: 'GET',
+                        signal: AbortSignal.timeout(8000)
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        console.log('[Word Lookup] 免费API返回:', data);
+                        
+                        if (Array.isArray(data) && data.length > 0) {
+                            const wordData = data[0];
+                            
+                            // 提取音标
+                            let phonetic = '';
+                            if (wordData.phonetic) {
+                                phonetic = wordData.phonetic;
+                            } else if (wordData.phonetics && wordData.phonetics.length > 0) {
+                                const ph = wordData.phonetics.find(p => p.text);
+                                if (ph) phonetic = ph.text;
+                            }
+                            phonetic = phonetic.replace(/^\/|\/$|^\[|\]$/g, '');
+                            
+                            // 提取释义
+                            const meanings = [];
+                            if (wordData.meanings && Array.isArray(wordData.meanings)) {
+                                wordData.meanings.forEach(meaning => {
+                                    const pos = meaning.partOfSpeech || '';
+                                    if (meaning.definitions && Array.isArray(meaning.definitions)) {
+                                        meaning.definitions.slice(0, 3).forEach(def => {
+                                            if (def.definition) {
+                                                meanings.push(`${pos ? pos + '. ' : ''}${def.definition}`);
+                                                // 添加例句
+                                                if (def.example) {
+                                                    meanings.push(`  例: ${def.example}`);
+                                                }
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                            
+                            displayWordInfo({
+                                query: cleanWord,
+                                phonetic: phonetic,
+                                explains: meanings,
+                                translation: meanings.length > 0 ? meanings[0] : ''
+                            }, element);
+                            return;
+                        }
+                    }
+                } catch (apiError) {
+                    console.warn('[Word Lookup] 免费API失败:', apiError.message);
                 }
                 
-                const data = await response.json();
-                console.log('[Word Lookup] 返回数据:', data);
-                
-                if (data.error) {
-                    throw new Error(data.error);
+                // 方法2：备用API（datamuse）
+                try {
+                    const response = await fetch(BACKUP_DICT_API + encodeURIComponent(cleanWord) + '&md=d&max=1', {
+                        method: 'GET',
+                        signal: AbortSignal.timeout(5000)
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        console.log('[Word Lookup] 备用API返回:', data);
+                        
+                        if (Array.isArray(data) && data.length > 0 && data[0].defs) {
+                            const defs = data[0].defs.map(def => {
+                                // 格式："n\tthe definition" -> "n. the definition"
+                                return def.replace(/\t/, '. ');
+                            });
+                            
+                            displayWordInfo({
+                                query: cleanWord,
+                                phonetic: '',
+                                explains: defs,
+                                translation: defs[0] || ''
+                            }, element);
+                            return;
+                        }
+                    }
+                } catch (backupError) {
+                    console.warn('[Word Lookup] 备用API失败:', backupError.message);
                 }
                 
-                // 显示单词详情
-                displayWordInfo(data, element);
+                // 所有API都失败
+                throw new Error('未找到该单词的释义');
                 
             } catch (error) {
                 console.error('[Word Lookup] 查询失败:', error);
                 
-                let errorMsg = '查询失败';
-                let suggestion = '';
-                
-                if (error.name === 'AbortError') {
-                    errorMsg = '请求超时';
-                    suggestion = '请检查网络连接';
-                } else if (error.message.includes('Failed to fetch')) {
-                    errorMsg = '网络连接失败';
-                    suggestion = '请检查网络或稍后重试';
-                } else {
-                    errorMsg = error.message || '未知错误';
-                    suggestion = '请稍后重试';
-                }
-                
                 showWordPopup(element, `
                     <div style="text-align: center; padding: 1.5rem;">
-                        <i class="fas fa-exclamation-circle" style="color: #ef4444; font-size: 1.8rem;"></i>
-                        <p style="margin-top: 0.8rem; color: #2d3436; font-weight: 600;">${errorMsg}</p>
-                        <p style="margin-top: 0.5rem; color: #64748b; font-size: 0.9rem;">${suggestion}</p>
+                        <i class="fas fa-info-circle" style="color: #f59e0b; font-size: 1.8rem;"></i>
+                        <p style="margin-top: 0.8rem; color: #2d3436; font-weight: 600;">未找到该单词</p>
+                        <p style="margin-top: 0.5rem; color: #64748b; font-size: 0.9rem;">请尝试其他单词</p>
                         <button onclick="document.getElementById('word-popup').remove()" 
                             style="margin-top: 1rem; padding: 0.5rem 1.5rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s ease;"
                             onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.4)'"
