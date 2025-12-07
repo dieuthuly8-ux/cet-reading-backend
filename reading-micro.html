@@ -916,27 +916,26 @@
       currentAudio.currentTime = timeInSeconds;
       currentAudio.play();
       
-      // 滚动到对应的题目
-      setTimeout(() => {
-        const questionCards = document.querySelectorAll('.question-card');
-        if (questionCards[questionIndex]) {
-          questionCards[questionIndex].scrollIntoView({ 
-            behavior: 'smooth', 
-            block: 'center' 
-          });
-          
-          // 高亮该题目卡片
-          questionCards[questionIndex].style.transform = 'scale(1.02)';
-          questionCards[questionIndex].style.boxShadow = '0 8px 32px rgba(102, 126, 234, 0.4)';
-          
-          setTimeout(() => {
-            questionCards[questionIndex].style.transform = 'scale(1)';
-            questionCards[questionIndex].style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.08)';
-          }, 800);
-        }
-      }, 300);
+      // 滚动到音频播放器（而不是题目）
+      const audioPlayer = currentAudio.closest('div');
+      if (audioPlayer) {
+        audioPlayer.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'start' 
+        });
+        
+        // 给音频播放器一个闪烁提示
+        const originalBoxShadow = audioPlayer.style.boxShadow;
+        audioPlayer.style.boxShadow = '0 12px 40px rgba(102, 126, 234, 0.6)';
+        audioPlayer.style.transform = 'scale(1.01)';
+        
+        setTimeout(() => {
+          audioPlayer.style.boxShadow = originalBoxShadow || '0 8px 24px rgba(102, 126, 234, 0.3)';
+          audioPlayer.style.transform = 'scale(1)';
+        }, 600);
+      }
       
-      console.log(`✅ 已跳转到: ${timeInSeconds}秒，题目 ${questionIndex + 1}`);
+      console.log(`✅ 已跳转到: ${timeInSeconds}秒，定位到音频播放器`);
     }
 
     // 页面加载时预加载题目
