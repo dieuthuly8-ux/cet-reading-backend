@@ -1052,15 +1052,24 @@
             let audioSrc = currentExamData.sections?.[0]?.audio;
             if (!audioSrc) throw new Error('未找到音频配置');
             
-            // 尝试加载音频
-            let audioResponse = await fetch(audioSrc);
+            // 尝试加载音频（添加超时控制）
+            const fetchWithTimeout = (url, timeout = 15000) => {
+              return Promise.race([
+                fetch(url),
+                new Promise((_, reject) => 
+                  setTimeout(() => reject(new Error('音频加载超时，请检查网络')), timeout)
+                )
+              ]);
+            };
+            
+            let audioResponse = await fetchWithTimeout(audioSrc);
             
             // 如果音频不存在，尝试回退到set1（同一考试通常共用听力音频）
             if (!audioResponse.ok) {
               const fallbackSrc = audioSrc.replace(/-set[23]\.mp3$/, '-set1.mp3');
               if (fallbackSrc !== audioSrc) {
                 aiGenerateStatus.innerHTML = '<i class="fas fa-sync"></i> 原音频不存在，尝试使用同期set1音频...';
-                audioResponse = await fetch(fallbackSrc);
+                audioResponse = await fetchWithTimeout(fallbackSrc);
                 if (audioResponse.ok) {
                   audioSrc = fallbackSrc;
                 }
@@ -1070,7 +1079,12 @@
             if (!audioResponse.ok) throw new Error('音频文件不存在，请确保已上传对应音频');
             const audioBlob = await audioResponse.blob();
             
-            // 调用SiliconFlow API识别音频
+            // 检查音频文件大小（超过10MB警告）
+            if (audioBlob.size > 10 * 1024 * 1024) {
+              aiGenerateStatus.innerHTML = '<i class="fas fa-info-circle"></i> 音频文件较大，处理时间可能较长...';
+            }
+            
+            // 调用SiliconFlow API识别音频（添加重试机制）
             const apiKey = 'sk-zxwcsadwzlqigvrgvxphpavfangpazhbxtlvgkwtapolwndm';
             const formData = new FormData();
             formData.append('file', audioBlob, 'audio.mp3');
@@ -1078,13 +1092,47 @@
             
             aiGenerateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> AI识别中...';
             
-            const transcriptResponse = await fetch('https://api.siliconflow.cn/v1/audio/transcriptions', {
+            // 重试函数
+            const fetchWithRetry = async (url, options, retries = 3) => {
+              for (let i = 0; i < retries; i++) {
+                try {
+                  const controller = new AbortController();
+                  const timeoutId = setTimeout(() => controller.abort(), 30000); // 30秒超时
+                  
+                  const response = await fetch(url, {
+                    ...options,
+                    signal: controller.signal
+                  });
+                  
+                  clearTimeout(timeoutId);
+                  
+                  if (response.ok) return response;
+                  
+                  // 如果是429限流错误，等待后重试
+                  if (response.status === 429 && i < retries - 1) {
+                    aiGenerateStatus.innerHTML = `<i class="fas fa-clock"></i> API繁忙，${i + 1}秒后重试...`;
+                    await new Promise(resolve => setTimeout(resolve, (i + 1) * 1000));
+                    continue;
+                  }
+                  
+                  throw new Error(`API请求失败 (${response.status})`);
+                  
+                } catch (err) {
+                  if (err.name === 'AbortError') {
+                    throw new Error('请求超时，请检查网络连接');
+                  }
+                  if (i === retries - 1) throw err;
+                  aiGenerateStatus.innerHTML = `<i class="fas fa-sync"></i> 网络不稳定，正在重试 (${i + 1}/${retries})...`;
+                  await new Promise(resolve => setTimeout(resolve, 1000));
+                }
+              }
+            };
+            
+            const transcriptResponse = await fetchWithRetry('https://api.siliconflow.cn/v1/audio/transcriptions', {
               method: 'POST',
               headers: { 'Authorization': `Bearer ${apiKey}` },
               body: formData
             });
-            
-            if (!transcriptResponse.ok) throw new Error('音频识别失败');
             const transcriptResult = await transcriptResponse.json();
             const transcript = transcriptResult.text;
             
@@ -1103,7 +1151,7 @@
 {"questions":[{"id":1,"stem":"What...?","options":["A","B","C","D"],"answer":"A"}]}
 Text:${truncatedTranscript}`;
 
-            const llmResponse = await fetch('https://api.siliconflow.cn/v1/chat/completions', {
+            const llmResponse = await fetchWithRetry('https://api.siliconflow.cn/v1/chat/completions', {
               method: 'POST',
               headers: {
                 'Authorization': `Bearer ${apiKey}`,
@@ -1117,8 +1165,6 @@ Text:${truncatedTranscript}`;
                 stream: false
               })
             });
-            
-            if (!llmResponse.ok) throw new Error('题目生成失败');
             const llmResult = await llmResponse.json();
             const content = llmResult.choices?.[0]?.message?.content || '';
             
@@ -1177,7 +1223,22 @@ Text:${truncatedTranscript}`;
             aiGenerateBtn.innerHTML = '<i class="fas fa-magic"></i> 重新生成';
             aiGenerateStatus.style.background = '#f8d7da';
             aiGenerateStatus.style.color = '#721c24';
-            aiGenerateStatus.innerHTML = `<i class="fas fa-exclamation-circle"></i> 生成失败：${err.message || '请检查网络后重试'}`;
+            
+            // 更详细的错误信息
+            let errorMsg = err.message || '未知错误';
+            let troubleshoot = '';
+            
+            if (errorMsg.includes('超时') || errorMsg.includes('timeout')) {
+              troubleshoot = '<br><small>💡 建议：检查网络连接，或稍后重试</small>';
+            } else if (errorMsg.includes('Failed to fetch') || errorMsg.includes('网络')) {
+              troubleshoot = '<br><small>💡 建议：检查网络连接，确保可以访问外部API</small>';
+            } else if (errorMsg.includes('429') || errorMsg.includes('繁忙')) {
+              troubleshoot = '<br><small>💡 建议：API使用量过大，请稍后再试</small>';
+            } else if (errorMsg.includes('音频')) {
+              troubleshoot = '<br><small>💡 建议：检查音频文件是否存在</small>';
+            }
+            
+            aiGenerateStatus.innerHTML = `<i class="fas fa-exclamation-circle"></i> 生成失败：${errorMsg}${troubleshoot}`;
           }
         });
         
