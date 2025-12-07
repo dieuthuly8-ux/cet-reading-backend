@@ -207,9 +207,37 @@ function renderListeningTest(entry, examId) {
     audio.preload = 'metadata';
     
     // 音频错误处理
+    let errorShown = false;
     audio.onerror = function(e) {
         console.error('音频加载失败:', sec.audio);
         console.error('错误详情:', e.target.error);
+        
+        if (!errorShown) {
+            errorShown = true;
+            const errorDiv = document.createElement('div');
+            errorDiv.style.cssText = `
+                background: #fff3cd;
+                border: 2px solid #ffc107;
+                border-radius: 8px;
+                padding: 16px;
+                margin: 12px 0;
+                font-size: 14px;
+                line-height: 1.6;
+            `;
+            errorDiv.innerHTML = `
+                <div style="display: flex; align-items: start; gap: 12px;">
+                    <span style="font-size: 24px;">⚠️</span>
+                    <div>
+                        <strong style="color: #856404;">音频加载失败 - 需要配置</strong>
+                        <p style="margin: 8px 0 0 0; color: #856404;">
+                            由于CDN仅支持HTTP协议，请点击地址栏左侧的<strong>锁图标</strong> → <strong>网站设置</strong> → 
+                            将<strong>不安全内容</strong>改为<strong>允许</strong>，然后刷新页面。
+                        </p>
+                    </div>
+                </div>
+            `;
+            audioWrap.insertBefore(errorDiv, audio);
+        }
     };
     
     audio.onloadedmetadata = function() {
