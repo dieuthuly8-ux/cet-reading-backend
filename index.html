@@ -6,7 +6,30 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>四六级学习站 - 免费真题资源平台</title>
+    <script>
+        // 防止页面被劫持 - 检测页面内容
+        window.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                // 检查关键元素是否存在
+                var hasNav = document.querySelector('.wehuster-nav');
+                var hasLogo = document.querySelector('.wehuster-logo');
+                
+                // 如果关键元素不存在，说明页面可能被劫持
+                if (!hasNav || !hasLogo) {
+                    // 尝试重新加载
+                    if (!sessionStorage.getItem('reloaded')) {
+                        sessionStorage.setItem('reloaded', '1');
+                        window.location.reload(true);
+                    }
+                } else {
+                    // 页面正常加载，清除标记
+                    sessionStorage.removeItem('reloaded');
+                }
+            }, 1000);
+        });
+    </script>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23007AFF' /><text x='50' y='50' font-size='50' fill='%23FFF' text-anchor='middle' dominant-baseline='central' font-family='system-ui' font-weight='bold'>CET</text></svg>" type="image/svg+xml">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/font-awesome/6.0.0/css/all.min.css">
