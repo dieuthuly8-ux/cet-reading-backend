@@ -608,25 +608,53 @@
                     </div>
                 `;
                 
+                // 带重试的翻译函数（静默重试，不显示中间错误）
+                async function translateWithRetry(text, maxRetries = 3) {
+                    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+                        try {
+                            console.log(`[翻译] 第${attempt}次尝试...`);
+                            
+                            const response = await fetch(API_ENDPOINT, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({ text }),
+                                signal: AbortSignal.timeout(15000) // 15秒超时
+                            });
+                            
+                            if (!response.ok) {
+                                throw new Error(`HTTP ${response.status}`);
+                            }
+                            
+                            const data = await response.json();
+                            
+                            if (data.error) {
+                                throw new Error(data.error);
+                            }
+                            
+                            // 成功！返回结果
+                            console.log(`[翻译] 第${attempt}次尝试成功`);
+                            return data;
+                            
+                        } catch (error) {
+                            console.warn(`[翻译] 第${attempt}次尝试失败:`, error.message);
+                            
+                            // 如果不是最后一次尝试，等待后重试
+                            if (attempt < maxRetries) {
+                                await new Promise(resolve => setTimeout(resolve, 1000 * attempt)); // 递增延迟
+                                continue;
+                            }
+                            
+                            // 所有尝试都失败，抛出错误
+                            throw error;
+                        }
+                    }
+                }
+                
                 try {
-                    // 调用Vercel代理API
-                    const response = await fetch(API_ENDPOINT, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ text })
-                    });
-                    
-                    if (!response.ok) {
-                        throw new Error('翻译服务暂时不可用');
-                    }
-                    
-                    const data = await response.json();
-                    
-                    if (data.error) {
-                        throw new Error(data.error);
-                    }
+                    // 调用带重试的翻译函数
+                    const data = await translateWithRetry(text);
                     
                     // 显示翻译结果（原文 + 译文，单词可点击）
                     const clickableText = makeWordsClickable(text);
@@ -652,12 +680,12 @@
                     // 为单词添加点击事件
                     attachWordClickEvents();
                 } catch (error) {
+                    // 只在所有重试都失败后才显示错误
                     outputDiv.innerHTML = `
                         <div style="padding: 2rem; text-align: center; color: #721c24; background: #f8d7da; border-radius: 8px; margin-top: 1.5rem;">
                             <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 1rem;"></i>
-                            <p><strong>翻译失败！</strong></p>
-                            <p style="margin-top: 0.5rem; font-size: 0.9rem;">错误信息：${error.message}</p>
-                            <p style="margin-top: 0.5rem; font-size: 0.9rem;">请稍后再试</p>
+                            <p><strong>翻译失败</strong></p>
+                            <p style="margin-top: 0.5rem; font-size: 0.9rem; color: #666;">服务暂时不可用，请稍后再试</p>
                         </div>
                     `;
                 }
