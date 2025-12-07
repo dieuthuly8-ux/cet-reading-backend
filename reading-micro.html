@@ -379,8 +379,23 @@
       area.style.display = 'block';
       area.innerHTML = '';
       
-      // 获取唯一的音频文件
+      // 获取唯一的音频文件和不同的section信息
       const audioUrl = questions[0]?.audio;
+      
+      // 收集所有不同的section信息（去重）
+      const sectionsMap = new Map();
+      questions.forEach(q => {
+        const key = `${q.sectionName}-${q.audioStart}`;
+        if (!sectionsMap.has(key)) {
+          sectionsMap.set(key, {
+            name: q.sectionName,
+            start: q.audioStart,
+            end: q.audioEnd,
+            firstQuestionIndex: questions.indexOf(q)
+          });
+        }
+      });
+      const sections = Array.from(sectionsMap.values()).sort((a, b) => a.start - b.start);
       
       // 音频播放器
       if (audioUrl) {
@@ -410,6 +425,65 @@
         area.appendChild(audioPlayer);
         
         currentAudio = document.getElementById('listening-audio');
+        
+        // 添加分段标记（类似B站）
+        if (sections.length > 1) {
+          const segmentBar = document.createElement('div');
+          segmentBar.style.cssText = `
+            background: rgba(255,255,255,0.15);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-top: 16px;
+            backdrop-filter: blur(10px);
+          `;
+          
+          let segmentHTML = '<div style="margin-bottom: 10px; font-size: 0.9rem; font-weight: 600; opacity: 0.95;">📍 快速跳转</div>';
+          segmentHTML += '<div style="display: flex; gap: 10px; flex-wrap: wrap;">';
+          
+          sections.forEach((section, idx) => {
+            const sectionIcon = section.name.includes('Long Conversations') ? '💬' : 
+                               section.name.includes('Passages') ? '📖' : 
+                               section.name.includes('Lectures') ? '🎓' : 
+                               section.name.includes('News Reports') ? '📰' : '🎧';
+            
+            const sectionLabel = section.name.includes('Long Conversations') ? '长对话' : 
+                                section.name.includes('Passages') ? '短文' : 
+                                section.name.includes('Lectures') ? '讲座' : 
+                                section.name.includes('News Reports') ? '新闻' : section.name;
+            
+            segmentHTML += `
+              <button 
+                class="segment-btn" 
+                data-time="${section.start}" 
+                data-question-idx="${section.firstQuestionIndex}"
+                style="
+                  background: rgba(255,255,255,0.25);
+                  color: white;
+                  border: 2px solid rgba(255,255,255,0.4);
+                  border-radius: 20px;
+                  padding: 8px 16px;
+                  font-size: 0.9rem;
+                  font-weight: 600;
+                  cursor: pointer;
+                  transition: all 0.3s ease;
+                  display: flex;
+                  align-items: center;
+                  gap: 6px;
+                "
+                onmouseover="this.style.background='rgba(255,255,255,0.4)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.2)';"
+                onmouseout="this.style.background='rgba(255,255,255,0.25)'; this.style.transform='translateY(0)'; this.style.boxShadow='none';"
+                onclick="jumpToSegment(${section.start}, ${section.firstQuestionIndex})"
+              >
+                <span>${sectionIcon}</span>
+                <span>${sectionLabel}</span>
+              </button>
+            `;
+          });
+          
+          segmentHTML += '</div>';
+          segmentBar.innerHTML = segmentHTML;
+          audioPlayer.appendChild(segmentBar);
+        }
       }
       
       // 顶部信息
@@ -718,6 +792,40 @@
       if (loopEnabled && currentAudio.currentTime >= loopEnd) {
         currentAudio.currentTime = loopStart;
       }
+    }
+
+    // 快速跳转到指定section
+    function jumpToSegment(timeInSeconds, questionIndex) {
+      if (!currentAudio) {
+        console.error('❌ 音频未加载');
+        return;
+      }
+      
+      // 跳转音频到指定时间
+      currentAudio.currentTime = timeInSeconds;
+      currentAudio.play();
+      
+      // 滚动到对应的题目
+      setTimeout(() => {
+        const questionCards = document.querySelectorAll('.question-card');
+        if (questionCards[questionIndex]) {
+          questionCards[questionIndex].scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center' 
+          });
+          
+          // 高亮该题目卡片
+          questionCards[questionIndex].style.transform = 'scale(1.02)';
+          questionCards[questionIndex].style.boxShadow = '0 8px 32px rgba(102, 126, 234, 0.4)';
+          
+          setTimeout(() => {
+            questionCards[questionIndex].style.transform = 'scale(1)';
+            questionCards[questionIndex].style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.08)';
+          }, 800);
+        }
+      }, 300);
+      
+      console.log(`✅ 已跳转到: ${timeInSeconds}秒，题目 ${questionIndex + 1}`);
     }
 
     // 页面加载时预加载题目
