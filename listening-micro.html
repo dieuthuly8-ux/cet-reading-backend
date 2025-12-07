@@ -1669,9 +1669,22 @@ Respond with JSON only:`;
               btn.style.boxShadow = 'none';
             };
             btn.addEventListener('click', () => {
-              if (qa.duration) {
+              // 如果音频已加载，直接跳转
+              if (qa.duration && qa.duration > 0) {
                 qa.currentTime = point.time * qa.duration;
                 qa.play();
+              } else {
+                // 如果音频未加载，等待加载完成后跳转
+                const jumpAfterLoad = () => {
+                  if (qa.duration && qa.duration > 0) {
+                    qa.currentTime = point.time * qa.duration;
+                    qa.play();
+                    qa.removeEventListener('loadedmetadata', jumpAfterLoad);
+                  }
+                };
+                qa.addEventListener('loadedmetadata', jumpAfterLoad);
+                // 尝试加载音频
+                qa.load();
               }
             });
             quickJumpBtns.appendChild(btn);
@@ -1731,9 +1744,22 @@ Respond with JSON only:`;
             
             // 点击跳转
             marker.addEventListener('click', () => {
-              if (qa.duration) {
+              // 如果音频已加载，直接跳转
+              if (qa.duration && qa.duration > 0) {
                 qa.currentTime = m.time * qa.duration;
                 qa.play();
+              } else {
+                // 如果音频未加载，等待加载完成后跳转
+                const jumpAfterLoad = () => {
+                  if (qa.duration && qa.duration > 0) {
+                    qa.currentTime = m.time * qa.duration;
+                    qa.play();
+                    qa.removeEventListener('loadedmetadata', jumpAfterLoad);
+                  }
+                };
+                qa.addEventListener('loadedmetadata', jumpAfterLoad);
+                // 尝试加载音频
+                qa.load();
               }
             });
             
