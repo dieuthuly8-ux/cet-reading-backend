@@ -903,7 +903,7 @@
           transition: all 0.3s ease;
           box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
         `;
-        aiGenerateBtn.innerHTML = '<i class="fas fa-magic"></i> AI智能生成题目';
+        aiGenerateBtn.innerHTML = '<i class="fas fa-bolt"></i> AI极速生成题目';
         
         const aiGenerateStatus = document.createElement('div');
         aiGenerateStatus.style.cssText = `
@@ -922,8 +922,8 @@
           line-height: 1.6;
         `;
         aiGenerateDesc.innerHTML = `
-          <i class="fas fa-bolt" style="color: #f59e0b;"></i> 
-          点击按钮，AI将<strong>极速</strong>生成<strong>5道听力题目</strong>，约需<strong>15-25秒</strong>。
+          <i class="fas fa-rocket" style="color: #f59e0b;"></i> 
+          <strong>极速AI生成</strong>：点击按钮生成<strong>5道精选听力题</strong>，预计<strong>10-20秒</strong>完成！
         `;
         
         aiGenerateArea.appendChild(aiGenerateDesc);
@@ -958,11 +958,12 @@
           aiGenerateStatus.style.color = '#0071e3';
           aiGenerateStatus.innerHTML = '<i class="fas fa-headphones"></i> 第1步：识别音频中...';
           
-          // 添加进度计时器
+          // 添加进度计时器 - 优化显示
           let seconds = 0;
           const timer = setInterval(() => {
             seconds++;
-            aiGenerateStatus.innerHTML = `<i class="fas fa-spinner fa-spin"></i> 处理中... ${seconds}秒`;
+            const dots = '.'.repeat((seconds % 3) + 1);
+            aiGenerateStatus.innerHTML = `<i class="fas fa-spinner fa-spin"></i> AI极速处理中${dots} ${seconds}秒`;
           }, 1000);
           
           try {
@@ -1010,16 +1011,16 @@
               throw new Error('音频识别结果过短，请确保音频文件正常');
             }
             
-            aiGenerateStatus.innerHTML = '<i class="fas fa-brain"></i> 第2步：正在快速生成题目...';
+            aiGenerateStatus.innerHTML = '<i class="fas fa-brain"></i> 第2步：AI极速生成题目中...';
             aiGenerateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 生成题目中...';
             
-            // 极速：只截取1500字符
-            const truncatedTranscript = transcript.substring(0, 1500);
+            // 极速优化：只截取1200字符（更快）
+            const truncatedTranscript = transcript.substring(0, 1200);
             
-            // 极简prompt - 5道题快速生成
-            const prompt = `根据原文生成5道英语选择题,直接输出JSON:
-{"questions":[{"id":1,"stem":"问题","options":["A","B","C","D"],"answer":"A"}]}
-原文:${truncatedTranscript}`;
+            // 超简prompt - 极速生成
+            const prompt = `Generate 5 English questions JSON:
+{"questions":[{"id":1,"stem":"What...?","options":["A","B","C","D"],"answer":"A"}]}
+Text:${truncatedTranscript}`;
 
             const llmResponse = await fetch('https://api.siliconflow.cn/v1/chat/completions', {
               method: 'POST',
@@ -1030,8 +1031,9 @@
               body: JSON.stringify({
                 model: 'Qwen/Qwen2.5-7B-Instruct',
                 messages: [{ role: 'user', content: prompt }],
-                temperature: 0.3,
-                max_tokens: 1500
+                temperature: 0.1,
+                max_tokens: 1000,
+                stream: false
               })
             });
             
@@ -1080,12 +1082,12 @@
             clearInterval(timer); // 清除计时器
             aiGenerateStatus.style.background = '#d4edda';
             aiGenerateStatus.style.color = '#155724';
-            aiGenerateStatus.innerHTML = `<i class="fas fa-check-circle"></i> 成功生成 ${questions.length} 道题目！用时${seconds}秒`;
+            aiGenerateStatus.innerHTML = `<i class="fas fa-check-circle"></i> ✨ 极速完成！生成 ${questions.length} 道题目，用时${seconds}秒`;
             
-            // 渲染生成的题目
+            // 立即渲染生成的题目（不延迟）
             setTimeout(() => {
               renderAIGeneratedQuiz(questions, currentExamId, currentExamData);
-            }, 1000);
+            }, 300);
             
           } catch (err) {
             clearInterval(timer); // 清除计时器
@@ -1586,7 +1588,7 @@
                 box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
                 transition: all 0.3s ease;
               `;
-              aiBtn.innerHTML = '<i class="fas fa-magic"></i> AI识别原文';
+              aiBtn.innerHTML = '<i class="fas fa-rocket"></i> AI极速识别原文';
               
               // AI识别状态显示区域
               const aiStatus = document.createElement('div');
@@ -1639,10 +1641,10 @@
                   formData.append('file', audioBlob, 'audio.mp3');
                   formData.append('model', 'FunAudioLLM/SenseVoiceSmall');
                   
-                  aiBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> AI识别中...';
+                  aiBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> AI极速识别中...';
                   aiStatus.innerHTML = `
                     <div style="color: #667eea; font-size: 0.85rem;">
-                      <i class="fas fa-robot"></i> 硅基流动云端正在识别，请稍候...
+                      <i class="fas fa-rocket"></i> 极速识别中，预计10-15秒...
                     </div>
                   `;
                   
