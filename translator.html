@@ -206,6 +206,197 @@
         // Vercel API端点
         const API_ENDPOINT = 'https://cet-reading-backend.vercel.app/api/translate';
 
+        // 后端API地址
+        const LOOKUP_API = 'https://cet-reading-backend.vercel.app/api/lookup';
+        
+        // 将英文文本分词并变成可点击的span
+        function makeWordsClickable(text) {
+            // 按单词分割（保留标点和空格）
+            return text.replace(/([a-zA-Z]+(?:'[a-zA-Z]+)?)/g, (match) => {
+                return `<span class="clickable-word" data-word="${match.toLowerCase()}" style="cursor: pointer; padding: 2px 4px; border-radius: 4px; transition: all 0.2s ease; display: inline-block;">${match}</span>`;
+            });
+        }
+        
+        // 为单词添加点击事件
+        function attachWordClickEvents() {
+            const words = document.querySelectorAll('.clickable-word');
+            words.forEach(word => {
+                word.addEventListener('mouseenter', function() {
+                    this.style.background = 'linear-gradient(135deg, #667eea20, #764ba220)';
+                    this.style.transform = 'translateY(-1px)';
+                });
+                word.addEventListener('mouseleave', function() {
+                    this.style.background = 'transparent';
+                    this.style.transform = 'translateY(0)';
+                });
+                word.addEventListener('click', function() {
+                    const wordText = this.getAttribute('data-word');
+                    lookupWord(wordText, this);
+                });
+            });
+        }
+        
+        // 查询单词
+        async function lookupWord(word, element) {
+            // 显示加载提示
+            showWordPopup(element, `
+                <div style="text-align: center; padding: 1rem;">
+                    <i class="fas fa-spinner fa-spin" style="color: #667eea; font-size: 1.5rem;"></i>
+                    <p style="margin-top: 0.5rem; color: #64748b;">查询中...</p>
+                </div>
+            `);
+            
+            try {
+                const response = await fetch(LOOKUP_API, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ word })
+                });
+                
+                if (!response.ok) throw new Error('查询失败');
+                
+                const data = await response.json();
+                
+                if (data.error) throw new Error(data.error);
+                
+                // 显示单词详情
+                displayWordInfo(data, element);
+                
+            } catch (error) {
+                showWordPopup(element, `
+                    <div style="text-align: center; padding: 1rem;">
+                        <i class="fas fa-exclamation-circle" style="color: #ef4444; font-size: 1.5rem;"></i>
+                        <p style="margin-top: 0.5rem; color: #64748b;">${error.message}</p>
+                    </div>
+                `);
+            }
+        }
+        
+        // 显示单词信息弹窗
+        function displayWordInfo(data, element) {
+            const basic = data.basic || {};
+            const phonetic = basic['uk-phonetic'] || basic['us-phonetic'] || basic.phonetic || '';
+            const explains = basic.explains || [];
+            const webExplains = data.web ? data.web.slice(0, 3) : [];
+            
+            let html = `
+                <div style="min-width: 350px; max-width: 450px;">
+                    <!-- 单词标题 -->
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 1.2rem; border-radius: 8px 8px 0 0; margin: -1rem -1rem 1rem -1rem;">
+                        <h3 style="margin: 0; color: white; font-size: 1.5rem; font-weight: 700;">${data.query || ''}</h3>
+                        ${phonetic ? `<p style="margin: 0.3rem 0 0 0; color: rgba(255,255,255,0.9); font-size: 0.95rem;">📢 [${phonetic}]</p>` : ''}
+                    </div>
+                    
+                    <!-- 基本释义 -->
+                    ${explains.length > 0 ? `
+                        <div style="margin-bottom: 1rem;">
+                            <h4 style="color: #667eea; font-size: 1rem; margin: 0 0 0.8rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fas fa-book"></i> 基本释义
+                            </h4>
+                            <div style="background: #f8fafc; padding: 1rem; border-radius: 8px; border-left: 3px solid #667eea;">
+                                ${explains.map(exp => `<p style="margin: 0.4rem 0; color: #2d3436; line-height: 1.6;">• ${exp}</p>`).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+                    
+                    <!-- 网络释义/例句 -->
+                    ${webExplains.length > 0 ? `
+                        <div>
+                            <h4 style="color: #10b981; font-size: 1rem; margin: 0 0 0.8rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fas fa-globe"></i> 网络释义
+                            </h4>
+                            <div style="background: #f0fdf4; padding: 1rem; border-radius: 8px; border-left: 3px solid #10b981;">
+                                ${webExplains.map(web => `
+                                    <div style="margin-bottom: 0.8rem;">
+                                        <p style="margin: 0; color: #064e3b; font-weight: 600;">${web.key || ''}</p>
+                                        <p style="margin: 0.2rem 0 0 0; color: #065f46; font-size: 0.9rem;">${(web.value || []).join('; ')}</p>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+                    
+                    ${explains.length === 0 && webExplains.length === 0 ? `
+                        <div style="text-align: center; padding: 1rem; color: #64748b;">
+                            <i class="fas fa-info-circle" style="font-size: 1.5rem;"></i>
+                            <p style="margin-top: 0.5rem;">未找到该单词的详细释义</p>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+            
+            showWordPopup(element, html);
+        }
+        
+        // 显示弹窗
+        function showWordPopup(element, content) {
+            // 移除已存在的弹窗
+            const existingPopup = document.getElementById('word-popup');
+            if (existingPopup) existingPopup.remove();
+            
+            // 创建新弹窗
+            const popup = document.createElement('div');
+            popup.id = 'word-popup';
+            popup.innerHTML = content;
+            popup.style.cssText = `
+                position: fixed;
+                background: white;
+                padding: 1rem;
+                border-radius: 12px;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+                z-index: 10000;
+                max-height: 80vh;
+                overflow-y: auto;
+                border: 2px solid #e2e8f0;
+                animation: popupFadeIn 0.2s ease;
+            `;
+            
+            // 添加动画
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes popupFadeIn {
+                    from { opacity: 0; transform: translateY(-10px) scale(0.95); }
+                    to { opacity: 1; transform: translateY(0) scale(1); }
+                }
+            `;
+            if (!document.getElementById('popup-animation-style')) {
+                style.id = 'popup-animation-style';
+                document.head.appendChild(style);
+            }
+            
+            document.body.appendChild(popup);
+            
+            // 计算位置
+            const rect = element.getBoundingClientRect();
+            const popupRect = popup.getBoundingClientRect();
+            
+            let left = rect.left + (rect.width / 2) - (popupRect.width / 2);
+            let top = rect.bottom + 10;
+            
+            // 确保不超出屏幕
+            if (left + popupRect.width > window.innerWidth - 20) {
+                left = window.innerWidth - popupRect.width - 20;
+            }
+            if (left < 20) left = 20;
+            
+            if (top + popupRect.height > window.innerHeight - 20) {
+                top = rect.top - popupRect.height - 10;
+            }
+            
+            popup.style.left = left + 'px';
+            popup.style.top = top + 'px';
+            
+            // 点击其他地方关闭
+            setTimeout(() => {
+                document.addEventListener('click', function closePopup(e) {
+                    if (!popup.contains(e.target) && e.target !== element) {
+                        popup.remove();
+                        document.removeEventListener('click', closePopup);
+                    }
+                });
+            }, 100);
+        }
+        
         // 翻译功能
         document.addEventListener('DOMContentLoaded', () => {
             const translateBtn = document.getElementById('translate-btn');
@@ -252,17 +443,29 @@
                         throw new Error(data.error);
                     }
                     
-                    // 显示翻译结果
+                    // 显示翻译结果（原文 + 译文，单词可点击）
+                    const clickableText = makeWordsClickable(text);
                     outputDiv.innerHTML = `
                         <div style="margin-top: 2rem; padding: 2rem; background: white; border-radius: 12px; box-shadow: 0 2px 15px rgba(0,0,0,0.1);">
                             <h3 style="margin: 0 0 1rem 0; color: #333; border-bottom: 2px solid #007AFF; padding-bottom: 0.5rem;">
-                                <i class="fas fa-check-circle" style="color: #10b981;"></i> 翻译结果
+                                <i class="fas fa-language" style="color: #667eea;"></i> 英文原文
+                                <span style="font-size: 0.8rem; color: #64748b; font-weight: 400; margin-left: 0.5rem;">（点击单词查看释义）</span>
+                            </h3>
+                            <div id="clickable-english" style="background: #f8fafc; padding: 1.5rem; border-radius: 8px; line-height: 2; color: #2d3436; font-size: 1.05rem; border: 2px solid #e2e8f0;">
+                                ${clickableText}
+                            </div>
+                            
+                            <h3 style="margin: 2rem 0 1rem 0; color: #333; border-bottom: 2px solid #10b981; padding-bottom: 0.5rem;">
+                                <i class="fas fa-check-circle" style="color: #10b981;"></i> 中文翻译
                             </h3>
                             <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; line-height: 1.8; color: #333; font-size: 1.05rem;">
                                 ${data.result}
                             </div>
                         </div>
                     `;
+                    
+                    // 为单词添加点击事件
+                    attachWordClickEvents();
                 } catch (error) {
                     outputDiv.innerHTML = `
                         <div style="padding: 2rem; text-align: center; color: #721c24; background: #f8d7da; border-radius: 8px; margin-top: 1.5rem;">
