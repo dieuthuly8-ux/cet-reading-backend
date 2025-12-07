@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>阅读微练习 - 四六级学习站</title>
+  <title>听力微练习 - 四六级学习站</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <style>
@@ -160,9 +160,9 @@
     <div style="text-align: center; margin-bottom: 3rem; animation: fadeInDown 0.6s ease-out;">
       <div style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 1.25rem 2.5rem; border-radius: 24px; box-shadow: 0 8px 32px rgba(102, 126, 234, 0.4), 0 2px 8px rgba(0, 0, 0, 0.1); margin-bottom: 1.25rem; position: relative; overflow: hidden; transition: all 0.4s ease;">
         <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, transparent 100%); pointer-events: none;"></div>
-        <h1 style="color: white; margin: 0; font-weight: 800; font-size: 2.2rem; letter-spacing: -0.02em; position: relative; z-index: 1; text-shadow: 0 2px 8px rgba(0,0,0,0.15); text-align: center;">📖 阅读微练习</h1>
+        <h1 style="color: white; margin: 0; font-weight: 800; font-size: 2.2rem; letter-spacing: -0.02em; position: relative; z-index: 1; text-shadow: 0 2px 8px rgba(0,0,0,0.15); text-align: center;">🎧 听力微练习</h1>
       </div>
-      <p style="color: #6c757d; font-size: 1.1rem; margin: 0; font-weight: 500; letter-spacing: 0.5px;"><span style="color: #667eea; font-weight: 600;">智能抽题</span> · <span style="color: #764ba2; font-weight: 600;">建立画像</span> · <span style="color: #667eea; font-weight: 600;">精准推荐</span></p>
+      <p style="color: #6c757d; font-size: 1.1rem; margin: 0; font-weight: 500; letter-spacing: 0.5px;"><span style="color: #667eea; font-weight: 600;">真题音频</span> · <span style="color: #764ba2; font-weight: 600;">智能练习</span> · <span style="color: #667eea; font-weight: 600;">错题分析</span></p>
     </div>
 
     <!-- 使用说明 -->
@@ -174,8 +174,8 @@
         <div style="flex: 1;">
           <h3 style="margin: 0 0 12px 0; color: #075985; font-size: 1.25rem; font-weight: 700;">💡 功能说明</h3>
           <p style="margin: 0; color: #0c4a6e; line-height: 1.8; font-size: 0.95rem;">
-            <strong>阅读微练习</strong>帮助您<strong>建立用户画像</strong>，系统会根据您的答题记录智能推荐题目。
-            完成3-5道题后，您就可以在<a href="listening-micro.html" style="color: #0ea5e9; font-weight: 600; text-decoration: none;">听力微练习</a>中使用智能抽题功能了！
+            <strong>听力微练习</strong>提供真题音频和题目，支持<strong>AB循环</strong>、<strong>倍速播放</strong>功能。
+            完成练习后，系统会自动<strong>统计错题</strong>，并将数据同步到<a href="listening-micro.html" style="color: #0ea5e9; font-weight: 600; text-decoration: none;">听力测试</a>板块！
           </p>
         </div>
       </div>
@@ -192,7 +192,7 @@
             </div>
             <div>
               <h3 style="margin: 0; font-size: 1.05rem; color: #2d3436; font-weight: 700;">题目数量</h3>
-              <p style="margin: 0; font-size: 0.85rem; color: #74798d;">选择练习题数</p>
+              <p style="margin: 0; font-size: 0.85rem; color: #74798d;">选择听力题数</p>
             </div>
           </div>
           <select id="count-select" style="width: 100%; border: 1px solid rgba(0,0,0,0.12); border-radius: 8px; padding: 10px 12px; background: #ffffff; font-size: 0.95rem;">
@@ -210,15 +210,15 @@
               <i class="fas fa-layer-group" style="color: white; font-size: 1.3rem;"></i>
             </div>
             <div>
-              <h3 style="margin: 0; font-size: 1.05rem; color: #2d3436; font-weight: 700;">题型选择</h3>
-              <p style="margin: 0; font-size: 0.85rem; color: #74798d;">精准练习</p>
+              <h3 style="margin: 0; font-size: 1.05rem; color: #2d3436; font-weight: 700;">听力类型</h3>
+              <p style="margin: 0; font-size: 0.85rem; color: #74798d;">选择部分</p>
             </div>
           </div>
           <select id="type-select" style="width: 100%; border: 1px solid rgba(0,0,0,0.12); border-radius: 8px; padding: 10px 12px; background: #ffffff; font-size: 0.95rem;">
-            <option value="all">全部题型</option>
-            <option value="仔细阅读">仔细阅读</option>
-            <option value="长篇阅读">长篇阅读</option>
-            <option value="选词填空">选词填空</option>
+            <option value="all">全部</option>
+            <option value="Long Conversations">长对话</option>
+            <option value="Passages">短文</option>
+            <option value="Lectures">讲座</option>
           </select>
         </div>
 
@@ -273,27 +273,28 @@
     let allQuestions = [];
     let currentQuestions = [];
     let userAnswers = [];
+    let currentAudio = null;
 
-    // 加载题目数据
+    // 加载听力题目数据
     async function loadQuestions() {
       try {
-        const resp = await fetch('./papers.json');
-        const papers = await resp.json();
+        const resp = await fetch('./listening.json');
+        const listeningData = await resp.json();
         
-        // 提取所有阅读题目
+        // 提取所有听力题目
         allQuestions = [];
-        Object.entries(papers).forEach(([paperId, paper]) => {
-          if (paper.sections) {
-            Object.entries(paper.sections).forEach(([sectionId, section]) => {
+        Object.entries(listeningData).forEach(([examId, exam]) => {
+          if (exam.sections) {
+            exam.sections.forEach(section => {
               if (section.questions) {
                 section.questions.forEach(q => {
                   allQuestions.push({
                     ...q,
-                    paperId,
-                    sectionId,
-                    sectionTitle: section.title || '',
-                    passage: section.passage || '',
-                    level: paper.level || ''
+                    examId,
+                    sectionName: section.name || '',
+                    audio: section.audio || '',
+                    audioStart: section.audioStart || 0,
+                    audioEnd: section.audioEnd || 0
                   });
                 });
               }
@@ -301,9 +302,9 @@
           }
         });
         
-        console.log(`已加载 ${allQuestions.length} 道题目`);
+        console.log(`✅ 已加载 ${allQuestions.length} 道听力题目`);
       } catch (err) {
-        console.error('加载题目失败:', err);
+        console.error('❌ 加载题目失败:', err);
         alert('题目加载失败，请刷新页面重试');
       }
     }
@@ -312,14 +313,14 @@
     function filterQuestions(count, type, level) {
       let filtered = [...allQuestions];
       
-      // 按题型筛选
+      // 按听力类型筛选
       if (type !== 'all') {
-        filtered = filtered.filter(q => q.sectionTitle?.includes(type));
+        filtered = filtered.filter(q => q.sectionName?.includes(type));
       }
       
-      // 按难度筛选
+      // 按考试类型筛选（四级/六级）
       if (level !== 'all') {
-        filtered = filtered.filter(q => q.level === level);
+        filtered = filtered.filter(q => q.examId?.toUpperCase().includes(level));
       }
       
       // 随机抽取
@@ -333,19 +334,52 @@
       area.style.display = 'block';
       area.innerHTML = '';
       
+      // 获取唯一的音频文件
+      const audioUrl = questions[0]?.audio;
+      
+      // 音频播放器
+      if (audioUrl) {
+        const audioPlayer = document.createElement('div');
+        audioPlayer.style.cssText = `
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          border-radius: 16px;
+          padding: 24px;
+          margin-bottom: 24px;
+          color: white;
+          box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+        `;
+        audioPlayer.innerHTML = `
+          <h3 style="margin: 0 0 16px 0; font-size: 1.3rem; font-weight: 700;">🎧 听力音频</h3>
+          <audio id="listening-audio" controls style="width: 100%; border-radius: 12px; margin-bottom: 12px;" preload="auto">
+            <source src="${audioUrl}" type="audio/mpeg">
+            您的浏览器不支持音频播放
+          </audio>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px;">
+            <button onclick="setPlaybackRate(0.75)" class="btn" style="background: rgba(255,255,255,0.2); color: white; padding: 8px 16px; font-size: 0.9rem; border: 1px solid rgba(255,255,255,0.3);">0.75x</button>
+            <button onclick="setPlaybackRate(1)" class="btn" style="background: rgba(255,255,255,0.3); color: white; padding: 8px 16px; font-size: 0.9rem; border: 1px solid rgba(255,255,255,0.4);">1.0x</button>
+            <button onclick="setPlaybackRate(1.25)" class="btn" style="background: rgba(255,255,255,0.2); color: white; padding: 8px 16px; font-size: 0.9rem; border: 1px solid rgba(255,255,255,0.3);">1.25x</button>
+            <button onclick="setPlaybackRate(1.5)" class="btn" style="background: rgba(255,255,255,0.2); color: white; padding: 8px 16px; font-size: 0.9rem; border: 1px solid rgba(255,255,255,0.3);">1.5x</button>
+            <button onclick="toggleLoop()" id="loop-btn" class="btn" style="background: rgba(255,255,255,0.2); color: white; padding: 8px 16px; font-size: 0.9rem; border: 1px solid rgba(255,255,255,0.3);">🔁 AB循环</button>
+          </div>
+        `;
+        area.appendChild(audioPlayer);
+        
+        currentAudio = document.getElementById('listening-audio');
+      }
+      
       // 顶部信息
       const banner = document.createElement('div');
       banner.style.cssText = `
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: white;
         border-radius: 16px;
         padding: 20px 24px;
         margin-bottom: 24px;
-        color: white;
-        box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+        border: 2px solid #667eea;
+        box-shadow: 0 4px 16px rgba(102, 126, 234, 0.15);
       `;
       banner.innerHTML = `
-        <h3 style="margin: 0 0 8px 0; font-size: 1.3rem; font-weight: 700;">📝 开始答题</h3>
-        <p style="margin: 0; opacity: 0.95;">共 ${questions.length} 道题 · 完成后自动提交</p>
+        <h3 style="margin: 0 0 8px 0; font-size: 1.3rem; font-weight: 700; color: #667eea;">📝 开始答题</h3>
+        <p style="margin: 0; color: #6c757d;">共 ${questions.length} 道题 · 请先听音频再答题 · 完成后自动提交</p>
       `;
       area.appendChild(banner);
 
@@ -361,24 +395,15 @@
               ${idx + 1}
             </div>
             <div style="flex: 1;">
-              <div style="font-size: 0.85rem; color: #6c757d; margin-bottom: 4px;">
-                ${q.sectionTitle || '阅读理解'} ${q.level ? '· ' + q.level : ''}
+              <div style="font-size: 0.85rem; color: #6c757d;">
+                ${q.sectionName || '听力理解'} ${q.scenario ? '· ' + q.scenario : ''}
               </div>
             </div>
           </div>
         `;
         
-        // 文章
-        if (q.passage) {
-          html += `
-            <div style="background: #f8f9fa; border-left: 4px solid #667eea; border-radius: 8px; padding: 16px; margin-bottom: 16px; font-size: 0.95rem; line-height: 1.8; color: #2d3436;">
-              ${q.passage.replace(/\n/g, '<br>')}
-            </div>
-          `;
-        }
-        
         // 题目
-        html += `<div style="font-size: 1.05rem; font-weight: 600; color: #1d1d1f; margin-bottom: 16px; line-height: 1.6;">${q.stem || q.question || '题目'}</div>`;
+        html += `<div style="font-size: 1.05rem; font-weight: 600; color: #1d1d1f; margin-bottom: 16px; line-height: 1.6;">${q.stem || '题目'}</div>`;
         
         // 选项
         if (q.options) {
@@ -459,36 +484,88 @@
       showResult(correct, currentQuestions.length);
     }
 
-    // 保存答题记录
+    // 保存答题记录（同步到听力测试板块）
     function saveAnswerHistory(questions, answers) {
       try {
-        let history = JSON.parse(localStorage.getItem('reading-history') || '[]');
+        // 保存听力练习历史
+        let history = JSON.parse(localStorage.getItem('listening-practice-history') || '[]');
+        
+        // 统计错题
+        const wrongQuestions = questions.filter((q, idx) => answers[idx] !== q.answer);
+        
         const record = {
           timestamp: Date.now(),
+          totalQuestions: questions.length,
+          correctCount: questions.filter((q, idx) => answers[idx] === q.answer).length,
+          wrongCount: wrongQuestions.length,
           questions: questions.map((q, idx) => ({
-            qid: q.paperId + '-' + q.sectionId + '-' + (q.id || idx),
-            type: q.sectionTitle,
-            level: q.level,
+            examId: q.examId,
+            questionId: q.id,
+            sectionName: q.sectionName,
+            stem: q.stem,
             userAnswer: answers[idx],
             correctAnswer: q.answer,
-            correct: answers[idx] === q.answer
+            correct: answers[idx] === q.answer,
+            options: q.options,
+            explain: q.explain
+          })),
+          wrongQuestions: wrongQuestions.map((q, idx) => ({
+            examId: q.examId,
+            questionId: q.id,
+            sectionName: q.sectionName,
+            stem: q.stem,
+            userAnswer: answers[questions.indexOf(q)],
+            correctAnswer: q.answer,
+            options: q.options,
+            explain: q.explain
           }))
         };
+        
         history.push(record);
         
-        // 只保留最近50次记录
-        if (history.length > 50) history = history.slice(-50);
+        // 只保留最近30次记录
+        if (history.length > 30) history = history.slice(-30);
         
-        localStorage.setItem('reading-history', JSON.stringify(history));
-        console.log('✅ 用户画像已更新');
+        localStorage.setItem('listening-practice-history', JSON.stringify(history));
+        
+        // 同步错题到听力测试板块
+        if (wrongQuestions.length > 0) {
+          let listeningWrongQuestions = JSON.parse(localStorage.getItem('listening-wrong-questions') || '[]');
+          wrongQuestions.forEach(q => {
+            const idx = questions.indexOf(q);
+            listeningWrongQuestions.push({
+              timestamp: Date.now(),
+              examId: q.examId,
+              questionId: q.id,
+              sectionName: q.sectionName,
+              stem: q.stem,
+              userAnswer: answers[idx],
+              correctAnswer: q.answer,
+              options: q.options,
+              explain: q.explain,
+              source: 'listening-practice'
+            });
+          });
+          
+          // 只保留最近100个错题
+          if (listeningWrongQuestions.length > 100) {
+            listeningWrongQuestions = listeningWrongQuestions.slice(-100);
+          }
+          
+          localStorage.setItem('listening-wrong-questions', JSON.stringify(listeningWrongQuestions));
+          console.log(`✅ 已将 ${wrongQuestions.length} 个错题同步到听力测试板块`);
+        }
+        
+        console.log('✅ 听力练习记录已保存');
       } catch (err) {
-        console.error('保存记录失败:', err);
+        console.error('❌ 保存记录失败:', err);
       }
     }
 
     // 显示结果
     function showResult(correct, total) {
       const score = Math.round((correct / total) * 100);
+      const wrongCount = total - correct;
       
       const resultArea = document.getElementById('result-area');
       resultArea.style.display = 'block';
@@ -496,19 +573,26 @@
         <div style="background: ${score >= 60 ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)' : 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)'}; border-radius: 16px; padding: 32px; margin: 24px 0; color: white; text-align: center; box-shadow: 0 8px 24px ${score >= 60 ? 'rgba(16, 185, 129, 0.4)' : 'rgba(245, 158, 11, 0.4)'};">
           <div style="font-size: 4rem; margin-bottom: 16px;">${score >= 60 ? '🎉' : '💪'}</div>
           <h2 style="margin: 0 0 12px 0; font-size: 2.5rem; font-weight: 800;">${score}分</h2>
-          <p style="margin: 0; font-size: 1.2rem; opacity: 0.95;">答对 ${correct} 题，共 ${total} 题</p>
+          <p style="margin: 0; font-size: 1.2rem; opacity: 0.95;">答对 ${correct} 题，错误 ${wrongCount} 题，共 ${total} 题</p>
           <p style="margin: 12px 0 0; font-size: 1rem;">${score >= 85 ? '优秀！继续保持！' : score >= 60 ? '及格了，还有提升空间！' : '需要多加练习哦！'}</p>
         </div>
 
+        <div style="background: white; border-radius: 16px; padding: 24px; margin-bottom: 16px; box-shadow: 0 4px 16px rgba(0,0,0,0.08);">
+          <h3 style="margin: 0 0 12px 0; color: #667eea; font-size: 1.2rem; font-weight: 700;">📊 数据同步</h3>
+          <div style="background: #f0f9ff; border-left: 4px solid #0ea5e9; border-radius: 8px; padding: 16px; margin-bottom: 12px;">
+            <p style="margin: 0; color: #0c4a6e; line-height: 1.8;">
+              ✅ 答题记录已保存<br>
+              ${wrongCount > 0 ? `❌ ${wrongCount} 个错题已同步到<a href="listening-micro.html" style="color: #0ea5e9; font-weight: 600; text-decoration: none;">听力测试</a>板块` : '✨ 全部答对，没有错题！'}
+            </p>
+          </div>
+        </div>
+
         <div style="background: white; border-radius: 16px; padding: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); text-align: center;">
-          <p style="margin: 0 0 20px; color: #6c757d; font-size: 1rem;">
-            ✅ 用户画像已建立！现在可以使用<a href="listening-micro.html" style="color: #667eea; font-weight: 600; text-decoration: none;">听力微练习</a>的智能抽题功能了
-          </p>
           <button class="btn" onclick="location.reload()" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4); margin-right: 12px;">
             <i class="fas fa-redo"></i> 再来一组
           </button>
           <button class="btn" onclick="location.href='listening-micro.html'" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);">
-            <i class="fas fa-headphones"></i> 去听力练习
+            <i class="fas fa-headphones"></i> 查看错题集
           </button>
         </div>
       `;
@@ -540,6 +624,46 @@
       // 滚动到题目区域
       document.getElementById('questions-area').scrollIntoView({ behavior: 'smooth' });
     });
+
+    // 音频控制函数
+    let loopEnabled = false;
+    let loopStart = 0;
+    let loopEnd = 0;
+
+    function setPlaybackRate(rate) {
+      if (currentAudio) {
+        currentAudio.playbackRate = rate;
+        console.log(`✅ 播放速度已设置为 ${rate}x`);
+      }
+    }
+
+    function toggleLoop() {
+      if (!currentAudio) return;
+      
+      loopEnabled = !loopEnabled;
+      const btn = document.getElementById('loop-btn');
+      
+      if (loopEnabled) {
+        loopStart = currentAudio.currentTime;
+        loopEnd = currentAudio.currentTime + 10; // 默认循环10秒
+        btn.style.background = 'rgba(255,255,255,0.4)';
+        btn.innerHTML = '🔁 循环中';
+        
+        currentAudio.addEventListener('timeupdate', loopCheck);
+        console.log(`✅ AB循环已开启: ${loopStart.toFixed(1)}s - ${loopEnd.toFixed(1)}s`);
+      } else {
+        btn.style.background = 'rgba(255,255,255,0.2)';
+        btn.innerHTML = '🔁 AB循环';
+        currentAudio.removeEventListener('timeupdate', loopCheck);
+        console.log('✅ AB循环已关闭');
+      }
+    }
+
+    function loopCheck() {
+      if (loopEnabled && currentAudio.currentTime >= loopEnd) {
+        currentAudio.currentTime = loopStart;
+      }
+    }
 
     // 页面加载时预加载题目
     window.addEventListener('DOMContentLoaded', loadQuestions);
