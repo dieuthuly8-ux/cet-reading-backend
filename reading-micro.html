@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>阅读微练习 - 四六级学习站</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    /* 苹果风格配色 */
+    :root {
+      --color-bg: #f5f5f7;
+      --color-bg-light: #ffffff;
+      --color-primary: #0071e3;
+      --color-primary-hover: #0077ED;
+      --color-secondary: #06c;
+      --color-card: #ffffff;
+      --color-text-dark: #1d1d1f;
+      --color-text-light: #6e6e73;
+    }
+    
+    body {
+      background: var(--color-bg) !important;
+    }
+    
+    .page-content {
+      background: var(--color-bg);
+    }
+    
+    .question-card {
+      background: var(--color-card);
+      border-radius: 18px;
+      padding: 28px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      transition: all 0.3s cubic-bezier(0.28, 0.11, 0.32, 1);
+      border: 1px solid rgba(0,0,0,0.08);
+    }
+    
+    .question-card:hover {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      transform: translateY(-2px);
+      border-color: rgba(0,0,0,0.12);
+    }
+    
+    .option {
+      background: #f5f5f7;
+      border: 2px solid transparent;
+      border-radius: 12px;
+      padding: 14px 18px;
+      margin: 8px 0;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 0.95rem;
+    }
+    
+    .option:hover {
+      background: #e8e8ed;
+      border-color: var(--color-primary);
+    }
+    
+    .option.selected {
+      background: #d1e7ff;
+      border-color: var(--color-primary);
+      font-weight: 600;
+    }
+    
+    .option.correct {
+      background: #d4edda;
+      border-color: #28a745;
+      color: #155724;
+    }
+    
+    .option.wrong {
+      background: #f8d7da;
+      border-color: #dc3545;
+      color: #721c24;
+    }
+    
+    .btn {
+      transition: all 0.3s ease;
+      border-radius: 980px;
+      border: none;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      padding: 14px 32px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    
+    .btn:hover {
+      transform: scale(1.02);
+    }
+    
+    .btn:active {
+      transform: scale(0.98);
+    }
+    
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 页面滚动进度条 -->
+  <div class="scroll-progress" id="scroll-progress"></div>
+  
+  <!-- 简洁导航栏 -->
+  <nav class="apple-nav wehuster-nav">
+    <div class="nav-container">
+      <a class="nav-logo wehuster-logo" href="index.html">
+        <i class="fas fa-graduation-cap"></i>
+        <span class="logo-text">四六级学习站</span>
+      </a>
+      
+      <ul class="nav-menu wehuster-menu">
+        <li class="nav-item"><a href="index.html" class="nav-link">首页</a></li>
+        <li class="nav-item"><a href="cet4.html" class="nav-link">四级真题</a></li>
+        <li class="nav-item"><a href="cet6.html" class="nav-link">六级真题</a></li>
+        <li class="nav-item"><a href="translator.html" class="nav-link">阅读神器</a></li>
+        <li class="nav-item"><a href="listening-micro.html" class="nav-link">听力练习</a></li>
+        <li class="nav-item"><a href="reading-micro.html" class="nav-link active">阅读微练习</a></li>
+        <li class="nav-item"><a href="news.html" class="nav-link">资讯</a></li>
+        <li class="nav-item"><a href="about.html" class="nav-link">About Us</a></li>
+      </ul>
+      
+      <div class="nav-tools">
+        <button class="search-btn" id="search-toggle" aria-label="搜索">
+          <i class="fas fa-search"></i>
+        </button>
+        <button class="mobile-toggle" id="mobile-toggle" aria-label="菜单">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+  
+  <div class="page-content">
+    <!-- 页面标题 -->
+    <div style="text-align: center; margin-bottom: 3rem; animation: fadeInDown 0.6s ease-out;">
+      <div style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 1.25rem 2.5rem; border-radius: 24px; box-shadow: 0 8px 32px rgba(102, 126, 234, 0.4), 0 2px 8px rgba(0, 0, 0, 0.1); margin-bottom: 1.25rem; position: relative; overflow: hidden; transition: all 0.4s ease;">
+        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, transparent 100%); pointer-events: none;"></div>
+        <h1 style="color: white; margin: 0; font-weight: 800; font-size: 2.2rem; letter-spacing: -0.02em; position: relative; z-index: 1; text-shadow: 0 2px 8px rgba(0,0,0,0.15); text-align: center;">📖 阅读微练习</h1>
+      </div>
+      <p style="color: #6c757d; font-size: 1.1rem; margin: 0; font-weight: 500; letter-spacing: 0.5px;"><span style="color: #667eea; font-weight: 600;">智能抽题</span> · <span style="color: #764ba2; font-weight: 600;">建立画像</span> · <span style="color: #667eea; font-weight: 600;">精准推荐</span></p>
+    </div>
+
+    <!-- 使用说明 -->
+    <div style="background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%); border-left: 5px solid #0ea5e9; border-radius: 16px; padding: 24px 28px; margin-bottom: 2rem; box-shadow: 0 8px 24px rgba(14, 165, 233, 0.15); animation: fadeInUp 0.6s ease-out;">
+      <div style="display: flex; align-items: start; gap: 16px;">
+        <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%); border-radius: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 6px 20px rgba(14, 165, 233, 0.35);">
+          <i class="fas fa-info-circle" style="color: white; font-size: 1.6rem; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));"></i>
+        </div>
+        <div style="flex: 1;">
+          <h3 style="margin: 0 0 12px 0; color: #075985; font-size: 1.25rem; font-weight: 700;">💡 功能说明</h3>
+          <p style="margin: 0; color: #0c4a6e; line-height: 1.8; font-size: 0.95rem;">
+            <strong>阅读微练习</strong>帮助您<strong>建立用户画像</strong>，系统会根据您的答题记录智能推荐题目。
+            完成3-5道题后，您就可以在<a href="listening-micro.html" style="color: #0ea5e9; font-weight: 600; text-decoration: none;">听力微练习</a>中使用智能抽题功能了！
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 控制面板 -->
+    <div style="background: linear-gradient(to bottom, #ffffff 0%, #f8f9ff 100%); border-radius: 24px; padding: 2.5rem; margin-bottom: 2.5rem; box-shadow: 0 10px 40px rgba(102, 126, 234, 0.15), 0 4px 12px rgba(0, 0, 0, 0.08); border: 1px solid rgba(102, 126, 234, 0.1); animation: fadeInUp 0.6s ease-out 0.1s both;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+        <!-- 题目数量 -->
+        <div style="background: white; border-radius: 20px; padding: 1.5rem; border: 2px solid rgba(79, 172, 254, 0.15); box-shadow: 0 4px 16px rgba(79, 172, 254, 0.1);">
+          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 1rem;">
+            <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(79, 172, 254, 0.35);">
+              <i class="fas fa-hashtag" style="color: white; font-size: 1.3rem;"></i>
+            </div>
+            <div>
+              <h3 style="margin: 0; font-size: 1.05rem; color: #2d3436; font-weight: 700;">题目数量</h3>
+              <p style="margin: 0; font-size: 0.85rem; color: #74798d;">选择练习题数</p>
+            </div>
+          </div>
+          <select id="count-select" style="width: 100%; border: 1px solid rgba(0,0,0,0.12); border-radius: 8px; padding: 10px 12px; background: #ffffff; font-size: 0.95rem;">
+            <option value="5">5 道（快速练习）</option>
+            <option value="10">10 道（推荐）</option>
+            <option value="15">15 道（深度训练）</option>
+            <option value="20">20 道（完整测试）</option>
+          </select>
+        </div>
+
+        <!-- 题型选择 -->
+        <div style="background: white; border-radius: 20px; padding: 1.5rem; border: 2px solid rgba(255, 159, 67, 0.15); box-shadow: 0 4px 16px rgba(255, 159, 67, 0.1);">
+          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 1rem;">
+            <div style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(250, 112, 154, 0.35);">
+              <i class="fas fa-layer-group" style="color: white; font-size: 1.3rem;"></i>
+            </div>
+            <div>
+              <h3 style="margin: 0; font-size: 1.05rem; color: #2d3436; font-weight: 700;">题型选择</h3>
+              <p style="margin: 0; font-size: 0.85rem; color: #74798d;">精准练习</p>
+            </div>
+          </div>
+          <select id="type-select" style="width: 100%; border: 1px solid rgba(0,0,0,0.12); border-radius: 8px; padding: 10px 12px; background: #ffffff; font-size: 0.95rem;">
+            <option value="all">全部题型</option>
+            <option value="仔细阅读">仔细阅读</option>
+            <option value="长篇阅读">长篇阅读</option>
+            <option value="选词填空">选词填空</option>
+          </select>
+        </div>
+
+        <!-- 难度选择 -->
+        <div style="background: white; border-radius: 20px; padding: 1.5rem; border: 2px solid rgba(52, 199, 89, 0.15); box-shadow: 0 4px 16px rgba(52, 199, 89, 0.1);">
+          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 1rem;">
+            <div style="background: linear-gradient(135deg, #34c759 0%, #30d158 100%); width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(52, 199, 89, 0.35);">
+              <i class="fas fa-signal" style="color: white; font-size: 1.3rem;"></i>
+            </div>
+            <div>
+              <h3 style="margin: 0; font-size: 1.05rem; color: #2d3436; font-weight: 700;">考试类型</h3>
+              <p style="margin: 0; font-size: 0.85rem; color: #74798d;">四级/六级</p>
+            </div>
+          </div>
+          <select id="level-select" style="width: 100%; border: 1px solid rgba(0,0,0,0.12); border-radius: 8px; padding: 10px 12px; background: #ffffff; font-size: 0.95rem;">
+            <option value="all">不限</option>
+            <option value="CET4">四级</option>
+            <option value="CET6">六级</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- 开始按钮 -->
+      <div style="text-align: center;">
+        <button id="start-btn" class="btn" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4); font-size: 1.1rem; padding: 16px 48px;">
+          <i class="fas fa-play-circle"></i> 开始练习
+        </button>
+      </div>
+    </div>
+
+    <!-- 题目区域 -->
+    <div id="questions-area" style="display: none;"></div>
+
+    <!-- 结果区域 -->
+    <div id="result-area" style="display: none;"></div>
+  </div>
+
+  <script>
+    // 滚动进度条
+    window.addEventListener('scroll', () => {
+      const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+      document.getElementById('scroll-progress').style.width = scrolled + '%';
+    });
+
+    // 移动端菜单切换
+    document.getElementById('mobile-toggle')?.addEventListener('click', function() {
+      document.querySelector('.nav-menu').classList.toggle('active');
+      this.classList.toggle('active');
+    });
+
+    // 题库数据
+    let allQuestions = [];
+    let currentQuestions = [];
+    let userAnswers = [];
+
+    // 加载题目数据
+    async function loadQuestions() {
+      try {
+        const resp = await fetch('./papers.json');
+        const papers = await resp.json();
+        
+        // 提取所有阅读题目
+        allQuestions = [];
+        Object.entries(papers).forEach(([paperId, paper]) => {
+          if (paper.sections) {
+            Object.entries(paper.sections).forEach(([sectionId, section]) => {
+              if (section.questions) {
+                section.questions.forEach(q => {
+                  allQuestions.push({
+                    ...q,
+                    paperId,
+                    sectionId,
+                    sectionTitle: section.title || '',
+                    passage: section.passage || '',
+                    level: paper.level || ''
+                  });
+                });
+              }
+            });
+          }
+        });
+        
+        console.log(`已加载 ${allQuestions.length} 道题目`);
+      } catch (err) {
+        console.error('加载题目失败:', err);
+        alert('题目加载失败，请刷新页面重试');
+      }
+    }
+
+    // 筛选题目
+    function filterQuestions(count, type, level) {
+      let filtered = [...allQuestions];
+      
+      // 按题型筛选
+      if (type !== 'all') {
+        filtered = filtered.filter(q => q.sectionTitle?.includes(type));
+      }
+      
+      // 按难度筛选
+      if (level !== 'all') {
+        filtered = filtered.filter(q => q.level === level);
+      }
+      
+      // 随机抽取
+      const shuffled = filtered.sort(() => 0.5 - Math.random());
+      return shuffled.slice(0, parseInt(count));
+    }
+
+    // 渲染题目
+    function renderQuestions(questions) {
+      const area = document.getElementById('questions-area');
+      area.style.display = 'block';
+      area.innerHTML = '';
+      
+      // 顶部信息
+      const banner = document.createElement('div');
+      banner.style.cssText = `
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 16px;
+        padding: 20px 24px;
+        margin-bottom: 24px;
+        color: white;
+        box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+      `;
+      banner.innerHTML = `
+        <h3 style="margin: 0 0 8px 0; font-size: 1.3rem; font-weight: 700;">📝 开始答题</h3>
+        <p style="margin: 0; opacity: 0.95;">共 ${questions.length} 道题 · 完成后自动提交</p>
+      `;
+      area.appendChild(banner);
+
+      // 渲染每道题
+      questions.forEach((q, idx) => {
+        const card = document.createElement('div');
+        card.className = 'question-card';
+        card.dataset.qid = idx;
+        
+        let html = `
+          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1rem; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+              ${idx + 1}
+            </div>
+            <div style="flex: 1;">
+              <div style="font-size: 0.85rem; color: #6c757d; margin-bottom: 4px;">
+                ${q.sectionTitle || '阅读理解'} ${q.level ? '· ' + q.level : ''}
+              </div>
+            </div>
+          </div>
+        `;
+        
+        // 文章
+        if (q.passage) {
+          html += `
+            <div style="background: #f8f9fa; border-left: 4px solid #667eea; border-radius: 8px; padding: 16px; margin-bottom: 16px; font-size: 0.95rem; line-height: 1.8; color: #2d3436;">
+              ${q.passage.replace(/\n/g, '<br>')}
+            </div>
+          `;
+        }
+        
+        // 题目
+        html += `<div style="font-size: 1.05rem; font-weight: 600; color: #1d1d1f; margin-bottom: 16px; line-height: 1.6;">${q.stem || q.question || '题目'}</div>`;
+        
+        // 选项
+        if (q.options) {
+          q.options.forEach((opt, oidx) => {
+            const optLabel = String.fromCharCode(65 + oidx);
+            html += `
+              <div class="option" data-value="${optLabel}" onclick="selectOption(${idx}, '${optLabel}', this)">
+                <strong>${optLabel}.</strong> ${opt}
+              </div>
+            `;
+          });
+        }
+        
+        card.innerHTML = html;
+        area.appendChild(card);
+      });
+
+      // 提交按钮
+      const submitArea = document.createElement('div');
+      submitArea.style.cssText = `
+        margin-top: 32px;
+        padding: 24px;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        text-align: center;
+      `;
+      submitArea.innerHTML = `
+        <button id="submit-btn" class="btn" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4); font-size: 1.1rem; padding: 16px 48px;">
+          <i class="fas fa-check-circle"></i> 提交答案
+        </button>
+      `;
+      area.appendChild(submitArea);
+
+      document.getElementById('submit-btn').addEventListener('click', submitAnswers);
+    }
+
+    // 选择选项
+    function selectOption(qid, value, elem) {
+      // 取消同题其他选项
+      const card = elem.closest('.question-card');
+      card.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+      
+      // 选中当前选项
+      elem.classList.add('selected');
+      userAnswers[qid] = value;
+    }
+
+    // 提交答案
+    function submitAnswers() {
+      if (userAnswers.filter(a => a).length < currentQuestions.length) {
+        if (!confirm('还有题目未作答，确定提交吗？')) return;
+      }
+
+      let correct = 0;
+      currentQuestions.forEach((q, idx) => {
+        const card = document.querySelector(`[data-qid="${idx}"]`);
+        const userAns = userAnswers[idx];
+        const correctAns = q.answer;
+        
+        if (userAns === correctAns) correct++;
+        
+        // 标记正确/错误
+        card.querySelectorAll('.option').forEach(opt => {
+          opt.style.pointerEvents = 'none';
+          if (opt.dataset.value === correctAns) {
+            opt.classList.add('correct');
+          } else if (opt.dataset.value === userAns && userAns !== correctAns) {
+            opt.classList.add('wrong');
+          }
+        });
+      });
+
+      // 保存答题记录（建立用户画像）
+      saveAnswerHistory(currentQuestions, userAnswers);
+
+      // 显示结果
+      showResult(correct, currentQuestions.length);
+    }
+
+    // 保存答题记录
+    function saveAnswerHistory(questions, answers) {
+      try {
+        let history = JSON.parse(localStorage.getItem('reading-history') || '[]');
+        const record = {
+          timestamp: Date.now(),
+          questions: questions.map((q, idx) => ({
+            qid: q.paperId + '-' + q.sectionId + '-' + (q.id || idx),
+            type: q.sectionTitle,
+            level: q.level,
+            userAnswer: answers[idx],
+            correctAnswer: q.answer,
+            correct: answers[idx] === q.answer
+          }))
+        };
+        history.push(record);
+        
+        // 只保留最近50次记录
+        if (history.length > 50) history = history.slice(-50);
+        
+        localStorage.setItem('reading-history', JSON.stringify(history));
+        console.log('✅ 用户画像已更新');
+      } catch (err) {
+        console.error('保存记录失败:', err);
+      }
+    }
+
+    // 显示结果
+    function showResult(correct, total) {
+      const score = Math.round((correct / total) * 100);
+      
+      const resultArea = document.getElementById('result-area');
+      resultArea.style.display = 'block';
+      resultArea.innerHTML = `
+        <div style="background: ${score >= 60 ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)' : 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)'}; border-radius: 16px; padding: 32px; margin: 24px 0; color: white; text-align: center; box-shadow: 0 8px 24px ${score >= 60 ? 'rgba(16, 185, 129, 0.4)' : 'rgba(245, 158, 11, 0.4)'};">
+          <div style="font-size: 4rem; margin-bottom: 16px;">${score >= 60 ? '🎉' : '💪'}</div>
+          <h2 style="margin: 0 0 12px 0; font-size: 2.5rem; font-weight: 800;">${score}分</h2>
+          <p style="margin: 0; font-size: 1.2rem; opacity: 0.95;">答对 ${correct} 题，共 ${total} 题</p>
+          <p style="margin: 12px 0 0; font-size: 1rem;">${score >= 85 ? '优秀！继续保持！' : score >= 60 ? '及格了，还有提升空间！' : '需要多加练习哦！'}</p>
+        </div>
+
+        <div style="background: white; border-radius: 16px; padding: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); text-align: center;">
+          <p style="margin: 0 0 20px; color: #6c757d; font-size: 1rem;">
+            ✅ 用户画像已建立！现在可以使用<a href="listening-micro.html" style="color: #667eea; font-weight: 600; text-decoration: none;">听力微练习</a>的智能抽题功能了
+          </p>
+          <button class="btn" onclick="location.reload()" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4); margin-right: 12px;">
+            <i class="fas fa-redo"></i> 再来一组
+          </button>
+          <button class="btn" onclick="location.href='listening-micro.html'" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);">
+            <i class="fas fa-headphones"></i> 去听力练习
+          </button>
+        </div>
+      `;
+
+      // 滚动到结果
+      resultArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    // 开始练习
+    document.getElementById('start-btn').addEventListener('click', async () => {
+      if (allQuestions.length === 0) {
+        await loadQuestions();
+      }
+
+      const count = document.getElementById('count-select').value;
+      const type = document.getElementById('type-select').value;
+      const level = document.getElementById('level-select').value;
+
+      currentQuestions = filterQuestions(count, type, level);
+      userAnswers = new Array(currentQuestions.length).fill(null);
+
+      if (currentQuestions.length === 0) {
+        alert('没有找到符合条件的题目，请调整筛选条件');
+        return;
+      }
+
+      renderQuestions(currentQuestions);
+      
+      // 滚动到题目区域
+      document.getElementById('questions-area').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    // 页面加载时预加载题目
+    window.addEventListener('DOMContentLoaded', loadQuestions);
+  </script>
+</body>
+</html>
