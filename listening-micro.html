@@ -1607,6 +1607,80 @@ Respond with JSON only:`;
           qa=document.createElement('audio'); qa.className='listening-mini-audio'; qa.controls=true; qa.src=audioSrc;
           card.appendChild(qa);
           
+          // 快速跳转按钮区域（放在播放器之后）
+          const quickJumpArea = document.createElement('div');
+          quickJumpArea.style.cssText = `
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%);
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin: 8px 0;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+          `;
+          
+          const quickJumpTitle = document.createElement('div');
+          quickJumpTitle.style.cssText = `
+            font-size: 0.85rem;
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+          `;
+          quickJumpTitle.innerHTML = '<i class="fas fa-bolt" style="font-size: 0.9rem;"></i>快速跳转';
+          
+          const quickJumpBtns = document.createElement('div');
+          quickJumpBtns.style.cssText = 'display: flex; gap: 8px; flex-wrap: wrap;';
+          
+          // 定义跳转点（与Section标记对应）
+          const jumpPoints = [
+            { label: '短篇新闻', time: 0, icon: '📰', color: '#10b981' },
+            { label: '长对话', time: 0.2, icon: '💬', color: '#3b82f6' },
+            { label: '听力篇章', time: 0.52, icon: '📖', color: '#8b5cf6' }
+          ];
+          
+          jumpPoints.forEach(point => {
+            const btn = document.createElement('button');
+            btn.style.cssText = `
+              background: white;
+              border: 2px solid ${point.color};
+              color: ${point.color};
+              padding: 6px 14px;
+              border-radius: 8px;
+              font-size: 0.85rem;
+              font-weight: 600;
+              cursor: pointer;
+              transition: all 0.3s ease;
+              display: flex;
+              align-items: center;
+              gap: 6px;
+            `;
+            btn.innerHTML = `${point.icon} ${point.label}`;
+            btn.onmouseover = () => {
+              btn.style.background = point.color;
+              btn.style.color = 'white';
+              btn.style.transform = 'translateY(-2px)';
+              btn.style.boxShadow = `0 4px 12px ${point.color}40`;
+            };
+            btn.onmouseout = () => {
+              btn.style.background = 'white';
+              btn.style.color = point.color;
+              btn.style.transform = 'translateY(0)';
+              btn.style.boxShadow = 'none';
+            };
+            btn.addEventListener('click', () => {
+              if (qa.duration) {
+                qa.currentTime = point.time * qa.duration;
+                qa.play();
+              }
+            });
+            quickJumpBtns.appendChild(btn);
+          });
+          
+          quickJumpArea.appendChild(quickJumpTitle);
+          quickJumpArea.appendChild(quickJumpBtns);
+          card.appendChild(quickJumpArea);
+          
           // Section时间标记区域
           const sectionMarkerArea = document.createElement('div');
           sectionMarkerArea.style.cssText = `
