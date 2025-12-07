@@ -236,37 +236,80 @@
             });
         }
         
-        // 查询单词
+        // 查询单词（添加重试和超时控制）
         async function lookupWord(word, element) {
             // 显示加载提示
             showWordPopup(element, `
-                <div style="text-align: center; padding: 1rem;">
-                    <i class="fas fa-spinner fa-spin" style="color: #667eea; font-size: 1.5rem;"></i>
-                    <p style="margin-top: 0.5rem; color: #64748b;">查询中...</p>
+                <div style="text-align: center; padding: 1.5rem;">
+                    <i class="fas fa-spinner fa-spin" style="color: #667eea; font-size: 1.8rem;"></i>
+                    <p style="margin-top: 0.8rem; color: #64748b; font-size: 0.95rem;">查询中...</p>
                 </div>
             `);
             
+            console.log('[Word Lookup] 查询单词:', word);
+            
             try {
+                // 添加超时控制（10秒）
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => {
+                    console.log('[Word Lookup] 请求超时');
+                    controller.abort();
+                }, 10000);
+                
                 const response = await fetch(LOOKUP_API, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ word })
+                    body: JSON.stringify({ word }),
+                    signal: controller.signal
                 });
                 
-                if (!response.ok) throw new Error('查询失败');
+                clearTimeout(timeoutId);
+                console.log('[Word Lookup] 响应状态:', response.status);
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('[Word Lookup] API错误:', errorText);
+                    throw new Error(`查询失败 (${response.status})`);
+                }
                 
                 const data = await response.json();
+                console.log('[Word Lookup] 返回数据:', data);
                 
-                if (data.error) throw new Error(data.error);
+                if (data.error) {
+                    throw new Error(data.error);
+                }
                 
                 // 显示单词详情
                 displayWordInfo(data, element);
                 
             } catch (error) {
+                console.error('[Word Lookup] 查询失败:', error);
+                
+                let errorMsg = '查询失败';
+                let suggestion = '';
+                
+                if (error.name === 'AbortError') {
+                    errorMsg = '请求超时';
+                    suggestion = '请检查网络连接';
+                } else if (error.message.includes('Failed to fetch')) {
+                    errorMsg = '网络连接失败';
+                    suggestion = '请检查网络或稍后重试';
+                } else {
+                    errorMsg = error.message || '未知错误';
+                    suggestion = '请稍后重试';
+                }
+                
                 showWordPopup(element, `
-                    <div style="text-align: center; padding: 1rem;">
-                        <i class="fas fa-exclamation-circle" style="color: #ef4444; font-size: 1.5rem;"></i>
-                        <p style="margin-top: 0.5rem; color: #64748b;">${error.message}</p>
+                    <div style="text-align: center; padding: 1.5rem;">
+                        <i class="fas fa-exclamation-circle" style="color: #ef4444; font-size: 1.8rem;"></i>
+                        <p style="margin-top: 0.8rem; color: #2d3436; font-weight: 600;">${errorMsg}</p>
+                        <p style="margin-top: 0.5rem; color: #64748b; font-size: 0.9rem;">${suggestion}</p>
+                        <button onclick="document.getElementById('word-popup').remove()" 
+                            style="margin-top: 1rem; padding: 0.5rem 1.5rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s ease;"
+                            onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.4)'"
+                            onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                            关闭
+                        </button>
                     </div>
                 `);
             }
