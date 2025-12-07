@@ -408,12 +408,91 @@
           color: white;
           box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
         `;
+        // 计算音频总时长（从最后一个section的结束时间）
+        const totalDuration = sections.length > 0 ? Math.max(...sections.map(s => s.end)) : 0;
+        
         audioPlayer.innerHTML = `
           <h3 style="margin: 0 0 16px 0; font-size: 1.3rem; font-weight: 700;">🎧 听力音频</h3>
-          <audio id="listening-audio" controls style="width: 100%; border-radius: 12px; margin-bottom: 12px;" preload="auto">
+          <audio id="listening-audio" controls style="width: 100%; border-radius: 12px; margin-bottom: 0;" preload="auto">
             <source src="${audioUrl}" type="audio/mpeg">
             您的浏览器不支持音频播放
           </audio>
+          
+          <!-- 进度条时间轴标记 -->
+          <div id="timeline-markers" style="position: relative; width: 100%; height: 40px; margin: 8px 0 12px 0;">
+            <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: rgba(255,255,255,0.3); border-radius: 2px;"></div>
+            ${sections.map((section, idx) => {
+              const colors = ['#10b981', '#3b82f6', '#8b5cf6', '#f59e0b', '#ec4899'];
+              const color = colors[idx % colors.length];
+              const percentage = totalDuration > 0 ? (section.start / totalDuration) * 100 : 0;
+              
+              const sectionIcon = section.name.includes('Long Conversations') ? '💬' : 
+                                 section.name.includes('Passages') ? '📖' : 
+                                 section.name.includes('Lectures') ? '🎓' : 
+                                 section.name.includes('News Reports') ? '📰' : '🎧';
+              
+              const sectionLabel = section.name.includes('Long Conversations') ? '长对话' : 
+                                  section.name.includes('Passages') ? '短文' : 
+                                  section.name.includes('Lectures') ? '讲座' : 
+                                  section.name.includes('News Reports') ? '新闻' : section.name;
+              
+              return `
+                <div 
+                  class="timeline-marker" 
+                  style="
+                    position: absolute;
+                    left: ${percentage}%;
+                    top: -2px;
+                    transform: translateX(-50%);
+                    cursor: pointer;
+                  "
+                  onclick="jumpToSegment(${section.start}, ${section.firstQuestionIndex})"
+                  onmouseover="this.querySelector('.marker-label').style.display='block';"
+                  onmouseout="this.querySelector('.marker-label').style.display='none';"
+                >
+                  <div style="
+                    width: 8px;
+                    height: 8px;
+                    background: ${color};
+                    border: 2px solid white;
+                    border-radius: 50%;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+                    transition: all 0.2s;
+                  "></div>
+                  <div class="marker-label" style="
+                    display: none;
+                    position: absolute;
+                    top: 18px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background: rgba(0,0,0,0.85);
+                    color: white;
+                    padding: 6px 12px;
+                    border-radius: 8px;
+                    font-size: 0.8rem;
+                    font-weight: 600;
+                    white-space: nowrap;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+                    z-index: 10;
+                  ">
+                    ${sectionIcon} ${sectionLabel}
+                  </div>
+                  <div style="
+                    position: absolute;
+                    left: 50%;
+                    top: 12px;
+                    transform: translateX(-50%);
+                    color: ${color};
+                    font-size: 0.75rem;
+                    font-weight: 700;
+                    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+                    white-space: nowrap;
+                  ">${sectionIcon}</div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+          
           <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px;">
             <button onclick="setPlaybackRate(0.75)" class="btn" style="background: rgba(255,255,255,0.2); color: white; padding: 8px 16px; font-size: 0.9rem; border: 1px solid rgba(255,255,255,0.3);">0.75x</button>
             <button onclick="setPlaybackRate(1)" class="btn" style="background: rgba(255,255,255,0.3); color: white; padding: 8px 16px; font-size: 0.9rem; border: 1px solid rgba(255,255,255,0.4);">1.0x</button>
