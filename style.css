@@ -2904,3 +2904,248 @@ a.feature-card:hover {
         font-size: 1.3rem;
     }
 }
+
+/* ==================== 移动端和平板端全面适配 ==================== */
+
+/* 平板端适配 (768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+    :root {
+        --container-width: 95%;
+    }
+    
+    .nav-container,
+    .nav-wrapper {
+        padding: 0 1.5rem;
+    }
+    
+    .page-content {
+        padding: 1.5rem;
+    }
+    
+    /* 卡片网格优化 */
+    .cards-container,
+    .resource-cards {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+    
+    /* 按钮适配 */
+    .action-btn,
+    button {
+        min-height: 44px;
+        padding: 0.75rem 1.5rem;
+    }
+}
+
+/* 手机端全面适配 (< 768px) */
+@media (max-width: 767px) {
+    :root {
+        --container-width: 100%;
+        font-size: 14px;
+    }
+    
+    /* 全局字体调整 */
+    body {
+        font-size: 14px;
+        line-height: 1.6;
+    }
+    
+    h1 { font-size: 1.75rem; }
+    h2 { font-size: 1.5rem; }
+    h3 { font-size: 1.25rem; }
+    
+    /* 容器内边距 */
+    .page-content {
+        padding: 1rem;
+        margin-top: 70px;
+    }
+    
+    .nav-container,
+    .nav-wrapper {
+        padding: 0 1rem;
+    }
+    
+    /* 卡片单列显示 */
+    .cards-container,
+    .resource-cards,
+    .features-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    /* 按钮增大点击区域 */
+    .action-btn,
+    button,
+    .btn,
+    .wehuster-btn {
+        min-height: 48px;
+        padding: 1rem 1.5rem;
+        font-size: 1rem;
+        border-radius: 12px;
+    }
+    
+    /* 搜索框优化 */
+    .search-container {
+        padding: 0 1rem;
+    }
+    
+    .search-box input {
+        font-size: 1rem;
+        padding: 0.875rem 3rem 0.875rem 1rem;
+    }
+    
+    /* 表单输入框 */
+    input,
+    textarea,
+    select {
+        font-size: 16px !important; /* 防止iOS缩放 */
+        min-height: 44px;
+    }
+    
+    /* 模态框适配 */
+    .modal-content {
+        width: 95%;
+        max-width: 95%;
+        padding: 1.5rem;
+        border-radius: 12px;
+    }
+    
+    /* 听力音频播放器 */
+    audio {
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    /* 翻译页面适配 */
+    #main-container {
+        padding: 1.5rem !important;
+        border-radius: 16px !important;
+    }
+    
+    textarea#english-text {
+        min-height: 200px;
+        font-size: 1rem;
+    }
+    
+    /* 单词弹窗适配 */
+    #word-popup {
+        max-width: 90vw !important;
+        max-height: 80vh !important;
+        left: 5vw !important;
+        right: 5vw !important;
+    }
+    
+    /* 听力练习页面 */
+    .listening-mini-audio {
+        width: 100%;
+    }
+    
+    /* 快速跳转按钮 */
+    .action-btn {
+        padding: 0.65rem 1.2rem;
+        font-size: 0.9rem;
+    }
+    
+    /* 倍速选择器 */
+    select {
+        padding: 0.6rem;
+        font-size: 0.9rem;
+    }
+    
+    /* 页脚优化 */
+    .footer-container {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        text-align: center;
+    }
+    
+    /* 试卷卡片 */
+    .paper-card {
+        padding: 1.25rem;
+    }
+    
+    .paper-card h3 {
+        font-size: 1.15rem;
+    }
+    
+    /* 筛选器 */
+    .modern-filter-container {
+        padding: 1rem;
+    }
+    
+    .modern-filter-row {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    
+    .modern-select {
+        width: 100%;
+        min-width: 100%;
+    }
+}
+
+/* 超小屏幕优化 (< 375px) */
+@media (max-width: 374px) {
+    :root {
+        font-size: 13px;
+    }
+    
+    body {
+        font-size: 13px;
+    }
+    
+    h1 { font-size: 1.5rem; }
+    h2 { font-size: 1.3rem; }
+    h3 { font-size: 1.1rem; }
+    
+    .page-content {
+        padding: 0.75rem;
+    }
+    
+    #main-container {
+        padding: 1rem !important;
+    }
+    
+    .action-btn,
+    button {
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* 横屏模式优化 */
+@media (max-height: 500px) and (orientation: landscape) {
+    .page-content {
+        margin-top: 60px;
+    }
+    
+    .modal-content {
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+}
+
+/* 触摸设备优化 */
+@media (hover: none) and (pointer: coarse) {
+    /* 增大所有可点击元素 */
+    a,
+    button,
+    .btn,
+    input[type="button"],
+    input[type="submit"] {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    /* 移除hover效果，使用active */
+    a:hover,
+    button:hover {
+        transform: none;
+    }
+    
+    a:active,
+    button:active {
+        transform: scale(0.98);
+        opacity: 0.8;
+    }
+}
