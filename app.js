@@ -702,8 +702,8 @@ document.addEventListener('DOMContentLoaded', () => {
         let allPapers = []; // 存储所有真题
         let listeningIdSet = null; // 含听力数据的试卷ID集合
 
-        // 2. 加载数据库
-        fetch('./papers.json')
+        // 2. 加载数据库（添加缓存策略）
+        fetch('./papers.json', { cache: 'force-cache' })
             .then(response => response.json())
             .then(data => {
                 // 3. 获取对应真题数组
@@ -719,10 +719,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                 }
                 
-                // 4. 读取 listening.json 以标记有听力的试卷
+                // 4. 读取 listening.json 以标记有听力的试卷（优化缓存策略）
                 (async () => {
                     try {
-                        const r = await fetch('./listening.json', { cache: 'no-store' });
+                        const r = await fetch('./listening.json', { cache: 'force-cache' });
                         if (r.ok) {
                             const listening = await r.json();
                             listeningIdSet = new Set(Object.keys(listening || {}));
@@ -746,11 +746,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     setupFiltersAndSearch();
                     
                     // 6. 预加载 exam-contents.json 到浏览器缓存（提升详情页加载速度）
-                    setTimeout(() => {
-                        fetch('./exam-contents.json', { cache: 'force-cache' })
-                            .then(() => console.log('✓ exam-contents.json 已预加载'))
-                            .catch(() => {});
-                    }, 1000); // 延迟1秒，避免阻塞主渲染
+                    // 使用 requestIdleCallback 在浏览器空闲时预加载
+                    if ('requestIdleCallback' in window) {
+                        requestIdleCallback(() => {
+                            fetch('./exam-contents.json', { cache: 'force-cache' })
+                                .then(() => console.log('✓ exam-contents.json 已预加载'))
+                                .catch(() => {});
+                        });
+                    } else {
+                        setTimeout(() => {
+                            fetch('./exam-contents.json', { cache: 'force-cache' })
+                                .then(() => console.log('✓ exam-contents.json 已预加载'))
+                                .catch(() => {});
+                        }, 500); // 减少延迟到500ms
+                    }
                 })();
             })
             .catch(error => {

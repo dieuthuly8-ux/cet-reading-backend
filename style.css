@@ -49,10 +49,21 @@ html {
 }
 
 /* 硬件加速 */
-.nav-link, .option-btn, button, a, .paper-card {
+.nav-link, .option-btn, button, a, .paper-card, .feature-card, .carousel-slide {
     -webkit-transform: translateZ(0);
     transform: translateZ(0);
     will-change: transform;
+}
+
+/* 优化图片加载 */
+img {
+    content-visibility: auto;
+}
+
+/* 优化长列表渲染 */
+.papers-list-container, .features-grid {
+    content-visibility: auto;
+    contain-intrinsic-size: 0 500px;
 }
 
 body {
