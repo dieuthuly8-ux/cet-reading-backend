@@ -736,7 +736,11 @@
         background: white;
         border-radius: 12px;
         box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        text-align: center;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 16px;
       `;
       
       const submitBtn = document.createElement('button');
@@ -840,7 +844,6 @@
       // 重新开始按钮
       const restartBtn = document.createElement('button');
       restartBtn.style.cssText = `
-        margin-top: 20px;
         padding: 12px 28px;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
@@ -854,6 +857,7 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
+        margin-left: auto;
       `;
       restartBtn.innerHTML = '<i class="fas fa-redo"></i> 重新测试';
       restartBtn.addEventListener('mouseover', () => {
