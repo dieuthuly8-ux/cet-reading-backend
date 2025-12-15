@@ -8,7 +8,7 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23007AFF' /><text x='50' y='50' font-size='50' fill='%23FFF' text-anchor='middle' dominant-baseline='central' font-family='system-ui' font-weight='bold'>CET</text></svg>" type="image/svg+xml">
     <link rel="stylesheet" href="style.css">
     <!-- Font Awesome 图标库 -->
-    <link rel="stylesheet" href="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <!-- 页面滚动进度条 -->
@@ -26,14 +26,7 @@
                 <li class="nav-item"><a href="cet4.html" class="nav-link">四级真题</a></li>
                 <li class="nav-item"><a href="cet6.html" class="nav-link">六级真题</a></li>
                 <li class="nav-item"><a href="translator.html" class="nav-link">阅读神器</a></li>
-                <li class="nav-item"><a href="listening-micro.html" class="nav-link listening-highlight" style="background: white; color: #667eea !important; border-radius: 8px; padding: 6px 14px; font-weight: 700; box-shadow: 0 4px 12px rgba(255, 255, 255, 0.4); border: 2px solid rgba(255, 255, 255, 0.8); position: relative; transition: all 0.3s ease; animation: pulse 2s ease-in-out infinite; white-space: nowrap;" onmouseover="this.style.transform='translateY(-2px) scale(1.05)'; this.style.boxShadow='0 6px 20px rgba(255, 255, 255, 0.6)';" onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 4px 12px rgba(255, 255, 255, 0.4)';"><span style="font-size: 1em;">🎧</span> 听力练习 <span style="font-size: 0.65em; background: linear-gradient(135deg, #ff6b6b, #feca57); color: white; padding: 2px 5px; border-radius: 8px; margin-left: 3px; font-weight: 800;">HOT</span></a></li>
-                <style>
-                  @keyframes pulse {
-                    0%, 100% { box-shadow: 0 4px 12px rgba(255, 255, 255, 0.4); }
-                    50% { box-shadow: 0 4px 16px rgba(255, 255, 255, 0.7); }
-                  }
-                </style>
-                <li class="nav-item"><a href="reading-micro.html" class="nav-link">听力微练习</a></li>
+                <li class="nav-item"><a href="listening-micro.html" class="nav-link">听力练习</a></li>
                 <li class="nav-item"><a href="news.html" class="nav-link">资讯</a></li>
                 <li class="nav-item"><a href="about.html" class="nav-link">About Us</a></li>
             </ul>
@@ -206,383 +199,6 @@
         // Vercel API端点
         const API_ENDPOINT = 'https://cet-reading-backend.vercel.app/api/translate';
 
-        // 免费词典API（不需要后端）
-        const FREE_DICT_API = 'https://api.dictionaryapi.dev/api/v2/entries/en/';
-        const BACKUP_DICT_API = 'https://api.datamuse.com/words?sp=';
-        
-        // 单词发音功能（使用浏览器原生API）
-        function speakWord(word) {
-            if ('speechSynthesis' in window) {
-                // 停止之前的发音
-                window.speechSynthesis.cancel();
-                
-                // 创建语音实例
-                const utterance = new SpeechSynthesisUtterance(word);
-                utterance.lang = 'en-US';  // 美式英语
-                utterance.rate = 0.9;      // 语速稍慢
-                utterance.pitch = 1;       // 音调
-                utterance.volume = 1;      // 音量
-                
-                // 播放
-                window.speechSynthesis.speak(utterance);
-                console.log('[发音] 播放单词:', word);
-            } else {
-                alert('您的浏览器不支持语音合成功能');
-            }
-        }
-        
-        // 将英文文本分词并变成可点击的span
-        function makeWordsClickable(text) {
-            // 按单词分割（保留标点和空格）
-            return text.replace(/([a-zA-Z]+(?:'[a-zA-Z]+)?)/g, (match) => {
-                return `<span class="clickable-word" data-word="${match.toLowerCase()}" style="cursor: pointer; padding: 2px 4px; border-radius: 4px; transition: all 0.2s ease; display: inline-block;">${match}</span>`;
-            });
-        }
-        
-        // 为单词添加点击事件
-        function attachWordClickEvents() {
-            const words = document.querySelectorAll('.clickable-word');
-            words.forEach(word => {
-                word.addEventListener('mouseenter', function() {
-                    this.style.background = 'linear-gradient(135deg, #667eea20, #764ba220)';
-                    this.style.transform = 'translateY(-1px)';
-                });
-                word.addEventListener('mouseleave', function() {
-                    this.style.background = 'transparent';
-                    this.style.transform = 'translateY(0)';
-                });
-                word.addEventListener('click', function() {
-                    const wordText = this.getAttribute('data-word');
-                    lookupWord(wordText, this);
-                });
-            });
-        }
-        
-        // 查询单词（使用免费API，不依赖后端）
-        async function lookupWord(word, element) {
-            showWordPopup(element, `
-                <div style="text-align: center; padding: 1.5rem;">
-                    <i class="fas fa-spinner fa-spin" style="color: #667eea; font-size: 1.8rem;"></i>
-                    <p style="margin-top: 0.8rem; color: #64748b; font-size: 0.95rem;">查询中...</p>
-                </div>
-            `);
-            
-            console.log('[Word Lookup] 查询单词:', word);
-            
-            try {
-                const cleanWord = word.toLowerCase().trim();
-                
-                // 方法1：使用免费词典API（dictionaryapi.dev）
-                try {
-                    const response = await fetch(FREE_DICT_API + encodeURIComponent(cleanWord), {
-                        method: 'GET',
-                        signal: AbortSignal.timeout(8000)
-                    });
-                    
-                    if (response.ok) {
-                        const data = await response.json();
-                        console.log('[Word Lookup] 免费API返回:', data);
-                        
-                        if (Array.isArray(data) && data.length > 0) {
-                            const wordData = data[0];
-                            
-                            // 提取音标
-                            let phonetic = '';
-                            if (wordData.phonetic) {
-                                phonetic = wordData.phonetic;
-                            } else if (wordData.phonetics && wordData.phonetics.length > 0) {
-                                const ph = wordData.phonetics.find(p => p.text);
-                                if (ph) phonetic = ph.text;
-                            }
-                            phonetic = phonetic.replace(/^\/|\/$|^\[|\]$/g, '');
-                            
-                            // 提取释义
-                            const meanings = [];
-                            if (wordData.meanings && Array.isArray(wordData.meanings)) {
-                                wordData.meanings.forEach(meaning => {
-                                    const pos = meaning.partOfSpeech || '';
-                                    if (meaning.definitions && Array.isArray(meaning.definitions)) {
-                                        meaning.definitions.slice(0, 3).forEach(def => {
-                                            if (def.definition) {
-                                                meanings.push(`${pos ? pos + '. ' : ''}${def.definition}`);
-                                                // 添加例句
-                                                if (def.example) {
-                                                    meanings.push(`  例: ${def.example}`);
-                                                }
-                                            }
-                                        });
-                                    }
-                                });
-                            }
-                            
-                            displayWordInfo({
-                                query: cleanWord,
-                                phonetic: phonetic,
-                                explains: meanings,
-                                translation: meanings.length > 0 ? meanings[0] : ''
-                            }, element);
-                            return;
-                        }
-                    }
-                } catch (apiError) {
-                    console.warn('[Word Lookup] 免费API失败:', apiError.message);
-                }
-                
-                // 方法2：备用API（datamuse）
-                try {
-                    const response = await fetch(BACKUP_DICT_API + encodeURIComponent(cleanWord) + '&md=d&max=1', {
-                        method: 'GET',
-                        signal: AbortSignal.timeout(5000)
-                    });
-                    
-                    if (response.ok) {
-                        const data = await response.json();
-                        console.log('[Word Lookup] 备用API返回:', data);
-                        
-                        if (Array.isArray(data) && data.length > 0 && data[0].defs) {
-                            const defs = data[0].defs.map(def => {
-                                // 格式："n\tthe definition" -> "n. the definition"
-                                return def.replace(/\t/, '. ');
-                            });
-                            
-                            displayWordInfo({
-                                query: cleanWord,
-                                phonetic: '',
-                                explains: defs,
-                                translation: defs[0] || ''
-                            }, element);
-                            return;
-                        }
-                    }
-                } catch (backupError) {
-                    console.warn('[Word Lookup] 备用API失败:', backupError.message);
-                }
-                
-                // 所有API都失败
-                throw new Error('未找到该单词的释义');
-                
-            } catch (error) {
-                console.error('[Word Lookup] 查询失败:', error);
-                
-                showWordPopup(element, `
-                    <div style="text-align: center; padding: 1.5rem;">
-                        <i class="fas fa-info-circle" style="color: #f59e0b; font-size: 1.8rem;"></i>
-                        <p style="margin-top: 0.8rem; color: #2d3436; font-weight: 600;">未找到该单词</p>
-                        <p style="margin-top: 0.5rem; color: #64748b; font-size: 0.9rem;">请尝试其他单词</p>
-                        <button onclick="document.getElementById('word-popup').remove()" 
-                            style="margin-top: 1rem; padding: 0.5rem 1.5rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s ease;"
-                            onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.4)'"
-                            onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
-                            关闭
-                        </button>
-                    </div>
-                `);
-            }
-        }
-        
-        // 翻译英文释义为中文
-        async function translateText(text) {
-            try {
-                const response = await fetch(API_ENDPOINT, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ text }),
-                    signal: AbortSignal.timeout(5000)
-                });
-                if (response.ok) {
-                    const data = await response.json();
-                    return data.result || text;
-                }
-            } catch (e) {
-                console.warn('[Translate] 翻译失败:', e.message);
-            }
-            return text;
-        }
-        
-        // 显示单词信息弹窗（有道词典风格）
-        async function displayWordInfo(data, element) {
-            console.log('[Word Lookup] 解析显示数据:', data);
-            
-            const word = data.query || element.getAttribute('data-word') || '';
-            const phonetic = data.phonetic || '';
-            const explains = data.explains || [];
-            
-            // 翻译英文释义为中文（异步）
-            const translatedExplains = [];
-            for (let i = 0; i < Math.min(explains.length, 5); i++) {
-                const exp = explains[i];
-                if (exp && !exp.startsWith('  例:')) {  // 不翻译例句
-                    const translated = await translateText(exp);
-                    translatedExplains.push({ en: exp, zh: translated });
-                }
-            }
-            
-            let html = `
-                <div style="min-width: 380px; max-width: 500px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;">
-                    <!-- 单词标题（紫色渐变主题） -->
-                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 1.3rem 1.5rem; border-radius: 12px 12px 0 0; margin: -1.2rem -1.2rem 0 -1.2rem; box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);">
-                        <h3 style="margin: 0; color: white; font-size: 1.6rem; font-weight: 700; text-transform: capitalize; letter-spacing: 0.5px;">${word}</h3>
-                        ${phonetic ? `
-                            <div style="margin-top: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
-                                <span style="color: rgba(255,255,255,0.95); font-size: 1rem;">[${phonetic}]</span>
-                                <button onclick="speakWord('${word}')" 
-                                    style="background: rgba(255,255,255,0.25); border: none; color: white; padding: 0.4rem 0.8rem; border-radius: 8px; cursor: pointer; font-size: 0.85rem; transition: all 0.3s; box-shadow: 0 2px 8px rgba(0,0,0,0.1); font-weight: 600;"
-                                    onmouseover="this.style.background='rgba(255,255,255,0.4)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
-                                    onmouseout="this.style.background='rgba(255,255,255,0.25)'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.1)'">
-                                    <i class="fas fa-volume-up"></i> 发音
-                                </button>
-                            </div>
-                        ` : ''}
-                    </div>
-                    
-                    <!-- 中英对照释义（紫色主题） -->
-                    ${translatedExplains.length > 0 ? `
-                        <div style="padding: 1.2rem; background: white;">
-                            <h4 style="margin: 0 0 1rem 0; color: #2c3e50; font-size: 0.95rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
-                                <span style="display: inline-block; width: 4px; height: 16px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 2px;"></span>
-                                基本释义
-                            </h4>
-                            <div style="space-y: 0.8rem;">
-                                ${translatedExplains.map((item, idx) => `
-                                    <div style="margin-bottom: 1rem; padding: 0.8rem; background: #f8fafc; border-radius: 8px; border-left: 3px solid #667eea;">
-                                        <div style="color: #2c3e50; font-size: 0.95rem; line-height: 1.6; margin-bottom: 0.4rem;">
-                                            <span style="display: inline-block; width: 20px; height: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-align: center; line-height: 20px; border-radius: 50%; font-size: 0.75rem; font-weight: 600; margin-right: 0.5rem;">${idx + 1}</span>
-                                            <span style="font-weight: 500;">${item.en}</span>
-                                        </div>
-                                        <div style="color: #10b981; font-size: 0.9rem; padding-left: 2rem; line-height: 1.5;">
-                                            <i class="fas fa-language" style="margin-right: 0.3rem; opacity: 0.7;"></i>
-                                            ${item.zh}
-                                        </div>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
-                    ` : `
-                        <div style="text-align: center; padding: 2rem; color: #94a3b8;">
-                            <i class="fas fa-info-circle" style="font-size: 2rem; margin-bottom: 0.8rem; display: block;"></i>
-                            <p style="margin: 0; font-size: 0.95rem;">未找到该单词的详细释义</p>
-                        </div>
-                    `}
-                </div>
-            `;
-            
-            showWordPopup(element, html);
-        }
-        
-        // 显示弹窗（优化样式和位置）
-        function showWordPopup(element, content) {
-            // 移除已存在的弹窗
-            const existingPopup = document.getElementById('word-popup');
-            if (existingPopup) {
-                existingPopup.style.animation = 'popupFadeOut 0.15s ease';
-                setTimeout(() => existingPopup.remove(), 150);
-            }
-            
-            // 创建新弹窗
-            const popup = document.createElement('div');
-            popup.id = 'word-popup';
-            popup.innerHTML = content;
-            popup.style.cssText = `
-                position: fixed;
-                background: white;
-                padding: 1.2rem;
-                border-radius: 16px;
-                box-shadow: 0 20px 60px rgba(0,0,0,0.15), 0 0 1px rgba(0,0,0,0.1);
-                z-index: 10000;
-                max-height: 85vh;
-                overflow-y: auto;
-                border: 1px solid rgba(102, 126, 234, 0.2);
-                animation: popupFadeIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-            `;
-            
-            // 添加动画样式
-            if (!document.getElementById('popup-animation-style')) {
-                const style = document.createElement('style');
-                style.id = 'popup-animation-style';
-                style.textContent = `
-                    @keyframes popupFadeIn {
-                        from { 
-                            opacity: 0; 
-                            transform: translateY(-20px) scale(0.92); 
-                        }
-                        to { 
-                            opacity: 1; 
-                            transform: translateY(0) scale(1); 
-                        }
-                    }
-                    @keyframes popupFadeOut {
-                        from { 
-                            opacity: 1; 
-                            transform: scale(1); 
-                        }
-                        to { 
-                            opacity: 0; 
-                            transform: scale(0.95); 
-                        }
-                    }
-                    #word-popup::-webkit-scrollbar {
-                        width: 8px;
-                    }
-                    #word-popup::-webkit-scrollbar-track {
-                        background: #f1f5f9;
-                        border-radius: 4px;
-                    }
-                    #word-popup::-webkit-scrollbar-thumb {
-                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                        border-radius: 4px;
-                    }
-                    #word-popup::-webkit-scrollbar-thumb:hover {
-                        background: linear-gradient(135deg, #5568d3 0%, #653a8b 100%);
-                        border-radius: 4px;
-                    }
-                `;
-                document.head.appendChild(style);
-            }
-            
-            document.body.appendChild(popup);
-            
-            // 智能计算位置
-            const rect = element.getBoundingClientRect();
-            const popupRect = popup.getBoundingClientRect();
-            const padding = 15;
-            
-            // 默认居中对齐
-            let left = rect.left + (rect.width / 2) - (popupRect.width / 2);
-            let top = rect.bottom + padding;
-            
-            // 水平方向调整
-            if (left < padding) {
-                left = padding;
-            } else if (left + popupRect.width > window.innerWidth - padding) {
-                left = window.innerWidth - popupRect.width - padding;
-            }
-            
-            // 垂直方向调整（如果下方空间不够，显示在上方）
-            if (top + popupRect.height > window.innerHeight - padding) {
-                top = rect.top - popupRect.height - padding;
-                // 如果上方也放不下，就显示在屏幕中间
-                if (top < padding) {
-                    top = (window.innerHeight - popupRect.height) / 2;
-                    if (top < padding) top = padding;
-                }
-            }
-            
-            popup.style.left = left + 'px';
-            popup.style.top = top + 'px';
-            
-            // 点击其他地方关闭（带动画）
-            setTimeout(() => {
-                const closeHandler = function(e) {
-                    if (!popup.contains(e.target) && e.target !== element && !e.target.closest('.clickable-word')) {
-                        popup.style.animation = 'popupFadeOut 0.15s ease';
-                        setTimeout(() => popup.remove(), 150);
-                        document.removeEventListener('click', closeHandler);
-                    }
-                };
-                document.addEventListener('click', closeHandler);
-            }, 100);
-        }
-        
         // 翻译功能
         document.addEventListener('DOMContentLoaded', () => {
             const translateBtn = document.getElementById('translate-btn');
@@ -609,84 +225,44 @@
                     </div>
                 `;
                 
-                // 带重试的翻译函数（静默重试，不显示中间错误）
-                async function translateWithRetry(text, maxRetries = 3) {
-                    for (let attempt = 1; attempt <= maxRetries; attempt++) {
-                        try {
-                            console.log(`[翻译] 第${attempt}次尝试...`);
-                            
-                            const response = await fetch(API_ENDPOINT, {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                },
-                                body: JSON.stringify({ text }),
-                                signal: AbortSignal.timeout(15000) // 15秒超时
-                            });
-                            
-                            if (!response.ok) {
-                                throw new Error(`HTTP ${response.status}`);
-                            }
-                            
-                            const data = await response.json();
-                            
-                            if (data.error) {
-                                throw new Error(data.error);
-                            }
-                            
-                            // 成功！返回结果
-                            console.log(`[翻译] 第${attempt}次尝试成功`);
-                            return data;
-                            
-                        } catch (error) {
-                            console.warn(`[翻译] 第${attempt}次尝试失败:`, error.message);
-                            
-                            // 如果不是最后一次尝试，等待后重试
-                            if (attempt < maxRetries) {
-                                await new Promise(resolve => setTimeout(resolve, 1000 * attempt)); // 递增延迟
-                                continue;
-                            }
-                            
-                            // 所有尝试都失败，抛出错误
-                            throw error;
-                        }
-                    }
-                }
-                
                 try {
-                    // 调用带重试的翻译函数
-                    const data = await translateWithRetry(text);
+                    // 调用Vercel代理API
+                    const response = await fetch(API_ENDPOINT, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ text })
+                    });
                     
-                    // 显示翻译结果（原文 + 译文，单词可点击）
-                    const clickableText = makeWordsClickable(text);
+                    if (!response.ok) {
+                        throw new Error('翻译服务暂时不可用');
+                    }
+                    
+                    const data = await response.json();
+                    
+                    if (data.error) {
+                        throw new Error(data.error);
+                    }
+                    
+                    // 显示翻译结果
                     outputDiv.innerHTML = `
                         <div style="margin-top: 2rem; padding: 2rem; background: white; border-radius: 12px; box-shadow: 0 2px 15px rgba(0,0,0,0.1);">
                             <h3 style="margin: 0 0 1rem 0; color: #333; border-bottom: 2px solid #007AFF; padding-bottom: 0.5rem;">
-                                <i class="fas fa-language" style="color: #667eea;"></i> 英文原文
-                                <span style="font-size: 0.8rem; color: #64748b; font-weight: 400; margin-left: 0.5rem;">（点击单词查看释义）</span>
-                            </h3>
-                            <div id="clickable-english" style="background: #f8fafc; padding: 1.5rem; border-radius: 8px; line-height: 2; color: #2d3436; font-size: 1.05rem; border: 2px solid #e2e8f0;">
-                                ${clickableText}
-                            </div>
-                            
-                            <h3 style="margin: 2rem 0 1rem 0; color: #333; border-bottom: 2px solid #10b981; padding-bottom: 0.5rem;">
-                                <i class="fas fa-check-circle" style="color: #10b981;"></i> 中文翻译
+                                <i class="fas fa-check-circle" style="color: #10b981;"></i> 翻译结果
                             </h3>
                             <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; line-height: 1.8; color: #333; font-size: 1.05rem;">
                                 ${data.result}
                             </div>
                         </div>
                     `;
-                    
-                    // 为单词添加点击事件
-                    attachWordClickEvents();
                 } catch (error) {
-                    // 只在所有重试都失败后才显示错误
                     outputDiv.innerHTML = `
                         <div style="padding: 2rem; text-align: center; color: #721c24; background: #f8d7da; border-radius: 8px; margin-top: 1.5rem;">
                             <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 1rem;"></i>
-                            <p><strong>翻译失败</strong></p>
-                            <p style="margin-top: 0.5rem; font-size: 0.9rem; color: #666;">服务暂时不可用，请稍后再试</p>
+                            <p><strong>翻译失败！</strong></p>
+                            <p style="margin-top: 0.5rem; font-size: 0.9rem;">错误信息：${error.message}</p>
+                            <p style="margin-top: 0.5rem; font-size: 0.9rem;">请稍后再试</p>
                         </div>
                     `;
                 }

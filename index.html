@@ -2,39 +2,13 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <meta name="format-detection" content="telephone=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport"="width=device-width, initial-scale=1.0">
     <title>四六级学习站 - 免费真题资源平台</title>
-    <script>
-        // 防止页面被劫持 - 检测页面内容
-        window.addEventListener('DOMContentLoaded', function() {
-            setTimeout(function() {
-                // 检查关键元素是否存在
-                var hasNav = document.querySelector('.wehuster-nav');
-                var hasLogo = document.querySelector('.wehuster-logo');
-                
-                // 如果关键元素不存在，说明页面可能被劫持
-                if (!hasNav || !hasLogo) {
-                    // 尝试重新加载
-                    if (!sessionStorage.getItem('reloaded')) {
-                        sessionStorage.setItem('reloaded', '1');
-                        window.location.reload(true);
-                    }
-                } else {
-                    // 页面正常加载，清除标记
-                    sessionStorage.removeItem('reloaded');
-                }
-            }, 1000);
-        });
-    </script>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23007AFF' /><text x='50' y='50' font-size='50' fill='%23FFF' text-anchor='middle' dominant-baseline='central' font-family='system-ui' font-weight='bold'>CET</text></svg>" type="image/svg+xml">
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/aos/2.3.4/aos.min.css" rel="stylesheet">
-    <script src="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/aos/2.3.4/aos.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <style>
         /* 表单输入框placeholder样式 */
         .contribute-section input::placeholder, 
@@ -81,16 +55,7 @@
                     <a href="translator.html" class="nav-link">阅读神器</a>
                 </li>
                 <li class="nav-item">
-                    <a href="listening-micro.html" class="nav-link listening-highlight" style="background: white; color: #667eea !important; border-radius: 8px; padding: 6px 14px; font-weight: 700; box-shadow: 0 4px 12px rgba(255, 255, 255, 0.4); border: 2px solid rgba(255, 255, 255, 0.8); position: relative; transition: all 0.3s ease; animation: pulse 2s ease-in-out infinite; white-space: nowrap;" onmouseover="this.style.transform='translateY(-2px) scale(1.05)'; this.style.boxShadow='0 6px 20px rgba(255, 255, 255, 0.6)';" onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 4px 12px rgba(255, 255, 255, 0.4)';"><span style="font-size: 1em;">🎧</span> 听力练习 <span style="font-size: 0.65em; background: linear-gradient(135deg, #ff6b6b, #feca57); color: white; padding: 2px 5px; border-radius: 8px; margin-left: 3px; font-weight: 800;">HOT</span></a>
-                </li>
-                <style>
-                  @keyframes pulse {
-                    0%, 100% { box-shadow: 0 4px 12px rgba(255, 255, 255, 0.4); }
-                    50% { box-shadow: 0 4px 16px rgba(255, 255, 255, 0.7); }
-                  }
-                </style>
-                <li class="nav-item">
-                    <a href="reading-micro.html" class="nav-link">听力微练习</a>
+                    <a href="listening-micro.html" class="nav-link">听力练习</a>
                 </li>
                 <li class="nav-item">
                     <a href="news.html" class="nav-link">资讯</a>
