@@ -21,25 +21,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /* --- 0. 页面滚动进度条 --- */
     const scrollProgress = document.getElementById('scroll-progress');
+    let scrollTicking = false;
     if (scrollProgress) {
         window.addEventListener('scroll', () => {
-            const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrolled = (window.scrollY / windowHeight) * 100;
-            scrollProgress.style.width = scrolled + '%';
-        });
+            if (!scrollTicking) {
+                window.requestAnimationFrame(() => {
+                    const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                    const scrolled = (window.scrollY / windowHeight) * 100;
+                    scrollProgress.style.width = scrolled + '%';
+                    scrollTicking = false;
+                });
+                scrollTicking = true;
+            }
+        }, { passive: true });
         console.log("滚动进度条已初始化");
     }
 
     /* --- 0.1 导航栏滚动效果 --- */
     const nav = document.querySelector('nav');
+    let navTicking = false;
     if (nav) {
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                nav.classList.add('scrolled');
-            } else {
-                nav.classList.remove('scrolled');
+            if (!navTicking) {
+                window.requestAnimationFrame(() => {
+                    if (window.scrollY > 50) {
+                        nav.classList.add('scrolled');
+                    } else {
+                        nav.classList.remove('scrolled');
+                    }
+                    navTicking = false;
+                });
+                navTicking = true;
             }
-        });
+        }, { passive: true });
     }
 
     /* --- 0.2 粒子背景初始化 (仅首页) --- */
@@ -1225,11 +1239,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateResultsCount(filtered.length);
             }
 
-            // 搜索输入事件 (实时搜索)
+            // 搜索输入事件 (实时搜索) - 优化防抖延迟
             let searchTimeout;
             searchInput.addEventListener('input', () => {
                 clearTimeout(searchTimeout);
-                searchTimeout = setTimeout(applyFilters, 300); // 防抖
+                searchTimeout = setTimeout(applyFilters, 200); // 减少防抖延迟从300ms到200ms
             });
 
             // 筛选器改变事件
