@@ -558,8 +558,9 @@
         
         const audioEl = document.createElement('audio');
         audioEl.controls = true;
-        audioEl.preload = 'metadata';
-        audioEl.crossOrigin = 'anonymous';
+        audioEl.preload = 'auto';
+        // 移除crossOrigin，因为jsDelivr CDN可能不支持CORS，会导致播放失败
+        // audioEl.crossOrigin = 'anonymous';
         audioEl.style.cssText = 'width: 100%;';
         
         // 确保路径是绝对路径（从根目录开始）
@@ -576,36 +577,51 @@
         // 加载状态处理
         audioEl.addEventListener('loadstart', () => {
           statusDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 正在加载音频...';
+          console.log('🎵 开始加载音频:', audioSrc);
         });
         
         audioEl.addEventListener('loadedmetadata', () => {
           statusDiv.innerHTML = '<span style="color: #10b981;"><i class="fas fa-check-circle"></i> 音频加载成功</span>';
+          console.log('✅ 音频元数据加载成功，时长:', audioEl.duration, '秒');
           setTimeout(() => statusDiv.innerHTML = '', 2000);
         });
         
         audioEl.addEventListener('canplay', () => {
-          statusDiv.innerHTML = '<span style="color: #10b981;"><i class="fas fa-check-circle"></i> 音频就绪</span>';
+          statusDiv.innerHTML = '<span style="color: #10b981;"><i class="fas fa-check-circle"></i> 音频就绪，可以播放</span>';
+          console.log('✅ 音频就绪，可以播放');
           setTimeout(() => statusDiv.innerHTML = '', 2000);
+        });
+        
+        audioEl.addEventListener('canplaythrough', () => {
+          console.log('✅ 音频完全加载，可以流畅播放');
         });
         
         // 错误处理 - 支持多个回退方案
         audioEl.addEventListener('error', function onError(e) {
-          console.error('音频加载失败:', audioSrc, e);
+          console.error('❌ 音频加载失败:', audioSrc, e);
+          console.error('错误代码:', audioEl.error ? audioEl.error.code : 'unknown');
+          console.error('错误信息:', audioEl.error ? audioEl.error.message : 'unknown');
           
           // 方案1: 尝试回退到set1（如果是set2或set3）
           const fallbackSrc1 = audioSrc.replace(/-set[23]\.mp3$/, '-set1.mp3');
           if (fallbackSrc1 !== audioSrc) {
             statusDiv.innerHTML = '<span style="color: #fbbf24;"><i class="fas fa-info-circle"></i> 原音频不存在，尝试使用同期set1音频...</span>';
+            console.log('🔄 尝试回退到set1:', fallbackSrc1);
             audioEl.removeEventListener('error', onError);
+            audioEl.crossOrigin = null; // 移除CORS设置
             audioEl.src = fallbackSrc1;
+            audioEl.load(); // 强制重新加载
             audioEl.addEventListener('error', function onFallbackError1() {
               // 方案2: 尝试使用 raw.githubusercontent.com
               const rawSrc = audioSrc.replace('cdn.jsdelivr.net/gh/', 'raw.githubusercontent.com/').replace('@main/', 'main/');
               statusDiv.innerHTML = '<span style="color: #fbbf24;"><i class="fas fa-sync"></i> 尝试备用CDN...</span>';
+              console.log('🔄 尝试备用CDN:', rawSrc);
               audioEl.removeEventListener('error', onFallbackError1);
               audioEl.src = rawSrc;
+              audioEl.load();
               audioEl.addEventListener('error', function onFallbackError2() {
                 statusDiv.innerHTML = '<span style="color: #ff6b6b;"><i class="fas fa-exclamation-triangle"></i> 音频加载失败，请检查网络连接或稍后重试</span>';
+                console.error('❌ 所有回退方案都失败');
               }, { once: true });
             }, { once: true });
             return;
@@ -615,16 +631,21 @@
           const rawSrc = audioSrc.replace('cdn.jsdelivr.net/gh/', 'raw.githubusercontent.com/').replace('@main/', 'main/');
           if (rawSrc !== audioSrc) {
             statusDiv.innerHTML = '<span style="color: #fbbf24;"><i class="fas fa-sync"></i> 尝试备用CDN...</span>';
+            console.log('🔄 尝试备用CDN:', rawSrc);
             audioEl.removeEventListener('error', onError);
+            audioEl.crossOrigin = null; // 移除CORS设置
             audioEl.src = rawSrc;
+            audioEl.load(); // 强制重新加载
             audioEl.addEventListener('error', function onRawError() {
               statusDiv.innerHTML = '<span style="color: #ff6b6b;"><i class="fas fa-exclamation-triangle"></i> 音频加载失败，请检查网络连接或稍后重试</span>';
+              console.error('❌ 备用CDN也失败');
             }, { once: true });
             return;
           }
           
           // 所有方案都失败
           statusDiv.innerHTML = '<span style="color: #ff6b6b;"><i class="fas fa-exclamation-triangle"></i> 音频加载失败，请检查网络连接或稍后重试</span>';
+          console.error('❌ 所有加载方案都失败');
         }, { once: true });
         
         // 先设置标题，再添加音频元素（避免innerHTML清空audioEl）
@@ -635,6 +656,7 @@
         
         // 设置音频源并添加到DOM
         audioEl.src = audioSrc;
+        audioEl.load(); // 强制加载音频
         audioCard.appendChild(audioEl);
         audioCard.appendChild(statusDiv);
         
@@ -999,8 +1021,9 @@
             // 检查音频是否存在，不存在则尝试回退
             const audioEl = document.createElement('audio');
             audioEl.controls = true;
-            audioEl.preload = 'metadata';
-            audioEl.crossOrigin = 'anonymous';
+            audioEl.preload = 'auto';
+            // 移除crossOrigin，因为jsDelivr CDN可能不支持CORS
+            // audioEl.crossOrigin = 'anonymous';
             audioEl.style.cssText = 'width: 100%; border-radius: 8px;';
             
             const statusDiv = document.createElement('div');
@@ -1021,12 +1044,18 @@
             
             audioEl.addEventListener('loadedmetadata', () => {
               statusDiv.innerHTML = '<span style="color: #10b981;"><i class="fas fa-check-circle"></i> 音频加载成功</span>';
+              console.log('✅ 音频元数据加载成功');
               setTimeout(() => statusDiv.innerHTML = '', 2000);
             });
             
             audioEl.addEventListener('canplay', () => {
-              statusDiv.innerHTML = '<span style="color: #10b981;"><i class="fas fa-check-circle"></i> 音频就绪</span>';
+              statusDiv.innerHTML = '<span style="color: #10b981;"><i class="fas fa-check-circle"></i> 音频就绪，可以播放</span>';
+              console.log('✅ 音频就绪，可以播放');
               setTimeout(() => statusDiv.innerHTML = '', 2000);
+            });
+            
+            audioEl.addEventListener('canplaythrough', () => {
+              console.log('✅ 音频完全加载，可以流畅播放');
             });
             
             // 错误处理 - 支持多个回退方案
@@ -1577,29 +1606,42 @@
           qa=document.createElement('audio'); 
           qa.className='listening-mini-audio'; 
           qa.controls=true;
-          qa.preload='metadata';
-          qa.crossOrigin='anonymous';
+          qa.preload='auto';
+          // 移除crossOrigin，因为jsDelivr CDN可能不支持CORS
+          // qa.crossOrigin='anonymous';
           
           // 添加错误处理
           qa.addEventListener('error', function onError(e) {
-            console.error('音频加载失败:', audioSrc, e);
+            console.error('❌ 音频加载失败:', audioSrc, e);
             // 尝试回退到set1（如果是set2或set3）
             const fallbackSrc = audioSrc.replace(/-set[23]\.mp3$/, '-set1.mp3');
             if (fallbackSrc !== audioSrc) {
+              console.log('🔄 尝试回退到set1:', fallbackSrc);
               qa.removeEventListener('error', onError);
+              qa.crossOrigin = null;
               qa.src = fallbackSrc;
+              qa.load();
             } else {
               // 如果已经是set1，尝试使用 raw.githubusercontent.com
               const rawSrc = audioSrc.replace('cdn.jsdelivr.net/gh/', 'raw.githubusercontent.com/').replace('@main/', 'main/');
               if (rawSrc !== audioSrc) {
+                console.log('🔄 尝试备用CDN:', rawSrc);
                 qa.removeEventListener('error', onError);
+                qa.crossOrigin = null;
                 qa.src = rawSrc;
+                qa.load();
               }
             }
           }, { once: true });
           
+          // 添加加载成功监听
+          qa.addEventListener('canplay', () => {
+            console.log('✅ 音频就绪，可以播放');
+          });
+          
           // 设置音频源并添加到DOM
           qa.src = audioSrc;
+          qa.load(); // 强制加载音频
           card.appendChild(qa);
           
           // Section时间标记区域
