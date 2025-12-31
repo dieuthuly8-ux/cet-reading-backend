@@ -627,13 +627,14 @@
           statusDiv.innerHTML = '<span style="color: #ff6b6b;"><i class="fas fa-exclamation-triangle"></i> 音频加载失败，请检查网络连接或稍后重试</span>';
         }, { once: true });
         
-        audioEl.src = audioSrc;
+        // 先设置标题，再添加音频元素（避免innerHTML清空audioEl）
+        const titleDiv = document.createElement('div');
+        titleDiv.style.cssText = 'font-weight: 600; margin-bottom: 10px; color: #333;';
+        titleDiv.innerHTML = '<i class="fas fa-headphones" style="color: #667eea;"></i> 听力音频';
+        audioCard.appendChild(titleDiv);
         
-        audioCard.innerHTML = `
-          <div style="font-weight: 600; margin-bottom: 10px; color: #333;">
-            <i class="fas fa-headphones" style="color: #667eea;"></i> 听力音频
-          </div>
-        `;
+        // 设置音频源并添加到DOM
+        audioEl.src = audioSrc;
         audioCard.appendChild(audioEl);
         audioCard.appendChild(statusDiv);
         
@@ -1067,19 +1068,21 @@
               statusDiv.innerHTML = '<span style="color: #ff6b6b;"><i class="fas fa-exclamation-triangle"></i> 音频加载失败，请检查网络连接或稍后重试</span>';
             }, { once: true });
             
-            audioEl.src = audioSrc;
+            // 先设置标题和描述，再添加音频元素（避免innerHTML清空audioEl）
+            const titleDiv2 = document.createElement('div');
+            titleDiv2.style.cssText = 'font-weight: 600; margin-bottom: 10px;';
+            titleDiv2.innerHTML = '<i class="fas fa-volume-up"></i> 完整听力音频';
+            secCard.appendChild(titleDiv2);
             
-            secCard.innerHTML = `
-              <div style="font-weight: 600; margin-bottom: 10px;">
-                <i class="fas fa-volume-up"></i> 完整听力音频
-              </div>
-            `;
+            // 设置音频源并添加到DOM
+            audioEl.src = audioSrc;
             secCard.appendChild(audioEl);
-            secCard.innerHTML += `
-              <p style="margin: 8px 0 0; font-size: 0.85rem; opacity: 0.8;">
-                ${sec.description || ''} · ${sec.duration || ''}
-              </p>
-            `;
+            
+            // 添加描述
+            const descP = document.createElement('p');
+            descP.style.cssText = 'margin: 8px 0 0; font-size: 0.85rem; opacity: 0.8;';
+            descP.textContent = `${sec.description || ''} · ${sec.duration || ''}`;
+            secCard.appendChild(descP);
             secCard.appendChild(statusDiv);
             audioOnlyBanner.appendChild(secCard);
           }
