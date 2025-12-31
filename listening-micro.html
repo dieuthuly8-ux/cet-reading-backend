@@ -1574,7 +1574,12 @@
           ctrl.appendChild(rateSel); ctrl.appendChild(btnA); ctrl.appendChild(btnB); ctrl.appendChild(btnLoop);
           card.appendChild(ctrl);
           // 播放器
-          qa=document.createElement('audio'); qa.className='listening-mini-audio'; qa.controls=true;
+          qa=document.createElement('audio'); 
+          qa.className='listening-mini-audio'; 
+          qa.controls=true;
+          qa.preload='metadata';
+          qa.crossOrigin='anonymous';
+          
           // 添加错误处理
           qa.addEventListener('error', function onError(e) {
             console.error('音频加载失败:', audioSrc, e);
@@ -1583,8 +1588,17 @@
             if (fallbackSrc !== audioSrc) {
               qa.removeEventListener('error', onError);
               qa.src = fallbackSrc;
+            } else {
+              // 如果已经是set1，尝试使用 raw.githubusercontent.com
+              const rawSrc = audioSrc.replace('cdn.jsdelivr.net/gh/', 'raw.githubusercontent.com/').replace('@main/', 'main/');
+              if (rawSrc !== audioSrc) {
+                qa.removeEventListener('error', onError);
+                qa.src = rawSrc;
+              }
             }
           }, { once: true });
+          
+          // 设置音频源并添加到DOM
           qa.src = audioSrc;
           card.appendChild(qa);
           
