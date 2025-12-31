@@ -558,8 +558,76 @@
         
         const audioEl = document.createElement('audio');
         audioEl.controls = true;
+        audioEl.preload = 'metadata';
+        audioEl.crossOrigin = 'anonymous';
         audioEl.style.cssText = 'width: 100%;';
-        audioEl.src = examData.sections[0].audio;
+        
+        // 确保路径是绝对路径（从根目录开始）
+        let audioSrc = examData.sections[0].audio;
+        if (audioSrc && !audioSrc.startsWith('http') && !audioSrc.startsWith('/')) {
+          audioSrc = '/' + audioSrc;
+        }
+        
+        // 添加错误处理和加载状态
+        const statusDiv = document.createElement('div');
+        statusDiv.style.cssText = 'margin-top: 8px; font-size: 0.85rem; color: #666;';
+        statusDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 正在加载音频...';
+        
+        // 加载状态处理
+        audioEl.addEventListener('loadstart', () => {
+          statusDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 正在加载音频...';
+        });
+        
+        audioEl.addEventListener('loadedmetadata', () => {
+          statusDiv.innerHTML = '<span style="color: #10b981;"><i class="fas fa-check-circle"></i> 音频加载成功</span>';
+          setTimeout(() => statusDiv.innerHTML = '', 2000);
+        });
+        
+        audioEl.addEventListener('canplay', () => {
+          statusDiv.innerHTML = '<span style="color: #10b981;"><i class="fas fa-check-circle"></i> 音频就绪</span>';
+          setTimeout(() => statusDiv.innerHTML = '', 2000);
+        });
+        
+        // 错误处理 - 支持多个回退方案
+        audioEl.addEventListener('error', function onError(e) {
+          console.error('音频加载失败:', audioSrc, e);
+          
+          // 方案1: 尝试回退到set1（如果是set2或set3）
+          const fallbackSrc1 = audioSrc.replace(/-set[23]\.mp3$/, '-set1.mp3');
+          if (fallbackSrc1 !== audioSrc) {
+            statusDiv.innerHTML = '<span style="color: #fbbf24;"><i class="fas fa-info-circle"></i> 原音频不存在，尝试使用同期set1音频...</span>';
+            audioEl.removeEventListener('error', onError);
+            audioEl.src = fallbackSrc1;
+            audioEl.addEventListener('error', function onFallbackError1() {
+              // 方案2: 尝试使用 raw.githubusercontent.com
+              const rawSrc = audioSrc.replace('cdn.jsdelivr.net/gh/', 'raw.githubusercontent.com/').replace('@main/', 'main/');
+              statusDiv.innerHTML = '<span style="color: #fbbf24;"><i class="fas fa-sync"></i> 尝试备用CDN...</span>';
+              audioEl.removeEventListener('error', onFallbackError1);
+              audioEl.src = rawSrc;
+              audioEl.addEventListener('error', function onFallbackError2() {
+                statusDiv.innerHTML = '<span style="color: #ff6b6b;"><i class="fas fa-exclamation-triangle"></i> 音频加载失败，请检查网络连接或稍后重试</span>';
+              }, { once: true });
+            }, { once: true });
+            return;
+          }
+          
+          // 方案2: 如果已经是set1，尝试使用 raw.githubusercontent.com
+          const rawSrc = audioSrc.replace('cdn.jsdelivr.net/gh/', 'raw.githubusercontent.com/').replace('@main/', 'main/');
+          if (rawSrc !== audioSrc) {
+            statusDiv.innerHTML = '<span style="color: #fbbf24;"><i class="fas fa-sync"></i> 尝试备用CDN...</span>';
+            audioEl.removeEventListener('error', onError);
+            audioEl.src = rawSrc;
+            audioEl.addEventListener('error', function onRawError() {
+              statusDiv.innerHTML = '<span style="color: #ff6b6b;"><i class="fas fa-exclamation-triangle"></i> 音频加载失败，请检查网络连接或稍后重试</span>';
+            }, { once: true });
+            return;
+          }
+          
+          // 所有方案都失败
+          statusDiv.innerHTML = '<span style="color: #ff6b6b;"><i class="fas fa-exclamation-triangle"></i> 音频加载失败，请检查网络连接或稍后重试</span>';
+        }, { once: true });
+        
+        audioEl.src = audioSrc;
         
         audioCard.innerHTML = `
           <div style="font-weight: 600; margin-bottom: 10px; color: #333;">
@@ -567,6 +635,7 @@
           </div>
         `;
         audioCard.appendChild(audioEl);
+        audioCard.appendChild(statusDiv);
         
         // Section时间标记区域
         const markerArea = document.createElement('div');
@@ -929,22 +998,76 @@
             // 检查音频是否存在，不存在则尝试回退
             const audioEl = document.createElement('audio');
             audioEl.controls = true;
+            audioEl.preload = 'metadata';
+            audioEl.crossOrigin = 'anonymous';
             audioEl.style.cssText = 'width: 100%; border-radius: 8px;';
-            audioEl.src = sec.audio;
             
             const statusDiv = document.createElement('div');
             statusDiv.style.cssText = 'margin-top: 8px; font-size: 0.85rem;';
             
-            audioEl.addEventListener('error', async () => {
-              // 尝试回退到set1
-              const fallbackSrc = sec.audio.replace(/-set[23]\.mp3$/, '-set1.mp3');
-              if (fallbackSrc !== sec.audio) {
-                statusDiv.innerHTML = '<span style="color: #fbbf24;"><i class="fas fa-info-circle"></i> 原音频不存在，已切换到同期set1音频</span>';
-                audioEl.src = fallbackSrc;
-              } else {
-                statusDiv.innerHTML = '<span style="color: #ff6b6b;"><i class="fas fa-exclamation-triangle"></i> 音频文件不存在，请上传对应音频文件</span>';
-              }
+            // 确保路径是绝对路径（从根目录开始）
+            let audioSrc = sec.audio;
+            if (audioSrc && !audioSrc.startsWith('http') && !audioSrc.startsWith('/')) {
+              audioSrc = '/' + audioSrc;
+            }
+            
+            // 添加加载状态和错误处理
+            statusDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 正在加载音频...';
+            
+            audioEl.addEventListener('loadstart', () => {
+              statusDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 正在加载音频...';
             });
+            
+            audioEl.addEventListener('loadedmetadata', () => {
+              statusDiv.innerHTML = '<span style="color: #10b981;"><i class="fas fa-check-circle"></i> 音频加载成功</span>';
+              setTimeout(() => statusDiv.innerHTML = '', 2000);
+            });
+            
+            audioEl.addEventListener('canplay', () => {
+              statusDiv.innerHTML = '<span style="color: #10b981;"><i class="fas fa-check-circle"></i> 音频就绪</span>';
+              setTimeout(() => statusDiv.innerHTML = '', 2000);
+            });
+            
+            // 错误处理 - 支持多个回退方案
+            audioEl.addEventListener('error', function onError(e) {
+              console.error('音频加载失败:', audioSrc, e);
+              
+              // 方案1: 尝试回退到set1（如果是set2或set3）
+              const fallbackSrc1 = audioSrc.replace(/-set[23]\.mp3$/, '-set1.mp3');
+              if (fallbackSrc1 !== audioSrc) {
+                statusDiv.innerHTML = '<span style="color: #fbbf24;"><i class="fas fa-info-circle"></i> 原音频不存在，尝试使用同期set1音频...</span>';
+                audioEl.removeEventListener('error', onError);
+                audioEl.src = fallbackSrc1;
+                audioEl.addEventListener('error', function onFallbackError1() {
+                  // 方案2: 尝试使用 raw.githubusercontent.com
+                  const rawSrc = audioSrc.replace('cdn.jsdelivr.net/gh/', 'raw.githubusercontent.com/').replace('@main/', 'main/');
+                  statusDiv.innerHTML = '<span style="color: #fbbf24;"><i class="fas fa-sync"></i> 尝试备用CDN...</span>';
+                  audioEl.removeEventListener('error', onFallbackError1);
+                  audioEl.src = rawSrc;
+                  audioEl.addEventListener('error', function onFallbackError2() {
+                    statusDiv.innerHTML = '<span style="color: #ff6b6b;"><i class="fas fa-exclamation-triangle"></i> 音频加载失败，请检查网络连接或稍后重试</span>';
+                  }, { once: true });
+                }, { once: true });
+                return;
+              }
+              
+              // 方案2: 如果已经是set1，尝试使用 raw.githubusercontent.com
+              const rawSrc = audioSrc.replace('cdn.jsdelivr.net/gh/', 'raw.githubusercontent.com/').replace('@main/', 'main/');
+              if (rawSrc !== audioSrc) {
+                statusDiv.innerHTML = '<span style="color: #fbbf24;"><i class="fas fa-sync"></i> 尝试备用CDN...</span>';
+                audioEl.removeEventListener('error', onError);
+                audioEl.src = rawSrc;
+                audioEl.addEventListener('error', function onRawError() {
+                  statusDiv.innerHTML = '<span style="color: #ff6b6b;"><i class="fas fa-exclamation-triangle"></i> 音频加载失败，请检查网络连接或稍后重试</span>';
+                }, { once: true });
+                return;
+              }
+              
+              // 所有方案都失败
+              statusDiv.innerHTML = '<span style="color: #ff6b6b;"><i class="fas fa-exclamation-triangle"></i> 音频加载失败，请检查网络连接或稍后重试</span>';
+            }, { once: true });
+            
+            audioEl.src = audioSrc;
             
             secCard.innerHTML = `
               <div style="font-weight: 600; margin-bottom: 10px;">
@@ -1057,22 +1180,44 @@
             let audioSrc = currentExamData.sections?.[0]?.audio;
             if (!audioSrc) throw new Error('未找到音频配置');
             
-            // 尝试加载音频
-            let audioResponse = await fetch(audioSrc);
+            // 确保路径是绝对路径（从根目录开始）
+            if (!audioSrc.startsWith('http') && !audioSrc.startsWith('/')) {
+              audioSrc = '/' + audioSrc;
+            }
             
-            // 如果音频不存在，尝试回退到set1（同一考试通常共用听力音频）
+            // 尝试加载音频（支持多个回退方案）
+            let audioResponse = await fetch(audioSrc, { 
+              mode: 'cors',
+              cache: 'default'
+            });
+            
+            // 方案1: 如果音频不存在，尝试回退到set1（同一考试通常共用听力音频）
             if (!audioResponse.ok) {
-              const fallbackSrc = audioSrc.replace(/-set[23]\.mp3$/, '-set1.mp3');
-              if (fallbackSrc !== audioSrc) {
+              const fallbackSrc1 = audioSrc.replace(/-set[23]\.mp3$/, '-set1.mp3');
+              if (fallbackSrc1 !== audioSrc) {
                 aiGenerateStatus.innerHTML = '<i class="fas fa-sync"></i> 原音频不存在，尝试使用同期set1音频...';
-                audioResponse = await fetch(fallbackSrc);
+                audioResponse = await fetch(fallbackSrc1, { mode: 'cors', cache: 'default' });
                 if (audioResponse.ok) {
-                  audioSrc = fallbackSrc;
+                  audioSrc = fallbackSrc1;
                 }
               }
             }
             
-            if (!audioResponse.ok) throw new Error('音频文件不存在，请确保已上传对应音频');
+            // 方案2: 如果还是失败，尝试使用 raw.githubusercontent.com
+            if (!audioResponse.ok) {
+              const rawSrc = audioSrc.replace('cdn.jsdelivr.net/gh/', 'raw.githubusercontent.com/').replace('@main/', 'main/');
+              if (rawSrc !== audioSrc) {
+                aiGenerateStatus.innerHTML = '<i class="fas fa-sync"></i> 尝试备用CDN...';
+                audioResponse = await fetch(rawSrc, { mode: 'cors', cache: 'default' });
+                if (audioResponse.ok) {
+                  audioSrc = rawSrc;
+                }
+              }
+            }
+            
+            if (!audioResponse.ok) {
+              throw new Error('音频文件加载失败，请检查网络连接或稍后重试');
+            }
             const audioBlob = await audioResponse.blob();
             
             // 调用SiliconFlow API识别音频
@@ -1332,7 +1477,11 @@
         questionHeader.appendChild(qText);
         card.appendChild(questionHeader);
         // 音频：优先题级，其次段级
-        const audioSrc = it.q?.audio || it.sectionAudio || '';
+        let audioSrc = it.q?.audio || it.sectionAudio || '';
+        // 确保路径是绝对路径（从根目录开始）
+        if (audioSrc && !audioSrc.startsWith('http') && !audioSrc.startsWith('/')) {
+          audioSrc = '/' + audioSrc;
+        }
         // 时间戳：优先使用题目级别，如果没有则使用Section级别
         const hasQuestionTimestamp = typeof it.q?.audioStart === 'number' && typeof it.q?.audioEnd === 'number';
         const hasSectionTimestamp = typeof it.sectionStart === 'number' && typeof it.sectionEnd === 'number';
@@ -1422,7 +1571,18 @@
           ctrl.appendChild(rateSel); ctrl.appendChild(btnA); ctrl.appendChild(btnB); ctrl.appendChild(btnLoop);
           card.appendChild(ctrl);
           // 播放器
-          qa=document.createElement('audio'); qa.className='listening-mini-audio'; qa.controls=true; qa.src=audioSrc;
+          qa=document.createElement('audio'); qa.className='listening-mini-audio'; qa.controls=true;
+          // 添加错误处理
+          qa.addEventListener('error', function onError(e) {
+            console.error('音频加载失败:', audioSrc, e);
+            // 尝试回退到set1（如果是set2或set3）
+            const fallbackSrc = audioSrc.replace(/-set[23]\.mp3$/, '-set1.mp3');
+            if (fallbackSrc !== audioSrc) {
+              qa.removeEventListener('error', onError);
+              qa.src = fallbackSrc;
+            }
+          }, { once: true });
+          qa.src = audioSrc;
           card.appendChild(qa);
           
           // Section时间标记区域
