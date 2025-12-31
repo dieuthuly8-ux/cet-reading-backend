@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <title>跨试卷微练习 - 四六级学习站</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -459,7 +462,9 @@
     }
 
     async function fetchAllQuestions(){
-      const resp = await fetch('./listening.json', { cache:'no-store' });
+      // 添加版本号和时间戳防止缓存
+      const cacheBuster = `?v=2.0.0&t=${Date.now()}`;
+      const resp = await fetch(`./listening.json${cacheBuster}`, { cache:'no-store' });
       if(!resp.ok) throw new Error('listening.json 加载失败');
       const data = await resp.json();
       const pool=[];
@@ -2627,7 +2632,9 @@
     $('#start-btn').addEventListener('click', async()=>{
       try{
         // 获取原始listening.json数据
-        const resp = await fetch('./listening.json', { cache:'no-store' });
+        // 添加版本号和时间戳防止缓存
+      const cacheBuster = `?v=2.0.0&t=${Date.now()}`;
+      const resp = await fetch(`./listening.json${cacheBuster}`, { cache:'no-store' });
         const allData = await resp.json();
         
         const pool = [];
