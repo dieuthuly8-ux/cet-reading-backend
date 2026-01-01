@@ -17,6 +17,7 @@ backend/.env
 *.ogg
 四级听力/
 六级听力/
+releases/audio/
 
 # 七牛云工具和配置文件（不需要部署到Cloudflare）
 qshell.exe
