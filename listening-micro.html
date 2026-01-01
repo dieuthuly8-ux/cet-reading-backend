@@ -618,7 +618,7 @@
             audioEl.load(); // 强制重新加载
             audioEl.addEventListener('error', function onFallbackError1() {
               // 方案2: 尝试使用 raw.githubusercontent.com
-              const rawSrc = audioSrc.replace('cdn.jsdelivr.net/gh/', 'raw.githubusercontent.com/').replace('@main/', 'main/');
+              const rawSrc = audioSrc.replace('cdn.jsdelivr.net/gh/', 'raw.githubusercontent.com/').replace(/@main\//, 'main/');
               statusDiv.innerHTML = '<span style="color: #fbbf24;"><i class="fas fa-sync"></i> 尝试备用CDN...</span>';
               console.log('🔄 尝试备用CDN:', rawSrc);
               audioEl.removeEventListener('error', onFallbackError1);
@@ -1075,7 +1075,7 @@
                 audioEl.src = fallbackSrc1;
                 audioEl.addEventListener('error', function onFallbackError1() {
                   // 方案2: 尝试使用 raw.githubusercontent.com
-                  const rawSrc = audioSrc.replace('cdn.jsdelivr.net/gh/', 'raw.githubusercontent.com/').replace('@main/', 'main/');
+                  const rawSrc = audioSrc.replace('cdn.jsdelivr.net/gh/', 'raw.githubusercontent.com/').replace(/@main\//, 'main/');
                   statusDiv.innerHTML = '<span style="color: #fbbf24;"><i class="fas fa-sync"></i> 尝试备用CDN...</span>';
                   audioEl.removeEventListener('error', onFallbackError1);
                   audioEl.src = rawSrc;
@@ -1087,7 +1087,7 @@
               }
               
               // 方案2: 如果已经是set1，尝试使用 raw.githubusercontent.com
-              const rawSrc = audioSrc.replace('cdn.jsdelivr.net/gh/', 'raw.githubusercontent.com/').replace('@main/', 'main/');
+              const rawSrc = audioSrc.replace('cdn.jsdelivr.net/gh/', 'raw.githubusercontent.com/').replace(/@main\//, 'main/');
               if (rawSrc !== audioSrc) {
                 statusDiv.innerHTML = '<span style="color: #fbbf24;"><i class="fas fa-sync"></i> 尝试备用CDN...</span>';
                 audioEl.removeEventListener('error', onError);
@@ -1242,7 +1242,7 @@
             
             // 方案2: 如果还是失败，尝试使用 raw.githubusercontent.com
             if (!audioResponse.ok) {
-              const rawSrc = audioSrc.replace('cdn.jsdelivr.net/gh/', 'raw.githubusercontent.com/').replace('@main/', 'main/');
+              const rawSrc = audioSrc.replace('cdn.jsdelivr.net/gh/', 'raw.githubusercontent.com/').replace(/@main\//, 'main/');
               if (rawSrc !== audioSrc) {
                 aiGenerateStatus.innerHTML = '<i class="fas fa-sync"></i> 尝试备用CDN...';
                 audioResponse = await fetch(rawSrc, { mode: 'cors', cache: 'default' });
@@ -1628,7 +1628,7 @@
               qa.load();
             } else {
               // 如果已经是set1，尝试使用 raw.githubusercontent.com
-              const rawSrc = audioSrc.replace('cdn.jsdelivr.net/gh/', 'raw.githubusercontent.com/').replace('@main/', 'main/');
+              const rawSrc = audioSrc.replace('cdn.jsdelivr.net/gh/', 'raw.githubusercontent.com/').replace(/@main\//, 'main/');
               if (rawSrc !== audioSrc) {
                 console.log('🔄 尝试备用CDN:', rawSrc);
                 qa.removeEventListener('error', onError);
