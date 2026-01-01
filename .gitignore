@@ -11,13 +11,13 @@ backend/
 .env
 backend/.env
 
-# 音频文件（使用 Git LFS 管理，不直接忽略）
-# *.mp3  # 注释掉，因为 Git LFS 会处理
-# *.wav
-# *.ogg
+# 音频文件（太大，必须用外部CDN托管，不能提交到Git）
+*.mp3
+*.wav
+*.ogg
 四级听力/
 六级听力/
-# releases/audio/  # 注释掉，使用 Git LFS 管理
+releases/audio/
 
 # 七牛云工具和配置文件（不需要部署到Cloudflare）
 qshell.exe
