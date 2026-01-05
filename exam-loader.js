@@ -1,78 +1,76 @@
-// 统一解析 PDF 链接（优先 papers.json，其次 exam-contents.json，最后推导路径）
+// 统一解析 PDF 链接（优先本地文件，其次CDN链接）
 async function resolvePdfUrlUnified(examId) {
     let pdf = null;
-    let fallbackPdf = null;
+    let localPdf = null;
+    let cdnPdf = null;
     
-    // 1. 优先从 papers.json 读取（支持四级和六级）
-    try {
-        const r = await fetch('./papers.json', { cache: 'no-store' });
-        if (r.ok) {
-            const data = await r.json();
-            // 尝试从 cet4 或 cet6 数组中查找
-            const allPapers = [...(data.cet4 || []), ...(data.cet6 || [])];
-            const entry = allPapers.find(x => x?.id === examId);
-            if (entry && entry.pdf) {
-                pdf = String(entry.pdf);
-            }
-        }
-    } catch(_) {}
-    
-    // 2. 其次从 exam-contents.json 读取
-    if (!pdf) {
-        try {
-            const r = await fetch('./exam-contents.json', { cache: 'no-store' });
-            if (r.ok) {
-                const data = await r.json();
-                const entry = data && (data[examId] || (Array.isArray(data?.items) ? data.items.find(x=>x?.id===examId) : null));
-                if (entry && entry.pdf) pdf = String(entry.pdf);
-            }
-        } catch(_) {}
-    }
-    
-    // 3. 生成备用本地路径（用于CDN失效时回退）
+    // 1. 首先生成本地文件路径（优先使用）
     const m4 = (examId||'').match(/^cet4-(20\d{2})-(\d{2})-set(\d)$/i);
     const m6 = (examId||'').match(/^cet6-(20\d{2})-(\d{1,2})-set(\d+)/i);
     
     if (m4) {
         const y=m4[1], mo=m4[2], s=m4[3];
-        fallbackPdf = `./assets/papers/cet4/${y}-${mo}-S${s}.pdf`;
+        localPdf = `./assets/papers/cet4/${y}-${mo}-S${s}.pdf`;
     } else if (m6) {
         const y=m6[1], mo=m6[2], s=m6[3];
-        // 六级PDF有多种命名格式，尝试多个可能的路径
-        const yearMonth = `${y}-${mo}`;
         const yearMonthCN = `${y}年${mo}月`;
         const setCN = ['第一套', '第二套', '第三套'][parseInt(s) - 1] || `第${s}套`;
         
-        // 尝试多种可能的文件名格式
+        // 尝试多种可能的文件名格式（按优先级）
         const possiblePaths = [
-            `./assets/cet6-pdf/CET-6 ${y}.${mo} 第${s}套.pdf`,
             `./assets/cet6-pdf/${yearMonthCN} 英语六级（${setCN}）.pdf`,
+            `./assets/cet6-pdf/CET-6 ${y}.${mo} 第${s}套.pdf`,
             `./assets/cet6-pdf/${yearMonthCN} 六级真题 （${setCN}）.pdf`,
-            `./assets/cet6-pdf/CET-6 ${yearMonth} 第${s}套.pdf`
+            `./assets/cet6-pdf/CET-6 ${y}-${mo} 第${s}套.pdf`
         ];
-        fallbackPdf = possiblePaths[0]; // 使用第一个作为主要回退路径
+        localPdf = possiblePaths[0]; // 使用第一个作为主要路径
     }
     
-    // 如果从papers.json获取的是CDN链接，检查是否需要回退
-    if (pdf && pdf.startsWith('http')) {
-        // 处理 HTTP 到 HTTPS 的转换
-        if (pdf.startsWith('http://')) {
-            pdf = pdf.replace(/^http:\/\//, 'https://');
-            console.log('🔄 已将 HTTP URL 转换为 HTTPS:', pdf);
+    // 2. 从 papers.json 读取CDN链接（作为备用）
+    try {
+        const r = await fetch('./papers.json', { cache: 'no-store' });
+        if (r.ok) {
+            const data = await r.json();
+            const allPapers = [...(data.cet4 || []), ...(data.cet6 || [])];
+            const entry = allPapers.find(x => x?.id === examId);
+            if (entry && entry.pdf) {
+                cdnPdf = String(entry.pdf);
+                // 处理 HTTP 到 HTTPS 的转换
+                if (cdnPdf.startsWith('http://')) {
+                    cdnPdf = cdnPdf.replace(/^http:\/\//, 'https://');
+                }
+            }
         }
-        // 返回CDN链接，但保留fallbackPdf作为备用
-        return { url: pdf, fallback: fallbackPdf };
+    } catch(_) {}
+    
+    // 3. 从 exam-contents.json 读取（备用）
+    if (!cdnPdf) {
+        try {
+            const r = await fetch('./exam-contents.json', { cache: 'no-store' });
+            if (r.ok) {
+                const data = await r.json();
+                const entry = data && (data[examId] || (Array.isArray(data?.items) ? data.items.find(x=>x?.id===examId) : null));
+                if (entry && entry.pdf) {
+                    cdnPdf = String(entry.pdf);
+                    if (cdnPdf.startsWith('http://')) {
+                        cdnPdf = cdnPdf.replace(/^http:\/\//, 'https://');
+                    }
+                }
+            }
+        } catch(_) {}
     }
     
-    // 如果没有从papers.json获取到链接，使用推导的本地路径
-    if (!pdf && fallbackPdf) {
-        return { url: fallbackPdf, fallback: null };
+    // 优先返回本地路径，CDN作为备用
+    if (localPdf) {
+        return { url: localPdf, fallback: cdnPdf };
     }
     
-    if (!pdf) return null;
+    // 如果没有本地路径，使用CDN链接
+    if (cdnPdf) {
+        return { url: cdnPdf, fallback: null };
+    }
     
-    // 如果是相对路径，直接返回
-    return { url: pdf.startsWith('.') ? pdf : ('./' + pdf.replace(/^\/+/, '')), fallback: fallbackPdf };
+    return null;
 }
 
 // 仅删除 Part I–IV 四个模块（更严格且针对性强）
@@ -943,7 +941,23 @@ function initListeningHistory(examId) {
     });
 }
 
-// PDF预览功能 - 使用iframe直接显示PDF，支持回退机制
+// 测试PDF链接是否可访问
+async function testPdfUrl(url) {
+    try {
+        const response = await fetch(url, { method: 'HEAD', mode: 'no-cors' });
+        return true; // no-cors模式下无法读取状态，假设可访问
+    } catch (error) {
+        // 尝试使用GET方法测试
+        try {
+            const response = await fetch(url, { method: 'GET', mode: 'no-cors' });
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
+}
+
+// PDF预览功能 - 使用embed和iframe组合，支持回退机制
 async function previewExam(examId) {
     const panel = document.getElementById('pdf-preview-panel');
     if (!panel) {
@@ -978,66 +992,110 @@ async function previewExam(examId) {
             pdfUrl = pdfUrl.replace(/^http:\/\//, 'https://');
         }
         
-        // 创建iframe并添加错误处理
+        // 尝试加载PDF，如果失败则使用备用链接
+        let finalUrl = pdfUrl;
+        let loadAttempted = false;
+        
+        // 创建PDF预览容器
+        const container = document.createElement('div');
+        container.style.cssText = 'width:100%; position:relative;';
+        
+        // 添加操作按钮（先创建，以便在错误处理中更新）
+        const linkContainer = document.createElement('div');
+        linkContainer.style.cssText = 'margin-top:15px; text-align:center; padding:10px; background:#f8f9fa; border-radius:6px;';
+        
+        const openLink = document.createElement('a');
+        openLink.href = finalUrl;
+        openLink.target = '_blank';
+        openLink.style.cssText = 'display:inline-block; padding:8px 16px; margin:0 5px; background:#007AFF; color:white; text-decoration:none; border-radius:6px; font-size:0.9rem;';
+        openLink.innerHTML = '<i class="fas fa-external-link-alt"></i> 在新窗口打开';
+        linkContainer.appendChild(openLink);
+        
+        const downloadLink = document.createElement('a');
+        downloadLink.href = finalUrl;
+        downloadLink.download = `${examId}.pdf`;
+        downloadLink.style.cssText = 'display:inline-block; padding:8px 16px; margin:0 5px; background:#10b981; color:white; text-decoration:none; border-radius:6px; font-size:0.9rem;';
+        downloadLink.innerHTML = '<i class="fas fa-download"></i> 下载PDF';
+        linkContainer.appendChild(downloadLink);
+        
+        // 如果有备用链接，添加备用下载按钮
+        if (fallbackUrl && fallbackUrl !== finalUrl) {
+            const fallbackDownloadLink = document.createElement('a');
+            fallbackDownloadLink.href = fallbackUrl;
+            fallbackDownloadLink.download = `${examId}.pdf`;
+            fallbackDownloadLink.style.cssText = 'display:inline-block; padding:8px 16px; margin:0 5px; background:#f59e0b; color:white; text-decoration:none; border-radius:6px; font-size:0.9rem;';
+            fallbackDownloadLink.innerHTML = '<i class="fas fa-download"></i> 备用下载';
+            linkContainer.appendChild(fallbackDownloadLink);
+        }
+        
+        // 使用object标签（兼容性最好）
+        const object = document.createElement('object');
+        object.type = 'application/pdf';
+        object.data = finalUrl;
+        object.style.cssText = 'width:100%; height:800px; border:none; border-radius:8px;';
+        
+        // 创建iframe作为备用
         const iframe = document.createElement('iframe');
-        iframe.style.cssText = 'width:100%; height:800px; border:none; border-radius:8px;';
+        iframe.style.cssText = 'width:100%; height:800px; border:none; border-radius:8px; display:none;';
         iframe.title = 'PDF预览';
         iframe.allow = 'fullscreen';
-        iframe.src = pdfUrl;
+        iframe.src = finalUrl + '#toolbar=1&navpanes=1&scrollbar=1';
         
-        // 错误处理：如果主链接失败，尝试备用链接
-        let fallbackAttempted = false;
-        iframe.onerror = async () => {
-            if (!fallbackAttempted && fallbackUrl) {
-                fallbackAttempted = true;
-                console.log('主PDF链接加载失败，尝试备用链接:', fallbackUrl);
-                iframe.src = fallbackUrl;
-            } else {
-                showPdfError(previewContent, pdfUrl, fallbackUrl);
-            }
+        // 创建embed作为第三备用
+        const embed = document.createElement('embed');
+        embed.type = 'application/pdf';
+        embed.style.cssText = 'width:100%; height:800px; border:none; border-radius:8px; display:none;';
+        embed.src = finalUrl;
+        
+        // 错误处理：如果object失败，尝试iframe
+        object.onerror = () => {
+            console.log('Object标签加载失败，切换到iframe');
+            object.style.display = 'none';
+            iframe.style.display = 'block';
         };
         
-        // 加载超时处理
-        const timeout = setTimeout(() => {
-            if (iframe.contentDocument && iframe.contentDocument.readyState !== 'complete') {
-                if (!fallbackAttempted && fallbackUrl) {
-                    fallbackAttempted = true;
-                    console.log('PDF加载超时，尝试备用链接:', fallbackUrl);
-                    iframe.src = fallbackUrl;
+        // 如果object加载失败，尝试iframe
+        setTimeout(() => {
+            // 检查object是否成功加载
+            try {
+                if (object.contentDocument === null && object.style.display !== 'none') {
+                    console.log('Object未成功加载，切换到iframe');
+                    object.style.display = 'none';
+                    iframe.style.display = 'block';
+                }
+            } catch (e) {
+                // 跨域情况下无法检查，假设已加载
+            }
+        }, 3000);
+        
+        // 如果iframe也失败，尝试备用链接
+        iframe.onerror = () => {
+            if (!loadAttempted && fallbackUrl) {
+                loadAttempted = true;
+                console.log('主PDF链接加载失败，尝试备用链接:', fallbackUrl);
+                finalUrl = fallbackUrl;
+                object.data = fallbackUrl;
+                iframe.src = fallbackUrl + '#toolbar=1&navpanes=1&scrollbar=1';
+                embed.src = fallbackUrl;
+                // 更新下载链接
+                openLink.href = fallbackUrl;
+                downloadLink.href = fallbackUrl;
+            } else {
+                // 如果iframe失败，尝试embed
+                if (iframe.style.display !== 'none') {
+                    iframe.style.display = 'none';
+                    embed.style.display = 'block';
                 } else {
                     showPdfError(previewContent, pdfUrl, fallbackUrl);
                 }
             }
-        }, 10000); // 10秒超时
-        
-        iframe.onload = () => {
-            clearTimeout(timeout);
         };
         
-        // 构建预览界面
-        const container = document.createElement('div');
+        container.appendChild(object);
         container.appendChild(iframe);
-        
-        const linkContainer = document.createElement('div');
-        linkContainer.style.cssText = 'margin-top:10px; text-align:center;';
-        const link = document.createElement('a');
-        link.href = pdfUrl;
-        link.target = '_blank';
-        link.style.cssText = 'color:#007AFF; text-decoration:none; margin:0 10px;';
-        link.innerHTML = '<i class="fas fa-external-link-alt"></i> 在新窗口打开';
-        linkContainer.appendChild(link);
-        
-        // 如果有备用链接，也添加下载按钮
-        if (fallbackUrl) {
-            const downloadLink = document.createElement('a');
-            downloadLink.href = fallbackUrl;
-            downloadLink.download = `${examId}.pdf`;
-            downloadLink.style.cssText = 'color:#007AFF; text-decoration:none; margin:0 10px;';
-            downloadLink.innerHTML = '<i class="fas fa-download"></i> 下载PDF';
-            linkContainer.appendChild(downloadLink);
-        }
-        
+        container.appendChild(embed);
         container.appendChild(linkContainer);
+        
         previewContent.innerHTML = '';
         previewContent.appendChild(container);
         
