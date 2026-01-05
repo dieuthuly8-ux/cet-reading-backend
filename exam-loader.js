@@ -64,15 +64,14 @@ async function resolvePdfUrlUnified(examId) {
         } catch(_) {}
     }
     
-    // 优先返回CDN链接（如果存在），本地路径作为备用
-    // 因为CDN链接通常更可靠，本地文件可能不存在
-    if (cdnPdf) {
-        return { url: cdnPdf, fallback: localPdf };
+    // 优先返回本地路径（同源，无跨域问题），CDN作为备用
+    if (localPdf) {
+        return { url: localPdf, fallback: cdnPdf };
     }
     
-    // 如果没有CDN链接，使用本地路径
-    if (localPdf) {
-        return { url: localPdf, fallback: null };
+    // 如果没有本地路径，使用CDN链接
+    if (cdnPdf) {
+        return { url: cdnPdf, fallback: null };
     }
     
     return null;
@@ -1033,87 +1032,99 @@ async function previewExam(examId) {
             linkContainer.appendChild(fallbackDownloadLink);
         }
         
-        // 使用iframe直接显示PDF，添加type参数确保浏览器识别为PDF
-        const iframe = document.createElement('iframe');
-        iframe.style.cssText = 'width:100%; height:800px; border:none; border-radius:8px; background:#f5f5f5;';
-        iframe.title = 'PDF预览';
-        iframe.allow = 'fullscreen';
+        // 使用PDF.js渲染PDF（解决跨域问题）
+        const canvasContainer = document.createElement('div');
+        canvasContainer.style.cssText = 'width:100%; overflow:auto; max-height:800px; border:1px solid #ddd; border-radius:8px; background:#f5f5f5; padding:20px;';
+        canvasContainer.id = 'pdf-canvas-container';
         
-        // 确保URL正确编码，并添加PDF查看器参数
-        let encodedUrl = finalUrl;
-        if (!finalUrl.startsWith('http')) {
-            // 相对路径需要编码中文字符
-            encodedUrl = encodeURI(finalUrl);
-        }
-        iframe.src = encodedUrl + '#view=FitH';
-        
-        // 加载超时处理
-        let loadTimeout = setTimeout(() => {
-            if (!loadAttempted && fallbackUrl) {
-                loadAttempted = true;
-                console.log('主PDF链接加载超时，尝试备用链接:', fallbackUrl);
-                finalUrl = fallbackUrl;
-                encodedUrl = fallbackUrl.startsWith('http') ? fallbackUrl : encodeURI(fallbackUrl);
-                iframe.src = encodedUrl + '#view=FitH';
-                openLink.href = fallbackUrl;
-                downloadLink.href = fallbackUrl;
-            } else if (!loadAttempted) {
-                // 如果主链接失败且没有备用链接，显示错误
-                showPdfError(previewContent, pdfUrl, fallbackUrl);
-            }
-        }, 8000);
-        
-        // iframe加载成功
-        iframe.onload = () => {
-            clearTimeout(loadTimeout);
-            console.log('PDF iframe加载完成:', finalUrl);
-        };
-        
-        // iframe加载失败
-        iframe.onerror = () => {
-            clearTimeout(loadTimeout);
-            if (!loadAttempted && fallbackUrl) {
-                loadAttempted = true;
-                console.log('主PDF链接加载失败，尝试备用链接:', fallbackUrl);
-                finalUrl = fallbackUrl;
-                encodedUrl = fallbackUrl.startsWith('http') ? fallbackUrl : encodeURI(fallbackUrl);
-                iframe.src = encodedUrl + '#view=FitH';
-                openLink.href = fallbackUrl;
-                downloadLink.href = fallbackUrl;
-            } else {
-                // 所有链接都失败，显示错误
-                showPdfError(previewContent, pdfUrl, fallbackUrl);
-            }
-        };
-        
-        // 检查iframe内容是否成功加载（延迟检查）
-        setTimeout(() => {
-            try {
-                const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
-                if (iframeDoc) {
-                    const bodyText = iframeDoc.body?.textContent || '';
-                    if (bodyText.includes('404') || bodyText.includes('Not Found') || bodyText.includes('无法找到')) {
-                        if (!loadAttempted && fallbackUrl) {
-                            loadAttempted = true;
-                            console.log('检测到404错误，尝试备用链接:', fallbackUrl);
-                            finalUrl = fallbackUrl;
-                            encodedUrl = fallbackUrl.startsWith('http') ? fallbackUrl : encodeURI(fallbackUrl);
-                            iframe.src = encodedUrl + '#view=FitH';
-                            openLink.href = fallbackUrl;
-                            downloadLink.href = fallbackUrl;
-                        } else if (!loadAttempted) {
-                            showPdfError(previewContent, pdfUrl, fallbackUrl);
-                        }
+        // 检查是否可以使用PDF.js
+        if (typeof pdfjsLib !== 'undefined') {
+            // 设置PDF.js worker
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+            
+            // 加载PDF
+            const loadPdf = async (url) => {
+                try {
+                    previewContent.innerHTML = '<div style="text-align:center; padding:40px;"><i class="fas fa-spinner fa-spin" style="font-size:2rem; color:#007AFF;"></i><p style="margin-top:20px;">正在加载PDF...</p></div>';
+                    
+                    const loadingTask = pdfjsLib.getDocument(url);
+                    const pdf = await loadingTask.promise;
+                    console.log('PDF加载成功，总页数:', pdf.numPages);
+                    
+                    // 清空容器
+                    canvasContainer.innerHTML = '';
+                    
+                    // 渲染所有页面
+                    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+                        const page = await pdf.getPage(pageNum);
+                        const viewport = page.getViewport({ scale: 1.5 });
+                        
+                        const canvas = document.createElement('canvas');
+                        const context = canvas.getContext('2d');
+                        canvas.height = viewport.height;
+                        canvas.width = viewport.width;
+                        canvas.style.cssText = 'display:block; margin:10px auto; box-shadow:0 2px 8px rgba(0,0,0,0.1);';
+                        
+                        const renderContext = {
+                            canvasContext: context,
+                            viewport: viewport
+                        };
+                        
+                        await page.render(renderContext).promise;
+                        canvasContainer.appendChild(canvas);
                     }
+                    
+                    previewContent.innerHTML = '';
+                    previewContent.appendChild(canvasContainer);
+                    previewContent.appendChild(linkContainer);
+                    
+                } catch (error) {
+                    console.error('PDF.js加载失败:', error);
+                    // 如果PDF.js失败，回退到iframe
+                    fallbackToIframe(finalUrl, fallbackUrl);
                 }
-            } catch (e) {
-                // 跨域情况下无法检查，假设已加载
-                console.log('无法检查iframe内容（可能跨域）:', e.message);
-            }
-        }, 3000);
+            };
+            
+            // 尝试加载主链接
+            loadPdf(finalUrl).catch(() => {
+                if (fallbackUrl) {
+                    console.log('主链接失败，尝试备用链接');
+                    finalUrl = fallbackUrl;
+                    loadPdf(fallbackUrl).catch(() => {
+                        showPdfError(previewContent, pdfUrl, fallbackUrl);
+                    });
+                } else {
+                    showPdfError(previewContent, pdfUrl, fallbackUrl);
+                }
+            });
+            
+        } else {
+            // 如果PDF.js未加载，使用iframe（优先本地文件）
+            fallbackToIframe(finalUrl, fallbackUrl);
+        }
         
-        container.appendChild(iframe);
-        container.appendChild(linkContainer);
+        function fallbackToIframe(url, fallback) {
+            const iframe = document.createElement('iframe');
+            iframe.style.cssText = 'width:100%; height:800px; border:none; border-radius:8px; background:#f5f5f5;';
+            iframe.title = 'PDF预览';
+            iframe.allow = 'fullscreen';
+            
+            // 优先使用本地文件（同源，无跨域问题）
+            let useUrl = url.startsWith('./') || url.startsWith('/') ? url : (fallback && fallback.startsWith('./') ? fallback : url);
+            iframe.src = useUrl;
+            
+            iframe.onerror = () => {
+                if (fallback && useUrl !== fallback) {
+                    iframe.src = fallback;
+                } else {
+                    showPdfError(previewContent, url, fallback);
+                }
+            };
+            
+            previewContent.innerHTML = '';
+            previewContent.appendChild(iframe);
+            previewContent.appendChild(linkContainer);
+        }
         
         previewContent.innerHTML = '';
         previewContent.appendChild(container);
