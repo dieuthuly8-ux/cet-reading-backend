@@ -13,7 +13,9 @@ async function resolvePdfUrlUnified(examId) {
         localPdf = `./assets/papers/cet4/${y}-${mo}-S${s}.pdf`;
     } else if (m6) {
         const y=m6[1], mo=m6[2], s=m6[3];
-        const yearMonthCN = `${y}年${mo}月`;
+        // 月份格式：6月（不补零）或06月（补零）
+        const monthCN = parseInt(mo, 10).toString();
+        const yearMonthCN = `${y}年${monthCN}月`;
         const setCN = ['第一套', '第二套', '第三套'][parseInt(s) - 1] || `第${s}套`;
         const monthPadded = mo.padStart(2, '0');
         
@@ -62,14 +64,15 @@ async function resolvePdfUrlUnified(examId) {
         } catch(_) {}
     }
     
-    // 优先返回本地路径，CDN作为备用
-    if (localPdf) {
-        return { url: localPdf, fallback: cdnPdf };
+    // 优先返回CDN链接（如果存在），本地路径作为备用
+    // 因为CDN链接通常更可靠，本地文件可能不存在
+    if (cdnPdf) {
+        return { url: cdnPdf, fallback: localPdf };
     }
     
-    // 如果没有本地路径，使用CDN链接
-    if (cdnPdf) {
-        return { url: cdnPdf, fallback: null };
+    // 如果没有CDN链接，使用本地路径
+    if (localPdf) {
+        return { url: localPdf, fallback: null };
     }
     
     return null;
@@ -1030,12 +1033,19 @@ async function previewExam(examId) {
             linkContainer.appendChild(fallbackDownloadLink);
         }
         
-        // 使用iframe直接显示PDF（最可靠的方法）
+        // 使用iframe直接显示PDF，添加type参数确保浏览器识别为PDF
         const iframe = document.createElement('iframe');
-        iframe.style.cssText = 'width:100%; height:800px; border:none; border-radius:8px;';
+        iframe.style.cssText = 'width:100%; height:800px; border:none; border-radius:8px; background:#f5f5f5;';
         iframe.title = 'PDF预览';
         iframe.allow = 'fullscreen';
-        iframe.src = finalUrl;
+        
+        // 确保URL正确编码，并添加PDF查看器参数
+        let encodedUrl = finalUrl;
+        if (!finalUrl.startsWith('http')) {
+            // 相对路径需要编码中文字符
+            encodedUrl = encodeURI(finalUrl);
+        }
+        iframe.src = encodedUrl + '#view=FitH';
         
         // 加载超时处理
         let loadTimeout = setTimeout(() => {
@@ -1043,16 +1053,20 @@ async function previewExam(examId) {
                 loadAttempted = true;
                 console.log('主PDF链接加载超时，尝试备用链接:', fallbackUrl);
                 finalUrl = fallbackUrl;
-                iframe.src = fallbackUrl;
+                encodedUrl = fallbackUrl.startsWith('http') ? fallbackUrl : encodeURI(fallbackUrl);
+                iframe.src = encodedUrl + '#view=FitH';
                 openLink.href = fallbackUrl;
                 downloadLink.href = fallbackUrl;
+            } else if (!loadAttempted) {
+                // 如果主链接失败且没有备用链接，显示错误
+                showPdfError(previewContent, pdfUrl, fallbackUrl);
             }
-        }, 5000);
+        }, 8000);
         
         // iframe加载成功
         iframe.onload = () => {
             clearTimeout(loadTimeout);
-            console.log('PDF加载成功:', finalUrl);
+            console.log('PDF iframe加载完成:', finalUrl);
         };
         
         // iframe加载失败
@@ -1062,7 +1076,8 @@ async function previewExam(examId) {
                 loadAttempted = true;
                 console.log('主PDF链接加载失败，尝试备用链接:', fallbackUrl);
                 finalUrl = fallbackUrl;
-                iframe.src = fallbackUrl;
+                encodedUrl = fallbackUrl.startsWith('http') ? fallbackUrl : encodeURI(fallbackUrl);
+                iframe.src = encodedUrl + '#view=FitH';
                 openLink.href = fallbackUrl;
                 downloadLink.href = fallbackUrl;
             } else {
@@ -1074,22 +1089,28 @@ async function previewExam(examId) {
         // 检查iframe内容是否成功加载（延迟检查）
         setTimeout(() => {
             try {
-                // 尝试访问iframe内容来判断是否加载成功
                 const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
-                if (!iframeDoc || iframeDoc.body?.textContent?.includes('404') || iframeDoc.body?.textContent?.includes('Not Found')) {
-                    if (!loadAttempted && fallbackUrl) {
-                        loadAttempted = true;
-                        console.log('检测到404错误，尝试备用链接:', fallbackUrl);
-                        finalUrl = fallbackUrl;
-                        iframe.src = fallbackUrl;
-                        openLink.href = fallbackUrl;
-                        downloadLink.href = fallbackUrl;
+                if (iframeDoc) {
+                    const bodyText = iframeDoc.body?.textContent || '';
+                    if (bodyText.includes('404') || bodyText.includes('Not Found') || bodyText.includes('无法找到')) {
+                        if (!loadAttempted && fallbackUrl) {
+                            loadAttempted = true;
+                            console.log('检测到404错误，尝试备用链接:', fallbackUrl);
+                            finalUrl = fallbackUrl;
+                            encodedUrl = fallbackUrl.startsWith('http') ? fallbackUrl : encodeURI(fallbackUrl);
+                            iframe.src = encodedUrl + '#view=FitH';
+                            openLink.href = fallbackUrl;
+                            downloadLink.href = fallbackUrl;
+                        } else if (!loadAttempted) {
+                            showPdfError(previewContent, pdfUrl, fallbackUrl);
+                        }
                     }
                 }
             } catch (e) {
                 // 跨域情况下无法检查，假设已加载
+                console.log('无法检查iframe内容（可能跨域）:', e.message);
             }
-        }, 2000);
+        }, 3000);
         
         container.appendChild(iframe);
         container.appendChild(linkContainer);
