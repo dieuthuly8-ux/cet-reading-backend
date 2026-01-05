@@ -1,6 +1,7 @@
 // 统一解析 PDF 链接（优先 papers.json，其次 exam-contents.json，最后推导路径）
 async function resolvePdfUrlUnified(examId) {
     let pdf = null;
+    let fallbackPdf = null;
     
     // 1. 优先从 papers.json 读取（支持四级和六级）
     try {
@@ -28,38 +29,50 @@ async function resolvePdfUrlUnified(examId) {
         } catch(_) {}
     }
     
-    // 3. 最后使用推导规则
-    if (!pdf) {
-        const m = (examId||'').match(/^cet4-(20\d{2})-(\d{2})-set(\d)$/i);
-        if (m) {
-            const y=m[1], mo=m[2], s=m[3];
-            pdf = `./assets/papers/cet4/${y}-${mo}-S${s}.pdf`;
-        }
+    // 3. 生成备用本地路径（用于CDN失效时回退）
+    const m4 = (examId||'').match(/^cet4-(20\d{2})-(\d{2})-set(\d)$/i);
+    const m6 = (examId||'').match(/^cet6-(20\d{2})-(\d{1,2})-set(\d+)/i);
+    
+    if (m4) {
+        const y=m4[1], mo=m4[2], s=m4[3];
+        fallbackPdf = `./assets/papers/cet4/${y}-${mo}-S${s}.pdf`;
+    } else if (m6) {
+        const y=m6[1], mo=m6[2], s=m6[3];
+        // 六级PDF有多种命名格式，尝试多个可能的路径
+        const yearMonth = `${y}-${mo}`;
+        const yearMonthCN = `${y}年${mo}月`;
+        const setCN = ['第一套', '第二套', '第三套'][parseInt(s) - 1] || `第${s}套`;
+        
+        // 尝试多种可能的文件名格式
+        const possiblePaths = [
+            `./assets/cet6-pdf/CET-6 ${y}.${mo} 第${s}套.pdf`,
+            `./assets/cet6-pdf/${yearMonthCN} 英语六级（${setCN}）.pdf`,
+            `./assets/cet6-pdf/${yearMonthCN} 六级真题 （${setCN}）.pdf`,
+            `./assets/cet6-pdf/CET-6 ${yearMonth} 第${s}套.pdf`
+        ];
+        fallbackPdf = possiblePaths[0]; // 使用第一个作为主要回退路径
     }
-    if (!pdf) {
-        const m6 = (examId||'').match(/^cet6-(20\d{2})-(\d{1,2})-set(\d+)/i);
-        if (m6) {
-            try {
-                const u = await resolveCet6PdfFromPapers();
-                if (u) pdf = u;
-            } catch(_) {}
+    
+    // 如果从papers.json获取的是CDN链接，检查是否需要回退
+    if (pdf && pdf.startsWith('http')) {
+        // 处理 HTTP 到 HTTPS 的转换
+        if (pdf.startsWith('http://')) {
+            pdf = pdf.replace(/^http:\/\//, 'https://');
+            console.log('🔄 已将 HTTP URL 转换为 HTTPS:', pdf);
         }
+        // 返回CDN链接，但保留fallbackPdf作为备用
+        return { url: pdf, fallback: fallbackPdf };
+    }
+    
+    // 如果没有从papers.json获取到链接，使用推导的本地路径
+    if (!pdf && fallbackPdf) {
+        return { url: fallbackPdf, fallback: null };
     }
     
     if (!pdf) return null;
     
-    // 处理 HTTP 到 HTTPS 的转换（解决 Mixed Content 问题）
-    if (pdf.startsWith('http://')) {
-        // 将 HTTP 转换为 HTTPS，避免 Mixed Content 错误
-        pdf = pdf.replace(/^http:\/\//, 'https://');
-        console.log('🔄 已将 HTTP URL 转换为 HTTPS:', pdf);
-    }
-    
-    // 如果是绝对URL（http/https），直接返回；否则添加相对路径前缀
-    if (pdf.startsWith('https://')) {
-        return pdf;
-    }
-    return pdf.startsWith('.') ? pdf : ('./' + pdf.replace(/^\/+/, ''));
+    // 如果是相对路径，直接返回
+    return { url: pdf.startsWith('.') ? pdf : ('./' + pdf.replace(/^\/+/, '')), fallback: fallbackPdf };
 }
 
 // 仅删除 Part I–IV 四个模块（更严格且针对性强）
@@ -930,7 +943,7 @@ function initListeningHistory(examId) {
     });
 }
 
-// PDF预览功能 - 使用iframe直接显示PDF
+// PDF预览功能 - 使用iframe直接显示PDF，支持回退机制
 async function previewExam(examId) {
     const panel = document.getElementById('pdf-preview-panel');
     if (!panel) {
@@ -949,31 +962,84 @@ async function previewExam(examId) {
     previewContent.innerHTML = '<div style="text-align:center; padding:40px;"><i class="fas fa-spinner fa-spin" style="font-size:2rem; color:#007AFF;"></i><p style="margin-top:20px;">正在加载PDF...</p></div>';
     
     try {
-        // 获取PDF URL
-        const pdfUrl = await resolvePdfUrlUnified(examId);
+        // 获取PDF URL（可能包含主链接和备用链接）
+        const pdfResult = await resolvePdfUrlUnified(examId);
         
-        if (!pdfUrl) {
+        if (!pdfResult || !pdfResult.url) {
             previewContent.innerHTML = '<div style="text-align:center; padding:40px; color:#999;"><i class="fas fa-exclamation-circle" style="font-size:2rem; margin-bottom:20px;"></i><p>未找到PDF文件</p><p style="font-size:0.9rem; margin-top:10px; color:#666;">请检查该试卷是否有对应的PDF资源</p></div>';
             return;
         }
         
-        // 确保使用HTTPS
-        const secureUrl = pdfUrl.startsWith('http://') ? pdfUrl.replace(/^http:\/\//, 'https://') : pdfUrl;
+        let pdfUrl = pdfResult.url;
+        const fallbackUrl = pdfResult.fallback;
         
-        // 使用iframe显示PDF
-        previewContent.innerHTML = `
-            <iframe 
-                src="${secureUrl}" 
-                style="width:100%; height:800px; border:none; border-radius:8px;"
-                title="PDF预览"
-                allow="fullscreen"
-            ></iframe>
-            <div style="margin-top:10px; text-align:center;">
-                <a href="${secureUrl}" target="_blank" style="color:#007AFF; text-decoration:none;">
-                    <i class="fas fa-external-link-alt"></i> 在新窗口打开
-                </a>
-            </div>
-        `;
+        // 确保使用HTTPS（如果是HTTP链接）
+        if (pdfUrl.startsWith('http://')) {
+            pdfUrl = pdfUrl.replace(/^http:\/\//, 'https://');
+        }
+        
+        // 创建iframe并添加错误处理
+        const iframe = document.createElement('iframe');
+        iframe.style.cssText = 'width:100%; height:800px; border:none; border-radius:8px;';
+        iframe.title = 'PDF预览';
+        iframe.allow = 'fullscreen';
+        iframe.src = pdfUrl;
+        
+        // 错误处理：如果主链接失败，尝试备用链接
+        let fallbackAttempted = false;
+        iframe.onerror = async () => {
+            if (!fallbackAttempted && fallbackUrl) {
+                fallbackAttempted = true;
+                console.log('主PDF链接加载失败，尝试备用链接:', fallbackUrl);
+                iframe.src = fallbackUrl;
+            } else {
+                showPdfError(previewContent, pdfUrl, fallbackUrl);
+            }
+        };
+        
+        // 加载超时处理
+        const timeout = setTimeout(() => {
+            if (iframe.contentDocument && iframe.contentDocument.readyState !== 'complete') {
+                if (!fallbackAttempted && fallbackUrl) {
+                    fallbackAttempted = true;
+                    console.log('PDF加载超时，尝试备用链接:', fallbackUrl);
+                    iframe.src = fallbackUrl;
+                } else {
+                    showPdfError(previewContent, pdfUrl, fallbackUrl);
+                }
+            }
+        }, 10000); // 10秒超时
+        
+        iframe.onload = () => {
+            clearTimeout(timeout);
+        };
+        
+        // 构建预览界面
+        const container = document.createElement('div');
+        container.appendChild(iframe);
+        
+        const linkContainer = document.createElement('div');
+        linkContainer.style.cssText = 'margin-top:10px; text-align:center;';
+        const link = document.createElement('a');
+        link.href = pdfUrl;
+        link.target = '_blank';
+        link.style.cssText = 'color:#007AFF; text-decoration:none; margin:0 10px;';
+        link.innerHTML = '<i class="fas fa-external-link-alt"></i> 在新窗口打开';
+        linkContainer.appendChild(link);
+        
+        // 如果有备用链接，也添加下载按钮
+        if (fallbackUrl) {
+            const downloadLink = document.createElement('a');
+            downloadLink.href = fallbackUrl;
+            downloadLink.download = `${examId}.pdf`;
+            downloadLink.style.cssText = 'color:#007AFF; text-decoration:none; margin:0 10px;';
+            downloadLink.innerHTML = '<i class="fas fa-download"></i> 下载PDF';
+            linkContainer.appendChild(downloadLink);
+        }
+        
+        container.appendChild(linkContainer);
+        previewContent.innerHTML = '';
+        previewContent.appendChild(container);
         
         // 滚动到预览面板
         setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
@@ -982,6 +1048,27 @@ async function previewExam(examId) {
         console.error('预览PDF失败:', error);
         previewContent.innerHTML = '<div style="text-align:center; padding:40px; color:#f00;"><i class="fas fa-times-circle" style="font-size:2rem; margin-bottom:20px;"></i><p>加载失败</p><p style="font-size:0.9rem; margin-top:10px; color:#666;">请刷新页面重试</p></div>';
     }
+}
+
+// 显示PDF错误信息
+function showPdfError(container, mainUrl, fallbackUrl) {
+    container.innerHTML = `
+        <div style="text-align:center; padding:40px; color:#999;">
+            <i class="fas fa-exclamation-triangle" style="font-size:3rem; color:#f59e0b; margin-bottom:20px;"></i>
+            <h3 style="color:#333; margin-bottom:10px;">PDF加载失败</h3>
+            <p style="font-size:0.9rem; color:#666; margin-bottom:20px;">无法从当前链接加载PDF文件</p>
+            <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+                <a href="${mainUrl}" target="_blank" style="display:inline-block; padding:10px 20px; background:#007AFF; color:white; text-decoration:none; border-radius:6px;">
+                    <i class="fas fa-external-link-alt"></i> 尝试直接打开
+                </a>
+                ${fallbackUrl ? `
+                <a href="${fallbackUrl}" download="${fallbackUrl.split('/').pop()}" style="display:inline-block; padding:10px 20px; background:#10b981; color:white; text-decoration:none; border-radius:6px;">
+                    <i class="fas fa-download"></i> 下载PDF
+                </a>
+                ` : ''}
+            </div>
+        </div>
+    `;
 }
 
 function printExamPdf(pdfUrl) {
@@ -1376,11 +1463,20 @@ function displayExamContent(content) {
             (async () => {
                 try {
                     const examId = (new URLSearchParams(location.search)).get('id') || '';
-                    const pdfHref = await resolvePdfUrlUnified(examId);
-                    if (pdfHref) {
+                    const pdfResult = await resolvePdfUrlUnified(examId);
+                    if (pdfResult && pdfResult.url) {
+                        let pdfHref = pdfResult.url;
+                        // 确保HTTPS
+                        if (pdfHref.startsWith('http://')) {
+                            pdfHref = pdfHref.replace(/^http:\/\//, 'https://');
+                        }
                         downloadBtn.href = pdfHref;
                         downloadBtn.rel = 'noopener';
                         downloadBtn.title = '下载原版PDF';
+                        // 存储备用链接
+                        if (pdfResult.fallback) {
+                            downloadBtn.setAttribute('data-fallback', pdfResult.fallback);
+                        }
                     } else {
                         downloadBtn.title = '未找到对应PDF文件';
                     }
@@ -1394,7 +1490,15 @@ function displayExamContent(content) {
                     if (downloadBtn.href.startsWith('http://')) {
                         e.preventDefault();
                         const secureUrl = downloadBtn.href.replace(/^http:\/\//, 'https://');
-                        window.open(secureUrl, '_blank');
+                        // 尝试在新窗口打开，如果失败则尝试备用链接
+                        const newWindow = window.open(secureUrl, '_blank');
+                        if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+                            // 如果主链接失败，尝试备用链接
+                            const fallback = downloadBtn.getAttribute('data-fallback');
+                            if (fallback) {
+                                window.open(fallback, '_blank');
+                            }
+                        }
                     }
                     return;
                 }
@@ -1403,17 +1507,35 @@ function displayExamContent(content) {
                 e.preventDefault();
                 try {
                     const examId = (new URLSearchParams(location.search)).get('id') || '';
-                    const pdfHref = await resolvePdfUrlUnified(examId);
-                    if (pdfHref) {
-                        const secureUrl = pdfHref.startsWith('http://') ? pdfHref.replace(/^http:\/\//, 'https://') : pdfHref;
+                    const pdfResult = await resolvePdfUrlUnified(examId);
+                    if (pdfResult && pdfResult.url) {
+                        let pdfHref = pdfResult.url;
+                        // 确保HTTPS
+                        if (pdfHref.startsWith('http://')) {
+                            pdfHref = pdfHref.replace(/^http:\/\//, 'https://');
+                        }
+                        
                         // 尝试下载
                         const link = document.createElement('a');
-                        link.href = secureUrl;
+                        link.href = pdfHref;
                         link.download = `${examId}.pdf`;
                         link.target = '_blank';
                         document.body.appendChild(link);
                         link.click();
                         document.body.removeChild(link);
+                        
+                        // 如果主链接失败，尝试备用链接
+                        setTimeout(() => {
+                            if (pdfResult.fallback) {
+                                const fallbackLink = document.createElement('a');
+                                fallbackLink.href = pdfResult.fallback;
+                                fallbackLink.download = `${examId}.pdf`;
+                                fallbackLink.target = '_blank';
+                                document.body.appendChild(fallbackLink);
+                                fallbackLink.click();
+                                document.body.removeChild(fallbackLink);
+                            }
+                        }, 1000);
                     } else {
                         alert('未找到对应PDF文件');
                     }
@@ -1645,9 +1767,16 @@ function setupActions(examId) {
             const urlParams = new URLSearchParams(window.location.search);
             let pdfUrl = urlParams.get('pdf');
             if (!(/\.pdf$/i.test(pdfUrl || ''))) {
-                try { pdfUrl = await resolvePdfUrlUnified(examId); } catch(_) { pdfUrl = null; }
+                try { 
+                    const pdfResult = await resolvePdfUrlUnified(examId);
+                    pdfUrl = pdfResult ? pdfResult.url : null;
+                } catch(_) { pdfUrl = null; }
             }
             if (!pdfUrl) { alert('未找到对应的 PDF 资源，暂无法打印。'); return; }
+            // 确保HTTPS
+            if (pdfUrl.startsWith('http://')) {
+                pdfUrl = pdfUrl.replace(/^http:\/\//, 'https://');
+            }
             // 直接在新窗口打开PDF，用户可使用Ctrl+P打印
             const printWindow = window.open(pdfUrl, '_blank');
             if (printWindow) {
@@ -1732,7 +1861,10 @@ function shareExam() {
     const tryShare = async () => {
         let pdfUrl = params.get('pdf');
         if (!(pdfUrl && /\.pdf$/i.test(pdfUrl))) {
-            try { pdfUrl = await resolvePdfUrlUnified(examId); } catch(_) { pdfUrl = null; }
+            try { 
+                const pdfResult = await resolvePdfUrlUnified(examId);
+                pdfUrl = pdfResult ? pdfResult.url : null;
+            } catch(_) { pdfUrl = null; }
         }
         if (!pdfUrl) {
             const pageUrl = window.location.href;
