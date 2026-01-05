@@ -1065,7 +1065,15 @@ async function previewExam(examId) {
                 try {
                     previewContent.innerHTML = '<div style="text-align:center; padding:40px;"><i class="fas fa-spinner fa-spin" style="font-size:2rem; color:#007AFF;"></i><p style="margin-top:20px;">正在加载PDF...</p></div>';
                     
-                    const loadingTask = pdfjsLib.getDocument(url);
+                    console.log('尝试加载PDF:', url);
+                    
+                    // 配置PDF.js加载选项，支持跨域
+                    const loadingTask = pdfjsLib.getDocument({
+                        url: url,
+                        httpHeaders: {},
+                        withCredentials: false
+                    });
+                    
                     const pdf = await loadingTask.promise;
                     console.log('PDF加载成功，总页数:', pdf.numPages);
                     
