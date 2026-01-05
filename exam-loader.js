@@ -1,10 +1,10 @@
-// 统一解析 PDF 链接（优先本地文件，其次CDN链接）
+// 统一解析 PDF 链接（优先CDN链接，本地文件作为备用）
 async function resolvePdfUrlUnified(examId) {
     let pdf = null;
     let localPdf = null;
     let cdnPdf = null;
     
-    // 1. 首先生成本地文件路径（优先使用）
+    // 1. 首先生成本地文件路径（作为备用）
     const m4 = (examId||'').match(/^cet4-(20\d{2})-(\d{2})-set(\d)$/i);
     const m6 = (examId||'').match(/^cet6-(20\d{2})-(\d{1,2})-set(\d+)/i);
     
@@ -30,7 +30,7 @@ async function resolvePdfUrlUnified(examId) {
         localPdf = possiblePaths[0]; // 使用第一个作为主要路径
     }
     
-    // 2. 从 papers.json 读取CDN链接（作为备用）
+    // 2. 优先从 papers.json 读取CDN链接（主要使用）
     try {
         const r = await fetch('./papers.json', { cache: 'no-store' });
         if (r.ok) {
@@ -43,9 +43,24 @@ async function resolvePdfUrlUnified(examId) {
                 if (cdnPdf.startsWith('http://')) {
                     cdnPdf = cdnPdf.replace(/^http:\/\//, 'https://');
                 }
+                // 确保URL编码正确（处理中文和特殊字符）
+                try {
+                    const urlObj = new URL(cdnPdf);
+                    // 如果路径包含中文字符，进行编码
+                    if (urlObj.pathname && /[\u4e00-\u9fa5]/.test(urlObj.pathname)) {
+                        const encodedPath = urlObj.pathname.split('/').map(segment => 
+                            encodeURIComponent(segment)
+                        ).join('/');
+                        cdnPdf = urlObj.origin + encodedPath + (urlObj.search || '');
+                    }
+                } catch(e) {
+                    console.warn('URL编码处理失败，使用原始链接:', e);
+                }
             }
         }
-    } catch(_) {}
+    } catch(e) {
+        console.warn('读取papers.json失败:', e);
+    }
     
     // 3. 从 exam-contents.json 读取（备用）
     if (!cdnPdf) {
@@ -61,19 +76,22 @@ async function resolvePdfUrlUnified(examId) {
                     }
                 }
             }
-        } catch(_) {}
+        } catch(e) {
+            console.warn('读取exam-contents.json失败:', e);
+        }
     }
     
-    // 优先返回本地路径（同源，无跨域问题），CDN作为备用
-    if (localPdf) {
-        return { url: localPdf, fallback: cdnPdf };
-    }
-    
-    // 如果没有本地路径，使用CDN链接
+    // 优先返回CDN链接（更可靠），本地路径作为备用
     if (cdnPdf) {
-        return { url: cdnPdf, fallback: null };
+        return { url: cdnPdf, fallback: localPdf };
     }
     
+    // 如果没有CDN链接，使用本地路径
+    if (localPdf) {
+        return { url: localPdf, fallback: null };
+    }
+    
+    console.error('未找到PDF链接，examId:', examId);
     return null;
 }
 
