@@ -15,13 +15,15 @@ async function resolvePdfUrlUnified(examId) {
         const y=m6[1], mo=m6[2], s=m6[3];
         const yearMonthCN = `${y}年${mo}月`;
         const setCN = ['第一套', '第二套', '第三套'][parseInt(s) - 1] || `第${s}套`;
+        const monthPadded = mo.padStart(2, '0');
         
-        // 尝试多种可能的文件名格式（按优先级）
+        // 尝试多种可能的文件名格式（按优先级，匹配实际文件名）
         const possiblePaths = [
-            `./assets/cet6-pdf/${yearMonthCN} 英语六级（${setCN}）.pdf`,
-            `./assets/cet6-pdf/CET-6 ${y}.${mo} 第${s}套.pdf`,
-            `./assets/cet6-pdf/${yearMonthCN} 六级真题 （${setCN}）.pdf`,
-            `./assets/cet6-pdf/CET-6 ${y}-${mo} 第${s}套.pdf`
+            `./assets/cet6-pdf/${yearMonthCN} 英语六级（${setCN}）.pdf`,  // 2025年6月 英语六级（第一套）.pdf
+            `./assets/cet6-pdf/CET-6 ${y}.${monthPadded} 第${s}套.pdf`,   // CET-6 2025.06 第1套.pdf
+            `./assets/cet6-pdf/${yearMonthCN} 六级真题 （${setCN}）.pdf`, // 2025年6月 六级真题 （第一套）.pdf
+            `./assets/cet6-pdf/CET-6 ${y}.${mo} 第${s}套.pdf`,           // CET-6 2025.6 第1套.pdf
+            `./assets/cet6-pdf/CET-6 ${y}-${monthPadded} 第${s}套.pdf`  // CET-6 2025-06 第1套.pdf
         ];
         localPdf = possiblePaths[0]; // 使用第一个作为主要路径
     }
@@ -1028,72 +1030,68 @@ async function previewExam(examId) {
             linkContainer.appendChild(fallbackDownloadLink);
         }
         
-        // 使用object标签（兼容性最好）
-        const object = document.createElement('object');
-        object.type = 'application/pdf';
-        object.data = finalUrl;
-        object.style.cssText = 'width:100%; height:800px; border:none; border-radius:8px;';
-        
-        // 创建iframe作为备用
+        // 使用iframe直接显示PDF（最可靠的方法）
         const iframe = document.createElement('iframe');
-        iframe.style.cssText = 'width:100%; height:800px; border:none; border-radius:8px; display:none;';
+        iframe.style.cssText = 'width:100%; height:800px; border:none; border-radius:8px;';
         iframe.title = 'PDF预览';
         iframe.allow = 'fullscreen';
-        iframe.src = finalUrl + '#toolbar=1&navpanes=1&scrollbar=1';
+        iframe.src = finalUrl;
         
-        // 创建embed作为第三备用
-        const embed = document.createElement('embed');
-        embed.type = 'application/pdf';
-        embed.style.cssText = 'width:100%; height:800px; border:none; border-radius:8px; display:none;';
-        embed.src = finalUrl;
+        // 加载超时处理
+        let loadTimeout = setTimeout(() => {
+            if (!loadAttempted && fallbackUrl) {
+                loadAttempted = true;
+                console.log('主PDF链接加载超时，尝试备用链接:', fallbackUrl);
+                finalUrl = fallbackUrl;
+                iframe.src = fallbackUrl;
+                openLink.href = fallbackUrl;
+                downloadLink.href = fallbackUrl;
+            }
+        }, 5000);
         
-        // 错误处理：如果object失败，尝试iframe
-        object.onerror = () => {
-            console.log('Object标签加载失败，切换到iframe');
-            object.style.display = 'none';
-            iframe.style.display = 'block';
+        // iframe加载成功
+        iframe.onload = () => {
+            clearTimeout(loadTimeout);
+            console.log('PDF加载成功:', finalUrl);
         };
         
-        // 如果object加载失败，尝试iframe
-        setTimeout(() => {
-            // 检查object是否成功加载
-            try {
-                if (object.contentDocument === null && object.style.display !== 'none') {
-                    console.log('Object未成功加载，切换到iframe');
-                    object.style.display = 'none';
-                    iframe.style.display = 'block';
-                }
-            } catch (e) {
-                // 跨域情况下无法检查，假设已加载
-            }
-        }, 3000);
-        
-        // 如果iframe也失败，尝试备用链接
+        // iframe加载失败
         iframe.onerror = () => {
+            clearTimeout(loadTimeout);
             if (!loadAttempted && fallbackUrl) {
                 loadAttempted = true;
                 console.log('主PDF链接加载失败，尝试备用链接:', fallbackUrl);
                 finalUrl = fallbackUrl;
-                object.data = fallbackUrl;
-                iframe.src = fallbackUrl + '#toolbar=1&navpanes=1&scrollbar=1';
-                embed.src = fallbackUrl;
-                // 更新下载链接
+                iframe.src = fallbackUrl;
                 openLink.href = fallbackUrl;
                 downloadLink.href = fallbackUrl;
             } else {
-                // 如果iframe失败，尝试embed
-                if (iframe.style.display !== 'none') {
-                    iframe.style.display = 'none';
-                    embed.style.display = 'block';
-                } else {
-                    showPdfError(previewContent, pdfUrl, fallbackUrl);
-                }
+                // 所有链接都失败，显示错误
+                showPdfError(previewContent, pdfUrl, fallbackUrl);
             }
         };
         
-        container.appendChild(object);
+        // 检查iframe内容是否成功加载（延迟检查）
+        setTimeout(() => {
+            try {
+                // 尝试访问iframe内容来判断是否加载成功
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+                if (!iframeDoc || iframeDoc.body?.textContent?.includes('404') || iframeDoc.body?.textContent?.includes('Not Found')) {
+                    if (!loadAttempted && fallbackUrl) {
+                        loadAttempted = true;
+                        console.log('检测到404错误，尝试备用链接:', fallbackUrl);
+                        finalUrl = fallbackUrl;
+                        iframe.src = fallbackUrl;
+                        openLink.href = fallbackUrl;
+                        downloadLink.href = fallbackUrl;
+                    }
+                }
+            } catch (e) {
+                // 跨域情况下无法检查，假设已加载
+            }
+        }, 2000);
+        
         container.appendChild(iframe);
-        container.appendChild(embed);
         container.appendChild(linkContainer);
         
         previewContent.innerHTML = '';
