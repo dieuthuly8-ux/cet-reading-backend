@@ -47,8 +47,16 @@ async function resolvePdfUrlUnified(examId) {
     }
     
     if (!pdf) return null;
+    
+    // 处理 HTTP 到 HTTPS 的转换（解决 Mixed Content 问题）
+    if (pdf.startsWith('http://')) {
+        // 将 HTTP 转换为 HTTPS，避免 Mixed Content 错误
+        pdf = pdf.replace(/^http:\/\//, 'https://');
+        console.log('🔄 已将 HTTP URL 转换为 HTTPS:', pdf);
+    }
+    
     // 如果是绝对URL（http/https），直接返回；否则添加相对路径前缀
-    if (pdf.startsWith('http://') || pdf.startsWith('https://')) {
+    if (pdf.startsWith('https://')) {
         return pdf;
     }
     return pdf.startsWith('.') ? pdf : ('./' + pdf.replace(/^\/+/, ''));
@@ -922,20 +930,57 @@ function initListeningHistory(examId) {
     });
 }
 
-// 打开 PDF 预览面板并加载 URL
-function openPdfPreview(pdfUrl) {
+// PDF预览功能 - 使用iframe直接显示PDF
+async function previewExam(examId) {
     const panel = document.getElementById('pdf-preview-panel');
-    const iframe = document.getElementById('pdf-preview-iframe');
-    if (!panel || !iframe) {
-        alert('当前页面不支持 PDF 预览区');
+    if (!panel) {
+        alert('预览功能不可用');
         return;
     }
+    
+    panel.style.display = 'block';
+    const previewContent = document.getElementById('pdf-preview-content');
+    if (!previewContent) {
+        alert('预览容器不存在');
+        return;
+    }
+    
+    // 显示加载状态
+    previewContent.innerHTML = '<div style="text-align:center; padding:40px;"><i class="fas fa-spinner fa-spin" style="font-size:2rem; color:#007AFF;"></i><p style="margin-top:20px;">正在加载PDF...</p></div>';
+    
     try {
-        iframe.src = pdfUrl;
-        panel.style.display = 'block';
-    } catch (e) {
-        console.error('加载 PDF 失败:', e);
-        alert('无法加载 PDF：' + (e?.message || '未知错误'));
+        // 获取PDF URL
+        const pdfUrl = await resolvePdfUrlUnified(examId);
+        
+        if (!pdfUrl) {
+            previewContent.innerHTML = '<div style="text-align:center; padding:40px; color:#999;"><i class="fas fa-exclamation-circle" style="font-size:2rem; margin-bottom:20px;"></i><p>未找到PDF文件</p><p style="font-size:0.9rem; margin-top:10px; color:#666;">请检查该试卷是否有对应的PDF资源</p></div>';
+            return;
+        }
+        
+        // 确保使用HTTPS
+        const secureUrl = pdfUrl.startsWith('http://') ? pdfUrl.replace(/^http:\/\//, 'https://') : pdfUrl;
+        
+        // 使用iframe显示PDF
+        previewContent.innerHTML = `
+            <iframe 
+                src="${secureUrl}" 
+                style="width:100%; height:800px; border:none; border-radius:8px;"
+                title="PDF预览"
+                allow="fullscreen"
+            ></iframe>
+            <div style="margin-top:10px; text-align:center;">
+                <a href="${secureUrl}" target="_blank" style="color:#007AFF; text-decoration:none;">
+                    <i class="fas fa-external-link-alt"></i> 在新窗口打开
+                </a>
+            </div>
+        `;
+        
+        // 滚动到预览面板
+        setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
+        
+    } catch (error) {
+        console.error('预览PDF失败:', error);
+        previewContent.innerHTML = '<div style="text-align:center; padding:40px; color:#f00;"><i class="fas fa-times-circle" style="font-size:2rem; margin-bottom:20px;"></i><p>加载失败</p><p style="font-size:0.9rem; margin-top:10px; color:#666;">请刷新页面重试</p></div>';
     }
 }
 
@@ -1222,14 +1267,21 @@ document.addEventListener('DOMContentLoaded', () => {
     // 加载真题内容
     loadExamContent(examId);
 
-    // 设置下载和打印按钮
-    setupActions(examId);
+    // 设置下载和打印按钮（延迟执行确保DOM完全渲染）
+    // 使用 setTimeout 确保按钮已经渲染到DOM中
+    setTimeout(() => {
+        setupActions(examId);
+    }, 100);
+    
+    // 保障措施：在窗口完全加载后再次检查（防止某些情况下按钮未及时渲染）
+    window.addEventListener('load', () => {
+        const previewBtn = document.getElementById('preview-pdf-btn');
+        if (previewBtn && !previewBtn.hasAttribute('data-listener-bound')) {
+            console.log('🔧 窗口加载完成，重新检查预览按钮');
+            setupActions(examId);
+        }
+    });
 
-    // 若存在 ?pdf= 参数，页面准备好后自动打开预览
-    if (urlPdfParam && urlPdfParam.toLowerCase().endsWith('.pdf')) {
-        // 稍等内容区域渲染完毕再打开预览
-        setTimeout(() => openPdfPreview(urlPdfParam), 0);
-    }
     try { initListeningEntry(examId); } catch (e) { console.warn('listening init failed', e); }
     try { initListeningHistory(examId); } catch (e) { console.warn('history init failed', e); }
 
@@ -1334,20 +1386,40 @@ function displayExamContent(content) {
                     }
                 } catch(_) {}
             })();
-            // 点击兜底
+            // 下载按钮点击处理
             downloadBtn.addEventListener('click', async (e) => {
-                if (downloadBtn.href && downloadBtn.href !== '#' && !downloadBtn.href.endsWith('#')) return;
+                // 如果href已设置且有效，直接使用
+                if (downloadBtn.href && downloadBtn.href !== '#' && !downloadBtn.href.endsWith('#')) {
+                    // 确保HTTPS
+                    if (downloadBtn.href.startsWith('http://')) {
+                        e.preventDefault();
+                        const secureUrl = downloadBtn.href.replace(/^http:\/\//, 'https://');
+                        window.open(secureUrl, '_blank');
+                    }
+                    return;
+                }
+                
+                // 否则尝试解析PDF URL
                 e.preventDefault();
                 try {
                     const examId = (new URLSearchParams(location.search)).get('id') || '';
                     const pdfHref = await resolvePdfUrlUnified(examId);
                     if (pdfHref) {
-                        window.open(pdfHref, '_blank');
+                        const secureUrl = pdfHref.startsWith('http://') ? pdfHref.replace(/^http:\/\//, 'https://') : pdfHref;
+                        // 尝试下载
+                        const link = document.createElement('a');
+                        link.href = secureUrl;
+                        link.download = `${examId}.pdf`;
+                        link.target = '_blank';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
                     } else {
                         alert('未找到对应PDF文件');
                     }
-                } catch(_) {
-                    alert('未找到对应PDF文件');
+                } catch(error) {
+                    console.error('下载PDF失败:', error);
+                    alert('下载PDF失败，请稍后重试');
                 }
             });
         }
@@ -1561,10 +1633,15 @@ function showError(message) {
 
 // 设置下载和打印功能
 function setupActions(examId) {
+    console.log('🔧 开始设置操作按钮，examId:', examId);
+    
     // 打印功能
     const printBtn = document.getElementById('print-btn');
     if (printBtn) {
-        printBtn.addEventListener('click', async () => {
+        // 移除可能存在的旧事件监听器
+        const newPrintBtn = printBtn.cloneNode(true);
+        printBtn.parentNode.replaceChild(newPrintBtn, printBtn);
+        newPrintBtn.addEventListener('click', async () => {
             const urlParams = new URLSearchParams(window.location.search);
             let pdfUrl = urlParams.get('pdf');
             if (!(/\.pdf$/i.test(pdfUrl || ''))) {
@@ -1579,62 +1656,71 @@ function setupActions(examId) {
                 alert('无法打开新窗口，请检查浏览器是否阻止了弹出窗口。');
             }
         });
+        console.log('✓ 打印按钮已绑定');
+    } else {
+        console.warn('⚠️ 未找到打印按钮');
     }
 
-    // 已移除“导出本页PDF/下载到桌面”功能
+    // 已移除"导出本页PDF/下载到桌面"功能
 
     // 分享功能
     const shareBtn = document.getElementById('share-btn');
     if (shareBtn) {
-        shareBtn.addEventListener('click', () => {
+        // 移除可能存在的旧事件监听器
+        const newShareBtn = shareBtn.cloneNode(true);
+        shareBtn.parentNode.replaceChild(newShareBtn, shareBtn);
+        newShareBtn.addEventListener('click', () => {
             shareExam();
         });
+        console.log('✓ 分享按钮已绑定');
+    } else {
+        console.warn('⚠️ 未找到分享按钮');
     }
 
-    // PDF 预览
-    const previewBtn = document.getElementById('preview-pdf-btn');
-    const closePreviewBtn = document.getElementById('close-preview-btn');
-    if (previewBtn) {
-        previewBtn.addEventListener('click', async () => {
-            // 1) 优先 URL 参数
-            const urlParams = new URLSearchParams(window.location.search);
-            let pdfUrl = urlParams.get('pdf');
-            if (/\.pdf$/i.test(pdfUrl || '')) {
+    // PDF 预览按钮
+    const setupPreviewBtn = () => {
+        const previewBtn = document.getElementById('preview-pdf-btn');
+        const closePreviewBtn = document.getElementById('close-preview-btn');
+        
+        if (previewBtn) {
+            const newPreviewBtn = previewBtn.cloneNode(true);
+            previewBtn.parentNode.replaceChild(newPreviewBtn, previewBtn);
+            
+            newPreviewBtn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const originalHTML = newPreviewBtn.innerHTML;
+                newPreviewBtn.disabled = true;
+                newPreviewBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>加载中...</span>';
+                
                 try {
-                    const r = await fetch(pdfUrl, { method: 'HEAD', cache: 'no-store' });
-                    const isPdf = (r.headers.get('content-type')||'').toLowerCase().includes('pdf');
-                    if (isPdf) { openPdfPreview(pdfUrl); return; }
-                } catch(_) {}
-                try { window.open(pdfUrl, '_blank'); } catch(_) {}
-                return;
-            }
-
-            // 2) 统一解析（exam-contents.pdf 优先，失败则按 CET-4 规则回退）
-            try {
-                const u = await resolvePdfUrlUnified(examId);
-                if (u) {
-                    try {
-                        const r = await fetch(u, { method: 'HEAD', cache: 'no-store' });
-                        const isPdf = (r.headers.get('content-type')||'').toLowerCase().includes('pdf');
-                        if (isPdf) { openPdfPreview(u); return; }
-                    } catch(_) {}
-                    try { window.open(u, '_blank'); } catch(_) {}
-                    return;
+                    await previewExam(examId);
+                } catch (error) {
+                    console.error('预览PDF失败:', error);
+                    alert('预览PDF失败：' + (error.message || '未知错误'));
+                } finally {
+                    newPreviewBtn.disabled = false;
+                    newPreviewBtn.innerHTML = originalHTML;
                 }
-            } catch (e) { console.warn('统一解析 PDF 失败:', e); }
-
-            // 3) 未匹配到则提示不可用（不再弹输入框）
-            alert('未找到对应的 PDF 资源，暂无法预览。');
-        });
-    }
-    if (closePreviewBtn) {
-        closePreviewBtn.addEventListener('click', () => {
-            const panel = document.getElementById('pdf-preview-panel');
-            const iframe = document.getElementById('pdf-preview-iframe');
-            if (iframe) iframe.src = 'about:blank';
-            if (panel) panel.style.display = 'none';
-        });
-    }
+            });
+            
+            newPreviewBtn.disabled = false;
+            console.log('✓ PDF预览按钮已绑定');
+        }
+        
+        if (closePreviewBtn) {
+            const newCloseBtn = closePreviewBtn.cloneNode(true);
+            closePreviewBtn.parentNode.replaceChild(newCloseBtn, closePreviewBtn);
+            newCloseBtn.addEventListener('click', () => {
+                const panel = document.getElementById('pdf-preview-panel');
+                if (panel) panel.style.display = 'none';
+            });
+            console.log('✓ 关闭预览按钮已绑定');
+        }
+    };
+    
+    setupPreviewBtn();
 }
 // 下载为PDF（通过打印对话框）
 
